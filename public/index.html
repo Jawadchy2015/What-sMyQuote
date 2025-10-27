@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>What's My Quote - Login</title>
+	<!-- <style>
+		/* Custom styles to ensure full page height and centering */
+		html, body {
+			/* Ensure HTML and BODY elements take up 100% of the viewport height */
+			height: 100%; 
+		}
+
+		body {
+			/* A subtle background color for a professional look */
+			background-color: #cad1d8; 
+			
+			/* The Bootstrap Flexbox utility classes that do the centering work */
+			display: flex;
+			align-items: center; /* Centers content vertically */
+			justify-content: center; /* Centers content horizontally (if no row is used) */
+		}
+		
+		/* Optional: If the container isn't full width, ensure it allows centering */
+		.container {
+			/* Keeps the container from taking up all space, allowing the card to center */
+			width: 100%;
+		}
+	</style> -->
+	<link rel="stylesheet" href="styles/index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  </head>
+  <body>
+	<div class="d-flex vh-100 justify-content-center align-items-center">
+		<div class="p-2 flex-grow">
+			<div class="smallContainer border shadow rounded">
+			<div class="row g-0">
+				<div class="col-sm-6 col-xs-12 d-none d-sm-block position-relative" id='leftCol'>
+				<img src="images/download.webp" />
+				<div id="pt-5 text-end w-100" class="position-absolute end-0 top-0">
+					<a href="#" class="customBtn activeBtn" id="largeLoginBtn">Login</a><br />
+					<a href="#" class="customBtn" id="largeSignupBtn">Signup</a>
+				</div>
+		
+				</div>
+				<div class="col-sm-6 col-xs-12">
+				<div class="d-flex flex-column" style="height:100%">
+		
+					<!-- <div class="text-center d-sm-none d-xs-block">
+					<div class="switch-button">
+						<input class="switch-button-checkbox" type="checkbox" id="smallScreenToggle"></input>
+						<label class="switch-button-label" for=""><span class="switch-button-label-span">Login</span></label>
+					</div>
+					</div> -->
+		
+					<div class="my-auto p-5">
+						<!-- <div class="text-center">
+							<div>
+							<img src="images/bell.webp" height="85" />
+							</div>
+							<h2 class="h4 pb-6">LOGIN</h2>
+						</div>
+						<form>
+							<div class="position-relative my-3 inputGroup text-center">
+							<span class="position-absolute"><i class="far fa-user"></i></span>
+							<input type="email" class="border-0 border-bottom w-100" placeholder="Enter email" />
+							</div>
+							<div class="position-relative my-3 inputGroup text-center">
+							<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
+							<input type="password" class="border-0 border-bottom w-100" placeholder="Password" />
+							</div>
+							<div class="d-flex align-items-center justify-content-between pt-2">
+							<a class="linkFlare" href="#"><small>Forgot Password?</small></a>
+							<button class="btn btn-primary px-4 rounded-pill">LOGIN</button>
+							</div>
+						</form> -->
+						<div id="loginFormContainer">
+							<div class="text-center">
+								<div>
+									<img src="images/bell.webp" height="85" />
+								</div>
+								<h2 class="h4 pb-6" id="formTitle">LOGIN</h2>
+							</div>
+							<form id="loginForm">
+								<div class="position-relative my-3 inputGroup text-center">
+									<span class="position-absolute"><i class="far fa-envelope"></i></span>
+									<input type="email" class="border-0 border-bottom w-100" placeholder="Enter email" required />
+								</div>
+								<div class="position-relative my-3 inputGroup text-center">
+									<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
+									<input type="password" class="border-0 border-bottom w-100" placeholder="Password" required />
+								</div>
+								<div class="d-flex align-items-center justify-content-between pt-2">
+									<a class="linkFlare" href="#"><small>Forgot Password?</small></a>
+									<button type="submit" class="btn btn-primary px-4 rounded-pill">LOGIN</button>
+								</div>
+							</form>
+						</div>
+
+						<div id="signupFormContainer" class="d-none"> 
+							<div class="text-center">
+								<div>
+									<img src="images/bell.webp" height="85" />
+								</div>
+								<h2 class="h4 pb-6">SIGN UP</h2>
+							</div>
+							<form id="signupForm">
+								<div class="position-relative my-3 inputGroup text-center">
+									<span class="position-absolute"><i class="far fa-user"></i></span>
+									<input type="text" class="border-0 border-bottom w-100" placeholder="Enter Username" required />
+								</div>
+								<div class="position-relative my-3 inputGroup text-center">
+									<span class="position-absolute"><i class="far fa-envelope"></i></span>
+									<input type="email" class="border-0 border-bottom w-100" placeholder="Enter Email" required />
+								</div>
+								<div class="position-relative my-3 inputGroup text-center">
+									<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
+									<input type="password" class="border-0 border-bottom w-100" placeholder="Create Password" required />
+								</div>
+								<div class="d-flex align-items-center justify-content-end pt-2">
+									<button type="submit" class="btn btn-primary px-4 rounded-pill">SIGN UP</button>
+								</div>
+							</form>
+						</div>
+
+					</div>
+
+					<div>
+					<div class="p-2 text-center" id="lsHeading">
+						LOGIN WITH
+					</div>
+					<div class="bg-accent-2 p-3 d-flex justify-content-evenly">
+						<i class="fab fa-facebook-square"></i>
+						<i class="fab fa-google"></i>
+						<i class="fab fa-twitter"></i>
+					</div>
+					</div>
+				</div>
+				</div>
+			</div>
+			</div>
+		</div>
+	</div>
+	<!-- <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-8">
+                <div class="card shadow-lg p-3 bg-white rounded">
+                    <div class="card-body p-4">
+                        
+                        <h2 class="card-title text-center mb-4">
+                            <span class="text-primary">What's My Quote</span> Login
+                        </h2>
+                        <p class="text-center text-muted mb-4">
+                            Sign in as a Bell Mobility Sales Representative
+                        </p>
+                        
+                        <form id="loginForm">
+                            
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" class="form-control" id="username" required>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label for="password" class="form-label">Password</label>
+                                <input type="password" class="form-control" id="password" required>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mb-3">
+                                <button type="submit" class="btn btn-primary">Log In</button>
+                            </div>
+                            
+                            <p class="text-center">
+                                <a href="#" class="text-muted">Forgot Password?</a>
+                            </p>
+                            
+                            <hr>
+                            
+                            <div class="text-center d-grid gap-2 mb-3">
+                                <p class="mb-2">Don't have an account?</p>
+                                <button type="button" class="btn btn-success">
+                                   Sign Up
+                                </button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+                
+            </div>
+		
+        </div>
+    </div>	 -->
+	<script src="scripts/index.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+	
+</body>
+</html>
