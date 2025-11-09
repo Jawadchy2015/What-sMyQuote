@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-50">
+<head>
+    <meta charset="UTF-R" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BellQuote - Plan Viewer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Hide scrollbar for clean look */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full">
+    <div class="min-h-full">
+        <header class="bg-white shadow-sm sticky top-0 z-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+                <h1 class="text-2xl font-bold text-gray-900">BellQuote Plans</h1>
+                <div class="bg-gray-100 p-1 rounded-lg flex">
+                    <button id="btn-byod" class="px-4 py-2 text-sm font-medium rounded-md transition-colors bg-white shadow text-blue-600">
+                        BYOD
+                    </button>
+                    <button id="btn-financing" class="px-4 py-2 text-sm font-medium rounded-md text-gray-500 hover:text-gray-700 transition-colors ml-1">
+                        Financing
+                    </button>
+                </div>
+            </div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex space-x-4 border-b border-gray-200 overflow-x-auto no-scrollbar" id="provider-tabs">
+                    </div>
+            </div>
+        </header>
+
+        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div id="loading-spinner" class="flex justify-center items-center h-64">
+                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+            </div>
+            <div id="error-message" class="hidden bg-red-50 p-4 rounded-md text-red-700 border border-red-200"></div>
+            
+            <div id="plans-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- STATE ---
+            let allPlanData = null;
+            let currentMainType = 'BYOD'; // 'BYOD' or 'Financing'
+            let currentProvider = 'BellConsumer';
+
+            // --- DOM ELEMENTS ---
+            const btnByod = document.getElementById('btn-byod');
+            const btnFinancing = document.getElementById('btn-financing');
+            const providerTabsContainer = document.getElementById('provider-tabs');
+            const plansContainer = document.getElementById('plans-container');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const errorMessage = document.getElementById('error-message');
+
+            // --- INITIAL FETCH ---
+            fetch('/api/plans')
+                .then(res => {
+                    if (!res.ok) throw new Error('Failed to load plans');
+                    return res.json();
+                })
+                .then(data => {
+                    allPlanData = data;
+                    renderProviderTabs();
+                    renderPlans();
+                    loadingSpinner.classList.add('hidden');
+                })
+                .catch(err => {
+                    console.error(err);
+                    loadingSpinner.classList.add('hidden');
+                    errorMessage.textContent = 'Error loading plans. Please try again later.';
+                    errorMessage.classList.remove('hidden');
+                });
+
+            // --- EVENT LISTENERS ---
+            btnByod.addEventListener('click', () => setMainType('BYOD'));
+            btnFinancing.addEventListener('click', () => setMainType('Financing'));
+
+            // --- FUNCTIONS ---
+            function setMainType(type) {
+                currentMainType = type;
+                // Update toggle UI
+                if (type === 'BYOD') {
+                    btnByod.classList.add('bg-white', 'shadow', 'text-blue-600');
+                    btnByod.classList.remove('text-gray-500');
+                    btnFinancing.classList.remove('bg-white', 'shadow', 'text-blue-600');
+                    btnFinancing.classList.add('text-gray-500');
+                } else {
+                    btnFinancing.classList.add('bg-white', 'shadow', 'text-blue-600');
+                    btnFinancing.classList.remove('text-gray-500');
+                    btnByod.classList.remove('bg-white', 'shadow', 'text-blue-600');
+                    btnByod.classList.add('text-gray-500');
+                }
+                // Reset provider to first available in new type
+                const availableProviders = Object.keys(allPlanData[currentMainType] || {});
+                currentProvider = availableProviders.length > 0 ? availableProviders[0] : null;
+                
+                renderProviderTabs();
+                renderPlans();
+            }
+
+            function renderProviderTabs() {
+                providerTabsContainer.innerHTML = '';
+                const providers = allPlanData[currentMainType] || {};
+                
+                Object.keys(providers).forEach(providerKey => {
+                    // Format provider name (e.g., 'BellConsumer' -> 'Bell Consumer')
+                    const providerName = providerKey.replace(/([A-Z])/g, ' $1').trim();
+                    
+                    const tab = document.createElement('button');
+                    tab.className = `py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                        currentProvider === providerKey
+                            ? 'border-blue-600 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`;
+                    tab.textContent = providerName;
+                    tab.onclick = () => {
+                        currentProvider = providerKey;
+                        renderedProviderTabs(); // Re-render tabs to update active state
+                        renderPlans();
+                    };
+                    providerTabsContainer.appendChild(tab);
+                });
+            }
+            
+            // Helper to re-render just active classes on tabs without rebuilding them
+            function renderedProviderTabs() {
+                 Array.from(providerTabsContainer.children).forEach(tab => {
+                    const isSelected = tab.textContent.replace(/\s/g, '') === currentProvider;
+                     tab.className = `py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+                        isSelected
+                            ? 'border-blue-600 text-blue-600'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    }`;
+                 });
+            }
+
+            function renderPlans() {
+                plansContainer.innerHTML = '';
+                
+                if (!allPlanData || !currentProvider || !allPlanData[currentMainType][currentProvider]) {
+                    plansContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center py-10">No plans available for this category.</p>';
+                    return;
+                }
+
+                const plans = allPlanData[currentMainType][currentProvider];
+
+                Object.entries(plans).forEach(([planKey, plan]) => {
+                    // Format plan name from key (e.g., 'Ultimate_150GB' -> 'Ultimate 150GB')
+                    const planName = planKey.replace(/_/g, ' ');
+
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow';
+                    
+                    // Price Section
+                    const priceDisplay = Array.isArray(plan.price) 
+                        ? plan.price.map(p => `$${p}`).join(' / ')
+                        : `$${plan.price}`; // Handle Lucky's single price
+
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <h3 class="text-lg font-bold text-gray-900">${planName}</h3>
+                                <div class="text-right">
+                                    <span class="block text-2xl font-bold text-blue-600">${priceDisplay}</span>
+                                    <span class="text-xs text-gray-500">per month</span>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-center bg-blue-50 text-blue-700 py-3 rounded-lg font-bold text-xl">
+                                    ${plan.data} GB <span class="text-sm font-normal ml-1 text-blue-600">(${plan.speed || '4G'})</span>
+                                </div>
+
+                                <ul class="space-y-2 text-sm text-gray-600">
+                                    ${renderFeature('Unlimited Canada calling', true)}
+                                    ${renderFeature('Unlimited CAN/US calling', plan.canUsCallingText || plan.caUsCallingText || plan.caUsCalling)}
+                                    ${renderFeature('US Roaming', plan.usRoam)}
+                                    ${renderFeature('Mexico Roaming', plan.usMxRoam)}
+                                    ${renderFeature('Data Share', plan.dataShare)}
+                                    ${renderFeature('1000 Int\'l Mins', plan.internationalMinutes1000)}
+                                    ${plan.bonusData ? renderFeature(`${plan.bonusData}GB Bonus Data`, true) : ''}
+                                </ul>
+
+                                ${plan.additionalFeature && plan.additionalFeature.length > 0 ? `
+                                    <div class="flex flex-wrap gap-2 pt-2">
+                                        ${plan.additionalFeature.map(feat => `
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                                ${feat}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    `;
+                    plansContainer.appendChild(card);
+                });
+            }
+
+            function renderFeature(label, isIncluded) {
+                if (!isIncluded) return '';
+                return `
+                    <li class="flex items-center">
+                        <svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        ${label}
+                    </li>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>
+```

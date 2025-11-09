@@ -13,7 +13,7 @@ const port = 3000
 
 // Model calls
 const Phone = require('./models/Phone');
-
+const Plan = require('./models/Plan');
 
 // import functions
 const { sendWelcomeEmail } = require('./public/scripts/login_signup/success_email');
@@ -127,16 +127,33 @@ app.post('/api/login', async (req, res) => {
     }
 });
 
-// fetch phone
-
+// fetch phones
 app.get('/api/phones', async (req, res) => {
     try {
         const phones = await Phone.find({}); // Fetches all phones
-        console.log(phones)
+        // console.log(phones)
         res.json(phones);
     } catch (error) {
         console.error('Error fetching phones:', error);
         res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
+
+// fetch plans
+app.get('/api/plans', async (req, res) => {
+    try {
+        // Find the single document that contains all plan data
+        const planData = await Plan.findOne({});
+        console.log(planData)
+        
+        if (!planData) {
+            return res.status(404).json({ error: 'Plan data not found.' });
+        }
+        
+        res.json(planData);
+    } catch (error) {
+        console.error('Error fetching plans:', error);
+        res.status(500).json({ error: 'Failed to fetch plan data' });
     }
 });
 
