@@ -1,0 +1,27 @@
+[
+  {
+    "name": "Jawad Chowdhury",
+    "email": "jawad.chowdhury@gmail.com",
+    "phone": "780-111-2222"
+  },
+  {
+    "name": "Jawad Chowdhury (UAlberta)",
+    "email": "jchowdhu@ualberta.ca",
+    "phone": "780-333-4444"
+  },
+  {
+    "name": "Alice Smith",
+    "email": "alice.smith@example.com",
+    "phone": "403-555-0101"
+  },
+  {
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.net",
+    "phone": "587-555-0102"
+  },
+  {
+    "name": "Meghan Patel",
+    "email": "meghan.patel@email-provider.com",
+    "phone": "780-555-0103"
+  }
+]
