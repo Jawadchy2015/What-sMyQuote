@@ -40,7 +40,7 @@ app.get('/dashboard', (req, res) => {
 // --- SIGNUP / REGISTER ROUTE ---
 app.post('/api/signup', async (req, res) => {
     try {
-		console.log("CREATING USER")
+		console.log("CREATING")
         // 1. Get user data from the request body
         const { username, email, password } = req.body;
 

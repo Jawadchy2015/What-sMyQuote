@@ -22,41 +22,33 @@ document.addEventListener('DOMContentLoaded', () => {
     
 	// Handle login
 	loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault(); // Stop the form from refreshing the page
+		e.preventDefault(); 
+		const email = loginForm.querySelector('input[type="email"]').value;
+		const password = loginForm.querySelector('input[type="password"]').value;
 
-        // Get values from the login form
-        const email = loginForm.querySelector('input[type="email"]').value;
-        const password = loginForm.querySelector('input[type="password"]').value;
-        
-        try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ email: email, password: password })
-            });
+		try {
+			const response = await fetch('/api/login', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify({ email: email, password: password })
+			});
+			
+			const data = await response.json();
 
-            const data = await response.json();
-
-            if (response.ok) {
-                // Login successful!
-                // 1. Store the token
-                localStorage.setItem('token', data.token); 
-                
-                // 2. Redirect to the dashboard
-                alert('Login successful! Redirecting to dashboard...');
-                window.location.href = '/dashboard'; // This triggers your app.get('/dashboard') route
-            } else {
-                // Login failed
-                alert('Login failed: ' + data.message);
-            }
-        } catch (error) {
-            console.error('Login error:', error);
-            alert('An error occurred during login.');
-        }
-    });
-
+			if (response.ok) {
+				// --- ⬇️ THIS IS THE CHANGED PART ⬇️ ---
+				// NO localStorage.setItem() needed!
+				// Just redirect to the dashboard. The browser will
+				// automatically send the cookie with this new request.
+				window.location.href = '/dashboard'; 
+			} else {
+				alert('Login failed: ' + data.message);
+			}
+		} catch (error) {
+			console.error('Login error:', error);
+			alert('An error occurred during login.');
+		}
+	});
 	// --- Handle Signup Form Submission ---
     signupForm.addEventListener('submit', async (e) => {
         e.preventDefault();

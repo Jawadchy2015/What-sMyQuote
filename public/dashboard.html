@@ -20,6 +20,9 @@
                     class="icn srchicn" alt="search-icon" />
             </div>
         </div>
+		<div class="logout">
+			<a href="/" class="btn btn-primary">Logout</a>
+		</div>
 
         <div class="message">
             <div class="circle"></div>
@@ -96,19 +99,28 @@
                     </div>   
                 </div>
 
-                <div class="box box2">
+                <div class="box box2"
+					data-bs-toggle="modal" 
+					data-bs-target="#postpaidModal" 
+					style="cursor: pointer;">
                     <div class="text">
                         <h2 class="topic-heading">80%</h2>
                         <h2 class="topic">Postpaid</h2>
                     </div>
                 </div>
-                <div class="box box3">
+                <div class="box box3"
+					data-bs-toggle="modal" 
+					data-bs-target="#hugModal" 
+					style="cursor: pointer;">
                     <div class="text">
                         <h2 class="topic-heading">30%</h2>
                         <h2 class="topic">Hug/Migration</h2>
                     </div>
                 </div>
-				  <div class="box box3">
+				  <div class="box box3"
+				  	data-bs-toggle="modal" 
+					data-bs-target="#prepaidModal" 
+					style="cursor: pointer;">
                     <div class="text">
                         <h2 class="topic-heading">20%</h2>
                         <h2 class="topic">Prepaid</h2>
@@ -173,7 +185,7 @@
 					</div>
 					<div class="card-body">
 						<h5 class="card-title">Special title treatment</h5>
-						<p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+						<p class="card-text">With supporting text below as a natural.</p>
 						<a href="#" class="btn btn-primary">Go somewhere</a>
 					</div>
 				</div>
@@ -181,6 +193,84 @@
 			</div>
         </div>
     </div>
+	<div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="postpaidModalLabel">Postpaid Information</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Track your monthly targets:</p>
+				
+				<div class="mb-3">
+				<label for="infoField1" class="form-label">MTD target attained</label>
+				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
+				</div>
+				<div class="mb-3">
+				<label for="infoField2" class="form-label">Montly target</label>
+				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="postpaidModalLabel">HUG Information</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Track your monthly targets:</p>
+				
+				<div class="mb-3">
+				<label for="infoField1" class="form-label">MTD target attained</label>
+				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
+				</div>
+				<div class="mb-3">
+				<label for="infoField2" class="form-label">Montly target</label>
+				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="postpaidModalLabel">Prepaid Information</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>Track your monthly targets:</p>
+				
+				<div class="mb-3">
+				<label for="infoField1" class="form-label">MTD target attained</label>
+				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
+				</div>
+				<div class="mb-3">
+				<label for="infoField2" class="form-label">Montly target</label>
+				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
+				</div>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+			</div>
+			</div>
+		</div>
+	</div>
 
     <script src="scripts/dashboard/index.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
