@@ -1,279 +1,374 @@
-<html>
+<!DOCTYPE html>
+<html lang="en" class="h-full">
 
 <head>
-    <title>What's My Quote</title>
-    <link rel="stylesheet" href="styles/dashboard/style.css" />
-    <link rel="stylesheet" href="styles/dashboard/responsive.css" />
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <title>What's My Quote - Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- NEW: Tailwind Dark Mode Configuration -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class', // This tells Tailwind to use the 'dark' class on the <html> tag
+      }
+    </script>
+
+    <!-- 1. Tailwind CSS (for the entire layout) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Bootstrap CSS (We keep this *only* for the modal pop-ups to work) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
+    <!-- 3. Font Awesome (for sidebar icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* A small tweak so Bootstrap Modals work nicely with the Tailwind background */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-backdrop {
+            --bs-backdrop-zindex: 1050; /* Ensure backdrop is behind modal */
+        }
+        .modal {
+            --bs-modal-zindex: 1055;
+        }
+        
+        /* --- NEW: Dark Mode Styles for Bootstrap Modals --- */
+        .dark .modal-content {
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            color: #f3f4f6; /* dark:text-gray-100 */
+        }
+        .dark .modal-header, .dark .modal-footer {
+            border-color: #374151; /* dark:border-gray-700 */
+        }
+        .dark .modal-body {
+            color: #d1d5db; /* dark:text-gray-300 */
+        }
+        .dark .form-label {
+             color: #d1d5db; /* dark:text-gray-300 */
+        }
+        .dark .form-control[readonly] {
+            background-color: #374151; /* dark:bg-gray-700 */
+            color: #d1d5db; /* dark:text-gray-300 */
+            border-color: #4b5563; /* dark:border-gray-600 */
+        }
+        .dark .btn-close {
+            /* This inverts the color of the 'X' button to make it visible */
+            filter: invert(1) grayscale(100%) brightness(200%);
+        }
+    </style>
+
+    <!-- NEW: Anti-Flicker Dark Mode Script -->
+    <script>
+        // Run this script immediately to prevent a "flash"
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+    </script>
 </head>
 
-<body>
-    <header>
-        <div class="logosec">
-            <div class="logo">What's My Quote</div>
-        </div>
-        <div class="searchbar">
-            <input type="text" placeholder="Search" />
-            <div class="searchbtn">
-                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
-                    class="icn srchicn" alt="search-icon" />
+<body class="h-full bg-gray-100 dark:bg-gray-900">
+    
+    <!-- Sidebar Navigation -->
+    <nav class="fixed inset-y-0 left-0 z-10 w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 hidden md:block">
+        <div class="flex flex-col h-full">
+            <!-- Logo/Header -->
+            <div class="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+                <span class="text-2xl font-bold text-blue-700">What's My Quote</span>
+            </div>
+            
+            <!-- Navigation Links -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-2">
+                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tools</h3>
+                
+                <!-- Link: Phone Price -->
+                <a href="./Phone.html" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-mobile-alt w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Phone Price</span>
+                </a>
+                
+                <!-- Link: Plan Price -->
+                <a href="./Plan.html" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-list-alt w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Plan Price</span>
+                </a>
+
+                <!-- Link: Saved Quote -->
+                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-save w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Saved Quote</span>
+                </a>
+
+                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider pt-4 mb-2">Customer</h3>
+                
+                <!-- Link: Customer Follow up -->
+                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-users w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Customer Follow up</span>
+                </a>
+
+                <!-- Link: Lucky P2P -->
+                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-exchange-alt w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Lucky P2P</span>
+                </a>
+
+                <!-- Link: Featured -->
+                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-star w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Featured</span>
+                </a>
+            </div>
+            
+            <!-- NEW: Dark Mode Toggle -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <div class="flex items-center justify-between">
+                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dark Mode (soon)</span>
+                    <button id="darkModeToggle" class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors bg-gray-200 dark:bg-gray-700">
+                        <span class="inline-block w-4 h-4 transform bg-white dark:translate-x-5 translate-x-1 rounded-full transition-transform"></span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Logout Button (Bottom of Sidebar) -->
+            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+                <a href="/" class="flex items-center w-full px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
+                    <i class="fas fa-sign-out-alt w-6 text-center text-gray-400"></i>
+                    <span class="ml-3 font-medium">Logout</span>
+                </a>
             </div>
         </div>
-		<div class="logout">
-			<a href="/" class="btn btn-primary">Logout</a>
-		</div>
+    </nav>
 
-        <div class="message">
-            <div class="circle"></div>
-            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/8.png" class="icn" alt="" />
-            <div class="dp">
-                <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180014/profile-removebg-preview.png"
-                    class="dpicn" alt="dp" />
-            </div>
-        </div>
-    </header>
-
-    <div class="main-container">
-        <!-- <div class="navcontainer">
-            <nav class="nav">
-                <div class="nav-upper-options">
-                    <div class="nav-option option1">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210182148/Untitled-design-(29).png"
-                            class="nav-img" alt="dashboard" />
-                        <h3>Dashboard</h3>
+    <!-- Main Content Wrapper -->
+    <div class="md:pl-64 flex flex-col min-h-full">
+        
+        <!-- Header -->
+        <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
+            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    
+                    <!-- Search Bar -->
+                    <div class="flex-1">
+                        <div class="relative max-w-md">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                </svg>
+                            </div>
+                            <input type_text placeholder="Search..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        </div>
                     </div>
-
-                    <div class="option2 nav-option">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183322/9.png"
-                            class="nav-img" alt="articles" />
-                        <h3>Articles</h3>
-                    </div>
-
-                    <div class="nav-option option3">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/5.png"
-                            class="nav-img" alt="report" />
-                        <h3>Report</h3>
-                    </div>
-
-                    <div class="nav-option option4">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/6.png"
-                            class="nav-img" alt="institution" />
-                        <h3>Institution</h3>
-                    </div>
-
-                    <div class="nav-option option5">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183323/10.png"
-                            class="nav-img" alt="blog" />
-                        <h3>Profile</h3>
-                    </div>
-
-                    <div class="nav-option option6">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183320/4.png"
-                            class="nav-img" alt="settings" />
-                        <h3>Settings</h3>
-                    </div>
-
-                    <div class="nav-option logout">
-                        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210183321/7.png"
-                            class="nav-img" alt="logout" />
-                        <h3>Logout</h3>
-                    </div>
-                </div>
-            </nav>
-        </div>
-        <div class="main"> -->
-            <!-- <div class="searchbar2">
-                <input type="text" name="" id="" placeholder="Search" />
-                <div class="searchbtn">
-                    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20221210180758/Untitled-design-(28).png"
-                        class="icn srchicn" alt="search-button" />
-                </div>
-            </div> -->
-
-            <div class="box-container mt-3">
-                <div class="box box1">
-                    <div class="text">
-                        <!-- <h2 class="topic-heading">60.5k</h2> -->
-                        <h2 class="topic-heading">Generate Quote</h2>
-                    </div>   
-                </div>
-
-                <div class="box box2"
-					data-bs-toggle="modal" 
-					data-bs-target="#postpaidModal" 
-					style="cursor: pointer;">
-                    <div class="text">
-                        <h2 class="topic-heading">80%</h2>
-                        <h2 class="topic">Postpaid</h2>
-                    </div>
-                </div>
-                <div class="box box3"
-					data-bs-toggle="modal" 
-					data-bs-target="#hugModal" 
-					style="cursor: pointer;">
-                    <div class="text">
-                        <h2 class="topic-heading">30%</h2>
-                        <h2 class="topic">Hug/Migration</h2>
-                    </div>
-                </div>
-				  <div class="box box3"
-				  	data-bs-toggle="modal" 
-					data-bs-target="#prepaidModal" 
-					style="cursor: pointer;">
-                    <div class="text">
-                        <h2 class="topic-heading">20%</h2>
-                        <h2 class="topic">Prepaid</h2>
+                    
+                    <!-- Profile/User Icon -->
+                    <div class="ml-4">
+                        <div class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+                            <i class="fas fa-user"></i>
+                        </div>
                     </div>
                 </div>
             </div>
-			<div class="row row-cols-1 row-cols-md-3 g-4 mt-3">
-				<div class="card  w-25 m-2">
-					<div class="card-header">
-						Phone price
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Check the latest price of phone</h5>
-						<p class="card-text">Bell and Virgin phone prices for all tiers
-						</p>
-						<a href="./Phone.html" class="btn btn-primary">Check price</a>
-					</div>
-				</div>
-				<div class="card  w-25 m-2">
-					<div class="card-header">
-						Plan price
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Check all the latest plan prices</h5>
-						<p class="card-text">Plan prices for BYOD and 2-yr contract</p>
-						<a href="./Plan.html" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-				<div class="card  w-25 m-2">
-					<div class="card-header">
-						Lucky P2P
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Lucky customer follow up</h5>
-						<p class="card-text">Follow up with lucky customer for pre to post </p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-				<div class="card  w-25 m-2">
-					<div class="card-header">
-						Saved Quote
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Check all your saved quotes</h5>
-						<p class="card-text">Send saved quotes to customer</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-				<div class="card  w-25 m-2 primary">
-					<div class="card-header">
-						Customer Follow up
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Follow up with potential customer</h5>
-						<p class="card-text">Targetted offers for new and existing customers</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-				<div class="card w-25 m-2">
-					<div class="card-header">
-						Featured
-					</div>
-					<div class="card-body">
-						<h5 class="card-title">Special title treatment</h5>
-						<p class="card-text">With supporting text below as a natural.</p>
-						<a href="#" class="btn btn-primary">Go somewhere</a>
-					</div>
-				</div>
-				
-			</div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-1">
+            
+            <!-- Quick Stats Boxes -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- Generate Quote -->
+                <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg flex items-center space-x-4 cursor-pointer hover:bg-blue-700 transition-colors">
+                    <!-- ... (SVG code is unchanged) ... -->
+                    <div class="bg-white/30 p-3 rounded-full">
+                        <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75v-2.625a3.375 3.375 0 0 1 3.375-3.375h1.5A1.125 1.125 0 0 0 13.5 7.125v-1.5a3.375 3.375 0 0 1 3.375-3.375H15.75m-7.5 12.75-3-3m0 0 3-3m-3 3h12.75" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-semibold">Generate Quote</h2>
+                    </div>
+                </div>
+
+                <!-- Postpaid (Triggers Modal) -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#postpaidModal">
+                    <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+                        <svg class="h-6 w-6 text-green-700 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Postpaid</h2>
+                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">80%</p>
+                    </div>
+                </div>
+
+                <!-- Hug/Migration (Triggers Modal) -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#hugModal">
+                    <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
+                        <svg class="h-6 w-6 text-purple-700 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                           <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Hug/Migration</h2>
+                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">30%</p>
+                    </div>
+                </div>
+
+                <!-- Prepaid (Triggers Modal) -->
+                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#prepaidModal">
+                    <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
+                         <svg class="h-6 w-6 text-yellow-700 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6m6 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Prepaid</h2>
+                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">20%</p>
+                    </div>
+                </div>
+            </div>
+            
+        </main>
+    </div>
+
+    <!-- 
+      BOOTSTRAP MODALS
+      (HTML is unchanged, but now respects dark mode via CSS)
+    -->
+    <div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
+        <!-- ... (modal content) ... -->
+    </div>
+    <div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="hugModalLabel" aria-hidden="true">
+        <!-- ... (modal content) ... -->
+    </div>
+    <div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="prepaidModalLabel" aria-hidden="true">
+        <!-- ... (modal content) ... -->
+    </div>
+    <!-- ... (All modal HTML is unchanged) ... -->
+    <div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="postpaidModalLabel">Postpaid Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Track your monthly targets:</p>
+                
+                <div class="mb-3">
+                <label for="infoField1" class="form-label">MTD target attained</label>
+                <input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
+                </div>
+                <div class="mb-3">
+                <label for="infoField2" class="form-label">Montly target</label>
+                <input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
         </div>
     </div>
-	<div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="postpaidModalLabel">Postpaid Information</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Track your monthly targets:</p>
-				
-				<div class="mb-3">
-				<label for="infoField1" class="form-label">MTD target attained</label>
-				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
-				</div>
-				<div class="mb-3">
-				<label for="infoField2" class="form-label">Montly target</label>
-				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
-				</div>
+    
+    <div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="hugModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="hugModalLabel">HUG Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Track your monthly targets:</p>
+                
+                <div class="mb-3">
+                <label for="infoField1_hug" class="form-label">MTD target attained</label>
+                <input type="text" class="form-control" id="infoField1_hug" value="This is some info" readonly>
+                </div>
+                <div class="mb-3">
+                <label for="infoField2_hug" class="form-label">Montly target</label>
+                <input type="text" class="form-control" id="infoField2_hug" value="This is other info" readonly>
+                </div>
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="postpaidModalLabel">HUG Information</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Track your monthly targets:</p>
-				
-				<div class="mb-3">
-				<label for="infoField1" class="form-label">MTD target attained</label>
-				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
-				</div>
-				<div class="mb-3">
-				<label for="infoField2" class="form-label">Montly target</label>
-				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
-				</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-			</div>
-		</div>
-	</div>
-	<div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="postpaidModalLabel">Prepaid Information</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				<p>Track your monthly targets:</p>
-				
-				<div class="mb-3">
-				<label for="infoField1" class="form-label">MTD target attained</label>
-				<input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
-				</div>
-				<div class="mb-3">
-				<label for="infoField2" class="form-label">Montly target</label>
-				<input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
-				</div>
+    <div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="prepaidModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="prepaidModalLabel">Prepaid Information</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Track your monthly targets:</p>
+                
+                <div class="mb-3">
+                <label for="infoField1_prepaid" class="form-label">MTD target attained</label>
+                <input type="text" class="form-control" id="infoField1_prepaid" value="This is some info" readonly>
+                </div>
+                <div class="mb-3">
+                <label for="infoField2_prepaid" class="form-label">Montly target</label>
+                <input type="text" class="form-control" id="infoField2_prepaid" value="This is other info" readonly>
+                </div>
 
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-			</div>
-			</div>
-		</div>
-	</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+            </div>
+        </div>
+    </div>
 
+    <!-- 
+      SCRIPTS
+    -->
     <script src="scripts/login_signup/index.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    <!-- NEW: Dark Mode Toggle Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleButton = document.getElementById('darkModeToggle');
+            const toggleKnob = toggleButton.querySelector('span'); // The moving knob
+            const root = document.documentElement; // The <html> tag
+
+            // Set initial state of the knob based on the theme
+            if (root.classList.contains('dark')) {
+                toggleKnob.classList.remove('translate-x-1');
+                toggleKnob.classList.add('translate-x-5');
+            }
+
+            toggleButton.addEventListener('click', () => {
+                // Toggle the 'dark' class on <html>
+                root.classList.toggle('dark');
+                
+                if (root.classList.contains('dark')) {
+                    // 1. Move knob
+                    toggleKnob.classList.remove('translate-x-1');
+                    toggleKnob.classList.add('translate-x-5');
+                    // 2. Save choice
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    // 1. Move knob
+                    toggleKnob.classList.remove('translate-x-5');
+                    toggleKnob.classList.add('translate-x-1');
+                    // 2. Save choice
+                    localStorage.setItem('theme', 'light');
+                }
+            });
+        });
+    </script>
 
 </body>
 

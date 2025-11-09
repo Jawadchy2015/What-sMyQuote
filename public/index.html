@@ -1,201 +1,453 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" class="h-full">
   <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>What's My Quote - Login</title>
-	<!-- <style>
-		/* Custom styles to ensure full page height and centering */
-		html, body {
-			/* Ensure HTML and BODY elements take up 100% of the viewport height */
-			height: 100%; 
-		}
 
-		body {
-			/* A subtle background color for a professional look */
-			background-color: #cad1d8; 
-			
-			/* The Bootstrap Flexbox utility classes that do the centering work */
-			display: flex;
-			align-items: center; /* Centers content vertically */
-			justify-content: center; /* Centers content horizontally (if no row is used) */
-		}
-		
-		/* Optional: If the container isn't full width, ensure it allows centering */
-		.container {
-			/* Keeps the container from taking up all space, allowing the card to center */
-			width: 100%;
-		}
-	</style> -->
-	<link rel="stylesheet" href="styles/index.css">
-	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Font Awesome (for icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+
+    <style>
+      /*
+          We define the button styles directly in CSS now
+          since the Tailwind @apply directive failed.
+        */
+      .customBtn {
+        display: block;
+        width: 100%;
+        max-width: 20rem; /* 320px */
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        padding: 0.5rem 1rem; /* 8px 16px */
+        border-radius: 9999px; /* full */
+        font-weight: 600; /* semibold */
+        font-size: 0.875rem; /* text-sm */
+        transition: all 200ms ease-in-out;
+      }
+
+      /* The "active" state: solid white, blue text */
+      .activeBtn {
+        background-color: white;
+        color: #2563eb; /* blue-700 */
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      }
+
+      /* The "inactive" state: white border, white text */
+      .customBtn:not(.activeBtn) {
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        color: white;
+      }
+      .customBtn:not(.activeBtn):hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+    </style>
   </head>
-  <body>
-	
-	<div class="d-flex vh-100 justify-content-center align-items-center">
-		<a href="/dashboard" class="btn btn-primary">Dashboard</a>
-		<div class="p-2 flex-grow">
-			<div class="smallContainer border shadow rounded">
-			<div class="row g-0">
-				<div class="col-sm-6 col-xs-12 d-none d-sm-block position-relative" id='leftCol'>
-				<img src="images/download.webp" />
-				<div id="pt-5 text-end w-100" class="position-absolute end-0 top-0">
-					<a href="#" class="customBtn activeBtn" id="largeLoginBtn">Login</a><br />
-					<a href="#" class="customBtn" id="largeSignupBtn">Signup</a>
-				</div>
-		
-				</div>
-				<div class="col-sm-6 col-xs-12">
-				<div class="d-flex flex-column" style="height:100%">
-		
-					<!-- <div class="text-center d-sm-none d-xs-block">
-					<div class="switch-button">
-						<input class="switch-button-checkbox" type="checkbox" id="smallScreenToggle"></input>
-						<label class="switch-button-label" for=""><span class="switch-button-label-span">Login</span></label>
-					</div>
-					</div> -->
-		
-					<div class="my-auto p-5">
-						<!-- <div class="text-center">
-							<div>
-							<img src="images/bell.webp" height="85" />
-							</div>
-							<h2 class="h4 pb-6">LOGIN</h2>
-						</div>
-						<form>
-							<div class="position-relative my-3 inputGroup text-center">
-							<span class="position-absolute"><i class="far fa-user"></i></span>
-							<input type="email" class="border-0 border-bottom w-100" placeholder="Enter email" />
-							</div>
-							<div class="position-relative my-3 inputGroup text-center">
-							<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
-							<input type="password" class="border-0 border-bottom w-100" placeholder="Password" />
-							</div>
-							<div class="d-flex align-items-center justify-content-between pt-2">
-							<a class="linkFlare" href="#"><small>Forgot Password?</small></a>
-							<button class="btn btn-primary px-4 rounded-pill">LOGIN</button>
-							</div>
-						</form> -->
-						<div id="loginFormContainer">
-							<div class="text-center">
-								<div>
-									<img src="images/bell.webp" height="85" />
-								</div>
-								<h2 class="h4 pb-6" id="formTitle">LOGIN</h2>
-							</div>
-							<form id="loginForm">
-								<div class="position-relative my-3 inputGroup text-center">
-									<span class="position-absolute"><i class="far fa-envelope"></i></span>
-									<input type="email" class="border-0 border-bottom w-100" placeholder="Enter email" required />
-								</div>
-								<div class="position-relative my-3 inputGroup text-center">
-									<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
-									<input type="password" class="border-0 border-bottom w-100" placeholder="Password" required />
-								</div>
-								<div class="d-flex align-items-center justify-content-between pt-2">
-									<a class="linkFlare" href="#"><small>Forgot Password?</small></a>
-									<button type="submit" class="btn btn-primary px-4 rounded-pill">LOGIN</button>
-								</div>
-							</form>
-						</div>
+  <body
+    class="bg-gradient-to-br from-gray-50 to-blue-100 flex items-center justify-center min-h-screen p-4"
+  >
+    <!-- Dashboard Link -->
+    <a
+      href="/dashboard"
+      class="absolute top-4 right-4 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+    >
+      Go to Dashboard &rarr;
+    </a>
 
-						<div id="signupFormContainer" class="d-none"> 
-							<div class="text-center">
-								<div>
-									<img src="images/bell.webp" height="85" />
-								</div>
-								<h2 class="h4 pb-6">SIGN UP</h2>
-							</div>
-							<form id="signupForm">
-								<div class="position-relative my-3 inputGroup text-center">
-									<span class="position-absolute"><i class="far fa-user"></i></span>
-									<input type="text" class="border-0 border-bottom w-100" placeholder="Enter Username" required />
-								</div>
-								<div class="position-relative my-3 inputGroup text-center">
-									<span class="position-absolute"><i class="far fa-envelope"></i></span>
-									<input type="email" class="border-0 border-bottom w-100" placeholder="Enter Email" required />
-								</div>
-								<div class="position-relative my-3 inputGroup text-center">
-									<span class="position-absolute"><i class="far fa-eye-slash"></i></span>
-									<input type="password" class="border-0 border-bottom w-100" placeholder="Create Password" required />
-								</div>
-								<div class="d-flex align-items-center justify-content-end pt-2">
-									<button type="submit" class="btn btn-primary px-4 rounded-pill" id="signUpNewUser">SIGN UP</button>
-								</div>
-							</form>
-						</div>
+    <!-- Main Login/Signup Card -->
+    <div
+      class="w-full max-w-4xl bg-white rounded-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col md:flex-row"
+    >
+      <!-- Left Panel (Branding & Toggles) -->
+      <div
+        class="w-full md:w-2/5 bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white flex flex-col justify-center items-center"
+      >
+        <i class="fas fa-bell fa-3x"></i>
 
-					</div>
+        <h2 class="text-3xl font-bold mt-4">What's My Quote</h2>
+        <p class="text-blue-100 mt-2 text-center text-sm">
+          Your all-in-one tool for Bell and Virgin quotes.
+        </p>
 
-					<div>
-					<div class="p-2 text-center" id="lsHeading">
-						LOGIN WITH
-					</div>
-					<div class="bg-accent-2 p-3 d-flex justify-content-evenly">
-						<i class="fab fa-facebook-square"></i>
-						<i class="fab fa-google"></i>
-						<i class="fab fa-twitter"></i>
-					</div>
-					</div>
-				</div>
-				</div>
-			</div>
-			</div>
-		</div>
-	</div>
-	<!-- <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-8 col-lg-8">
-                <div class="card shadow-lg p-3 bg-white rounded">
-                    <div class="card-body p-4">
-                        
-                        <h2 class="card-title text-center mb-4">
-                            <span class="text-primary">What's My Quote</span> Login
-                        </h2>
-                        <p class="text-center text-muted mb-4">
-                            Sign in as a Bell Mobility Sales Representative
-                        </p>
-                        
-                        <form id="loginForm">
-                            
-                            <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username" required>
-                            </div>
-                            
-                            <div class="mb-4">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" id="password" required>
-                            </div>
-                            
-                            <div class="d-grid gap-2 mb-3">
-                                <button type="submit" class="btn btn-primary">Log In</button>
-                            </div>
-                            
-                            <p class="text-center">
-                                <a href="#" class="text-muted">Forgot Password?</a>
-                            </p>
-                            
-                            <hr>
-                            
-                            <div class="text-center d-grid gap-2 mb-3">
-                                <p class="mb-2">Don't have an account?</p>
-                                <button type="button" class="btn btn-success">
-                                   Sign Up
-                                </button>
-                            </div>
-                            
-                        </form>
-                    </div>
-                </div>
-                
-            </div>
-		
+        <div class="mt-8 w-full space-y-4">
+          <!-- 
+                  These buttons will now be controlled by our
+                  new, built-in JavaScript.
+                -->
+          <a href="#" class="customBtn activeBtn" id="largeLoginBtn">Login</a>
+          <a href="#" class="customBtn" id="largeSignupBtn">Signup</a>
         </div>
-    </div>	 -->
-	<script src="scripts/login_signup/index.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-	
-</body>
+      </div>
+
+      <!-- Right Panel (Forms) -->
+      <div class="w-full md:w-3/5 p-8 relative overflow-hidden">
+        <!-- Login Form (Visible by default) -->
+        <div
+          id="loginFormContainer"
+          class="transition-all duration-500 ease-in-out opacity-100 max-h-[600px]"
+        >
+          <h2 class="text-3xl font-bold text-gray-900 text-center">Login</h2>
+          <form id="loginForm" class="mt-6 space-y-4">
+            <div>
+              <label
+                for="login-email"
+                class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <div class="relative mt-1">
+                <span
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                >
+                  <i class="far fa-envelope"></i>
+                </span>
+                <!-- ADDED autocomplete="email" -->
+                <input
+                  id="login-email"
+                  type="email"
+                  autocomplete="email"
+                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="login-password"
+                class="block text-sm font-medium text-gray-700"
+                >Password</label
+              >
+              <div class="relative mt-1">
+                <span
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                >
+                  <i class="far fa-eye-slash"></i>
+                </span>
+                <!-- ADDED autocomplete="current-password" -->
+                <input
+                  id="login-password"
+                  type="password"
+                  autocomplete="current-password"
+                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between pt-2">
+              <a class="text-sm text-blue-600 hover:underline" href="#"
+                ><small>Forgot Password?</small></a
+              >
+              <button
+                type="submit"
+                class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              >
+                LOGIN
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Signup Form (Hidden by default) -->
+        <!-- 
+              This is now hidden with Tailwind classes.
+              It's positioned absolutely so the forms can cross-fade.
+            -->
+        <div
+          id="signupFormContainer"
+          class="absolute top-8 left-0 w-full px-8 transition-all duration-500 ease-in-out opacity-0 max-h-0 invisible"
+        >
+          <h2 class="text-3xl font-bold text-gray-900 text-center">Sign Up</h2>
+          <form id="signupForm" class="mt-6 space-y-4">
+            <div>
+              <label
+                for="signup-username"
+                class="block text-sm font-medium text-gray-700"
+                >Username</label
+              >
+              <div class="relative mt-1">
+                <span
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                >
+                  <i class="far fa-user"></i>
+                </span>
+                <!-- ADDED autocomplete="username" -->
+                <input
+                  id="signup-username"
+                  type="text"
+                  autocomplete="username"
+                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
+                  placeholder="YourUsername"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="signup-email"
+                class="block text-sm font-medium text-gray-700"
+                >Email</label
+              >
+              <div class="relative mt-1">
+                <span
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                >
+                  <i class="far fa-envelope"></i>
+                </span>
+                <!-- ADDED autocomplete="email" -->
+                <input
+                  id="signup-email"
+                  type="email"
+                  autocomplete="email"
+                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div>
+              <label
+                for="signup-password"
+                class="block text-sm font-medium text-gray-700"
+                >Create Password</label
+              >
+              <div class="relative mt-1">
+                <span
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
+                >
+                  <i class="far fa-eye-slash"></i>
+                </span>
+                <!-- ADDED autocomplete="new-password" -->
+                <input
+                  id="signup-password"
+                  type="password"
+                  autocomplete="new-password"
+                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="flex items-center justify-end pt-2">
+              <button
+                type="submit"
+                class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+                id="signUpNewUser"
+              >
+                SIGN UP
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Social Login Footer -->
+        <div class="mt-8">
+          <div class="relative">
+            <div class="absolute inset-0 flex items-center">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span id="lsHeading" class="px-2 bg-white text-gray-500">
+                LOGIN WITH
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-center space-x-6">
+            <a
+              href="#"
+              class="text-gray-400 hover:text-blue-600 transition-colors"
+            >
+              <i class="fab fa-facebook-square fa-2x"></i>
+            </a>
+            <a
+              href="#"
+              class="text-gray-400 hover:text-red-600 transition-colors"
+            >
+              <i class="fab fa-google fa-2x"></i>
+            </a>
+            <a
+              href="#"
+              class="text-gray-400 hover:text-blue-400 transition-colors"
+            >
+              <i class="fab fa-twitter fa-2x"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 
+      NEW SCRIPT TO HANDLE TOGGLES
+      This replaces your external 'index.js' file for the toggle logic.
+    -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const largeLoginBtn = document.getElementById("largeLoginBtn");
+        const largeSignupBtn = document.getElementById("largeSignupBtn");
+        const loginFormContainer =
+          document.getElementById("loginFormContainer");
+        const signupFormContainer = document.getElementById(
+          "signupFormContainer"
+        );
+        const loginSocialText = document.getElementById("lsHeading");
+
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+
+        // ========================
+        // Toggle Logic
+        // ========================
+        function showLogin() {
+          largeLoginBtn.classList.add("activeBtn");
+          largeSignupBtn.classList.remove("activeBtn");
+
+          loginFormContainer.classList.remove(
+            "opacity-0",
+            "max-h-0",
+            "invisible",
+            "absolute"
+          );
+          signupFormContainer.classList.add(
+            "opacity-0",
+            "max-h-0",
+            "invisible",
+            "absolute"
+          );
+
+          loginSocialText.textContent = "LOGIN WITH";
+        }
+
+        function showSignup() {
+          largeSignupBtn.classList.add("activeBtn");
+          largeLoginBtn.classList.remove("activeBtn");
+
+          // Clear signup fields (prevents autofill bleed)
+          document.getElementById("signup-username").value = "";
+          document.getElementById("signup-email").value = "";
+          document.getElementById("signup-password").value = "";
+
+          signupFormContainer.classList.remove(
+            "opacity-0",
+            "max-h-0",
+            "invisible",
+            "absolute"
+          );
+          loginFormContainer.classList.add(
+            "opacity-0",
+            "max-h-0",
+            "invisible",
+            "absolute"
+          );
+
+          loginSocialText.textContent = "SIGN UP WITH";
+        }
+
+        largeLoginBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showLogin();
+        });
+
+        largeSignupBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          showSignup();
+        });
+
+        // ========================
+        // FORM SUBMISSIONS
+        // ========================
+
+        // ---- LOGIN ----
+        loginForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("login-email").value.trim();
+          const password = document
+            .getElementById("login-password")
+            .value.trim();
+
+          try {
+            const res = await fetch("/api/login", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+              alert(data.message || "Login failed.");
+              return;
+            }
+
+            // Success — store JWT and redirect
+            localStorage.setItem("token", data.token);
+            alert("Login successful!");
+            window.location.href = "/dashboard"; // redirect
+          } catch (err) {
+            console.error("Login error:", err);
+            alert("Server error during login.");
+          }
+        });
+
+        // ---- SIGNUP ----
+        signupForm.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const username = document
+            .getElementById("signup-username")
+            .value.trim();
+          const email = document.getElementById("signup-email").value.trim();
+          const password = document
+            .getElementById("signup-password")
+            .value.trim();
+
+          try {
+            const res = await fetch("/api/signup", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ username, email, password }),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+              alert(data.message || "Signup failed.");
+              return;
+            }
+
+            alert("Signup successful! Please log in.");
+            showLogin();
+          } catch (err) {
+            console.error("Signup error:", err);
+            alert("Server error during signup.");
+          }
+        });
+      });
+    </script>
+
+    <!-- 
+      *** IMPORTANT ***
+      You should now REMOVE the line below from your code,
+      as this file now handles its own logic.
+    -->
+    <!-- <script src="scripts/login_signup/index.js"></script> -->
+  </body>
 </html>
