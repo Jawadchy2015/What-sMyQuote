@@ -1,1 +1,293 @@
-<h1>Hello</h1>
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-R" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BellQuote - Phone Finder</title>
+    <!-- Load Tailwind CSS (No install needed) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .modal-backdrop {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-full">
+    <div class="min-h-full">
+        <!-- Header -->
+        <header class="bg-gradient-to-r from-blue-700 to-indigo-800 shadow-lg">
+            <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-16">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0">
+                            <svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <h1 class="text-2xl font-bold text-white">BellQuote Phone Finder</h1>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="py-10">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Loading Spinner -->
+                <div id="loading-spinner" class="flex justify-center items-center h-64">
+                    <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600"></div>
+                </div>
+
+                <!-- Error Message -->
+                <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert">
+                    <strong class="font-bold">Error:</strong>
+                    <span class="block sm:inline">Could not load phone data. Please make sure the server is running.</span>
+                </div>
+
+                <!-- Phone Grid -->
+                <div id="phone-container" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <!-- Phone cards will be injected here by JavaScript -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Pricing Modal -->
+    <div id="price-modal" class="fixed inset-0 z-50 overflow-y-auto hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <div class="flex items-end justify-center min-h-screen px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+            
+            <div id="modal-backdrop" class="fixed inset-0 bg-gray-500 bg-opacity-75 modal-backdrop opacity-0" aria-hidden="true"></div>
+            
+            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+            <div id="modal-content" class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform scale-95 opacity-0 sm:my-8 sm:align-middle sm:max-w-lg sm:w-full modal-content">
+                <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                    <div class="sm:flex sm:items-start">
+                        <div class="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                            <svg class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v0m0 0v.01M12 7v-1m0 1H9m3 0h3m-3 1v-1m0 1c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v0m0 0v.01M12 7v-1m0 1H9m3 0h3" />
+                            </svg>
+                        </div>
+                        <div class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                            <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                <!-- Modal Title (e.g., Apple iPhone 15) -->
+                            </h3>
+                            <div class="mt-2" id="modal-body">
+                                <!-- Pricing content will be injected here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                    <button id="modal-close-button" type="button" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneContainer = document.getElementById('phone-container');
+            const loadingSpinner = document.getElementById('loading-spinner');
+            const errorMessage = document.getElementById('error-message');
+            
+            const modal = document.getElementById('price-modal');
+            const modalBackdrop = document.getElementById('modal-backdrop');
+            const modalContent = document.getElementById('modal-content');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const modalCloseButton = document.getElementById('modal-close-button');
+
+            /**
+             * Fetches phone data from the API
+             */
+            async function fetchPhones() {
+                try {
+                    const response = await fetch('/api/phones');
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const phones = await response.json();
+                    
+                    // --- MOCK DATA (uncomment to test UI without an API) ---
+                    /*
+                    const phones = [
+                        { "_id": "672f7a0d8e1f413a9b54b1d0", "manufacturer": "Apple", "model": "15 Pro", "price": { "device_retail_price": 1449, "Bell_consumer": { "Elite": 899, "Ultimate": 999, "Device_Return_Option": 699 }, "Bell_SMB": { "Elite": 849, "Ultimate": 949, "Device_Return_Option": 649 }, "Virgin": { "Sweetpay": 50, "Sweetpay_lite": 70 } }, "DF_eligible": true, "eligibleForHUG": true, "trade_in_bonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["iPhone 12 or newer"] }, "Features": { "Storage": 128, "colors": "Natural Titanium", "battery": 3274, "no_of_back_camera": 3, "back_camera_lens_spec": ["48MP Main", "12MP Ultra Wide", "12MP Telephoto"], "screen_size": 6.1 } },
+                        { "_id": "672f7a0d8e1f413a9b54b1d1", "manufacturer": "Samsung", "model": "Galaxy S24 Ultra", "price": { "device_retail_price": 1799, "Bell_consumer": { "Elite": 1299, "Ultimate": 1399, "Device_Return_Option": 999 }, "Bell_SMB": { "Elite": 1249, "Ultimate": 1349, "Device_Return_Option": 949 }, "Virgin": { "Sweetpay": 65, "Sweetpay_lite": 85 } }, "DF_eligible": true, "eligibleForHUG": true, "trade_in_bonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S21 or newer"] }, "Features": { "Storage": 256, "colors": "Titanium Black", "battery": 5000, "no_of_back_camera": 4, "back_camera_lens_spec": ["200MP Main", "12MP Ultra Wide", "10MP Telephoto (3x)", "50MP Telephoto (5x)"], "screen_size": 6.8 } }
+                    ];
+                    */
+                    
+                    displayPhones(phones);
+
+                } catch (error) {
+                    console.error('Failed to fetch phones:', error);
+                    showError();
+                } finally {
+                    loadingSpinner.classList.add('hidden');
+                }
+            }
+
+            /**
+             * Displays the phone data in cards
+             */
+            function displayPhones(phones) {
+                if (phones.length === 0) {
+                    phoneContainer.innerHTML = '<p class="text-gray-500 col-span-full text-center">No phones found in the database.</p>';
+                    return;
+                }
+
+                phoneContainer.innerHTML = ''; 
+
+                phones.forEach(phone => {
+                    const card = document.createElement('div');
+                    card.className = 'bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1';
+                    
+                    // --- START OF FIX ---
+                    // 1. We now provide a fallback of an empty object {} if phone.Features is missing.
+                    const features = phone.features || {}; 
+                    
+                    const phoneName = `${phone.manufacturer} ${phone.model}`;
+                    
+                    // 2. We add "|| 'N/A'" to each variable to prevent "undefined" from showing on the page.
+                    const colors = Array.isArray(features.colors) ? features.colors.join(', ') : (features.colors || 'N/A');
+                    const cameraSpecs = Array.isArray(features.backCameraLensSpec) ? features.backCameraLensSpec.join(' / ') : (features.backCameraLensSpec || 'N/A');
+                    const screenSize = features.screenSize || 'N/A';
+                    const storage = features.storage || 'N/A';
+                    // --- END OF FIX ---
+
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <!-- Header -->
+                            <div class="flex justify-between items-start mb-4">
+                                <div>
+                                    <p class="text-sm font-medium text-indigo-600">${phone.manufacturer}</p>
+                                    <h3 class="text-2xl font-bold text-gray-900">${phone.model}</h3>
+                                </div>
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
+                                    Retail $${phone.price.deviceRetailPrice || 'N/A'}
+                                </span>
+                            </div>
+
+                            <!-- Features List (Now uses our safe variables) -->
+                            <div class="space-y-3 text-sm text-gray-700">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+                                    <span>${screenSize}" Screen</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M9 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4M9 19v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg>
+                                    <span>${storage}GB Storage</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                    <span>${colors}</span>
+                                </div>
+                                <div class="flex items-start">
+                                    <svg class="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span>${cameraSpecs}</span>
+                                </div>
+                            </div>
+
+                            <!-- Button -->
+                            <div class="mt-6">
+                                <button data-phone-id="${phone._id}" class="w-full view-prices-btn bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                                    View All Prices
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    phoneContainer.appendChild(card);
+
+                    card.querySelector('.view-prices-btn').addEventListener('click', () => {
+                        openPriceModal(phone);
+                    });
+                });
+            }
+
+            /**
+             * Shows the error message
+             */
+            function showError() {
+                errorMessage.classList.remove('hidden');
+            }
+
+            /**
+             * Opens and populates the pricing modal
+             */
+            function openPriceModal(phone) {
+                modalTitle.textContent = `${phone.manufacturer} ${phone.model} - Pricing`;
+                
+                // Provide a fallback for price as well, just in case
+                const prices = phone.price || {};
+                
+                const formatPriceSection = (title, priceData) => {
+                    // Check if priceData exists before trying to get entries
+                    if (!priceData) return ''; 
+                    let entries = Object.entries(priceData)
+                        .map(([key, value]) => `
+                            <div class="flex justify-between py-1">
+                                <span class="text-gray-500">${key.replace(/_/g, ' ')}:</span>
+                                <span class="font-medium text-gray-900">$${value}</span>
+                            </div>
+                        `).join('');
+                    return `
+                        <h4 class="font-semibold text-gray-800 mt-3 mb-1">${title}</h4>
+                        <div class="divide-y divide-gray-200">${entries}</div>
+                    `;
+                };
+
+                modalBody.innerHTML = `
+                    <div class="space-y-4">
+                        <div class="flex justify-between py-2 bg-gray-100 px-3 rounded-lg">
+                            <span class="text-lg font-bold text-gray-900">Device Retail Price:</span>
+                            <span class="text-lg font-bold text-blue-600">$${prices.deviceRetailPrice || 'N/A'}</span>
+                        </div>
+                        
+                        ${formatPriceSection('Bell Consumer', prices.bellConsumer)}
+                        ${formatPriceSection('Bell SMB', prices.bellSMB)}
+                        ${formatPriceSection('Virgin', prices.virgin)}
+                    </div>
+                `;
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modalBackdrop.classList.remove('opacity-0');
+                    modalBackdrop.classList.add('opacity-100');
+                    modalContent.classList.remove('opacity-0', 'scale-95');
+                    modalContent.classList.add('opacity-100', 'scale-100');
+                }, 10);
+            }
+
+            /**
+             * Closes the pricing modal
+             */
+            function closePriceModal() {
+                modalBackdrop.classList.remove('opacity-100');
+                modalBackdrop.classList.add('opacity-0');
+                modalContent.classList.remove('opacity-100', 'scale-100');
+                modalContent.classList.add('opacity-0', 'scale-95');
+
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            modalCloseButton.addEventListener('click', closePriceModal);
+            modalBackdrop.addEventListener('click', closePriceModal);
+
+            fetchPhones();
+        });
+    </script>
+</body>
+</html>

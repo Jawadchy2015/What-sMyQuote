@@ -11,6 +11,9 @@ dotenv.config();
 const app = express()
 const port = 3000
 
+// Model calls
+const Phone = require('./models/Phone');
+
 
 // import functions
 const { sendWelcomeEmail } = require('./public/scripts/login_signup/success_email');
@@ -123,6 +126,20 @@ app.post('/api/login', async (req, res) => {
         res.status(500).json({ message: 'Server error during login.' });
     }
 });
+
+// fetch phone
+
+app.get('/api/phones', async (req, res) => {
+    try {
+        const phones = await Phone.find({}); // Fetches all phones
+        console.log(phones)
+        res.json(phones);
+    } catch (error) {
+        console.error('Error fetching phones:', error);
+        res.status(500).json({ error: 'Failed to fetch data' });
+    }
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
