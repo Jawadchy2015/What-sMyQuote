@@ -11,6 +11,10 @@ dotenv.config();
 const app = express()
 const port = 3000
 
+
+// import functions
+const { sendWelcomeEmail } = require('./public/scripts/login_signup/success_email');
+
 // --- 1. NEW: Add Middleware to parse JSON bodies ---
 // This is crucial for your API to read {email, password}
 app.use(express.json());
@@ -40,6 +44,7 @@ app.get('/dashboard', (req, res) => {
 // --- SIGNUP / REGISTER ROUTE ---
 app.post('/api/signup', async (req, res) => {
     try {
+
 		console.log("CREATING")
         // 1. Get user data from the request body
         const { username, email, password } = req.body;
@@ -64,6 +69,8 @@ app.post('/api/signup', async (req, res) => {
         // 5. Save the user to the database
         await newUser.save();
 
+        // send welcome email
+        sendWelcomeEmail(email, username);
         // 6. Send a success response
         res.status(201).json({ message: 'User created successfully!' });
 

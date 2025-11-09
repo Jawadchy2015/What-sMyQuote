@@ -1,0 +1,635 @@
+[
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15 Pro",
+    "price": {
+      "deviceRetailPrice": 1579,
+      "bellConsumer": { "Elite": 43.30, "Ultimate": 43.30, "deviceReturnOption": 20.00 },
+      "bellSMB": { "Elite": 43.30, "Ultimate": 43.30, "deviceReturnOption": 20.00 },
+      "virgin": { "sweetpay": 65.79, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": {
+      "tradeInBonus": true,
+      "eligibleTradeInDevices": ["iPhone 12", "iPhone 13", "iPhone 14"]
+    },
+    "features": {
+      "storage": 128,
+      "colors": ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"],
+      "battery": 3274,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide", "12MP 3x Telephoto"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15 Pro",
+    "price": {
+      "deviceRetailPrice": 1729,
+      "bellConsumer": { "Elite": 49.96, "Ultimate": 49.96, "deviceReturnOption": 27.88 },
+      "bellSMB": { "Elite": 49.96, "Ultimate": 49.96, "deviceReturnOption": 27.88 },
+      "virgin": { "sweetpay": 72.05, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["iPhone 12", "iPhone 13", "iPhone 14"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"],
+      "battery": 3274,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide", "12MP 3x Telephoto"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "price": {
+      "deviceRetailPrice": 1879,
+      "bellConsumer": { "Elite": 56.63, "Ultimate": 56.63, "deviceReturnOption": 33.30 },
+      "bellSMB": { "Elite": 56.63, "Ultimate": 56.63, "deviceReturnOption": 33.30 },
+      "virgin": { "sweetpay": 78.30, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["iPhone 12", "iPhone 13", "iPhone 14"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"],
+      "battery": 4422,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide", "12MP 5x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "price": {
+      "deviceRetailPrice": 2179,
+      "bellConsumer": { "Elite": 69.13, "Ultimate": 69.13, "deviceReturnOption": 45.80 },
+      "bellSMB": { "Elite": 69.13, "Ultimate": 69.13, "deviceReturnOption": 45.80 },
+      "virgin": { "sweetpay": 90.80, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["iPhone 12", "iPhone 13", "iPhone 14"] },
+    "features": {
+      "storage": 512,
+      "colors": ["Natural Titanium", "Blue Titanium", "White Titanium", "Black Titanium"],
+      "battery": 4422,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide", "12MP 5x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15",
+    "price": {
+      "deviceRetailPrice": 1229,
+      "bellConsumer": { "Elite": 30.38, "Ultimate": 30.38, "deviceReturnOption": 10.00 },
+      "bellSMB": { "Elite": 30.38, "Ultimate": 30.38, "deviceReturnOption": 10.00 },
+      "virgin": { "sweetpay": 51.21, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Black", "Blue", "Green", "Pink", "Yellow"],
+      "battery": 3349,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15",
+    "price": {
+      "deviceRetailPrice": 1379,
+      "bellConsumer": { "Elite": 35.80, "Ultimate": 35.80, "deviceReturnOption": 15.42 },
+      "bellSMB": { "Elite": 35.80, "Ultimate": 35.80, "deviceReturnOption": 15.42 },
+      "virgin": { "sweetpay": 57.46, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Black", "Blue", "Green", "Pink", "Yellow"],
+      "battery": 3349,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 15 Plus",
+    "price": {
+      "deviceRetailPrice": 1379,
+      "bellConsumer": { "Elite": 35.80, "Ultimate": 35.80, "deviceReturnOption": 15.42 },
+      "bellSMB": { "Elite": 35.80, "Ultimate": 35.80, "deviceReturnOption": 15.42 },
+      "virgin": { "sweetpay": 57.46, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Black", "Blue", "Green", "Pink", "Yellow"],
+      "battery": 4383,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["48MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 14",
+    "price": {
+      "deviceRetailPrice": 999,
+      "bellConsumer": { "Elite": 20.00, "Ultimate": 20.00, "deviceReturnOption": 1.00 },
+      "bellSMB": { "Elite": 20.00, "Ultimate": 20.00, "deviceReturnOption": 1.00 },
+      "virgin": { "sweetpay": 41.63, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Midnight", "Starlight", "Purple", "Blue", "Yellow"],
+      "battery": 3279,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["12MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone 14",
+    "price": {
+      "deviceRetailPrice": 1149,
+      "bellConsumer": { "Elite": 26.21, "Ultimate": 26.21, "deviceReturnOption": 7.21 },
+      "bellSMB": { "Elite": 26.21, "Ultimate": 26.21, "deviceReturnOption": 7.21 },
+      "virgin": { "sweetpay": 47.88, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Midnight", "Starlight", "Purple", "Blue", "Yellow"],
+      "battery": 3279,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["12MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Apple",
+    "model": "iPhone SE (3rd gen)",
+    "price": {
+      "deviceRetailPrice": 649,
+      "bellConsumer": { "Elite": 6.21, "Ultimate": 6.21, "deviceReturnOption": 0 },
+      "bellSMB": { "Elite": 6.21, "Ultimate": 6.21, "deviceReturnOption": 0 },
+      "virgin": { "sweetpay": 27.05, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": false,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 64,
+      "colors": ["Midnight", "Starlight", "Red"],
+      "battery": 2018,
+      "noOfBackCamera": 1,
+      "backCameraLensSpec": ["12MP Main"],
+      "screenSize": 4.7
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S24 Ultra",
+    "price": {
+      "deviceRetailPrice": 1899,
+      "bellConsumer": { "Elite": 57.46, "Ultimate": 57.46, "deviceReturnOption": 33.30 },
+      "bellSMB": { "Elite": 57.46, "Ultimate": 57.46, "deviceReturnOption": 33.30 },
+      "virgin": { "sweetpay": 79.13, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S22", "Galaxy S23"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Titanium Black", "Titanium Violet", "Titanium Gray", "Titanium Yellow"],
+      "battery": 5000,
+      "noOfBackCamera": 4,
+      "backCameraLensSpec": ["200MP Main", "12MP Ultra-Wide", "50MP 5x Telephoto", "10MP 3x Telephoto"],
+      "screenSize": 6.8
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S24 Ultra",
+    "price": {
+      "deviceRetailPrice": 2079,
+      "bellConsumer": { "Elite": 64.96, "Ultimate": 64.96, "deviceReturnOption": 40.80 },
+      "bellSMB": { "Elite": 64.96, "Ultimate": 64.96, "deviceReturnOption": 40.80 },
+      "virgin": { "sweetpay": 86.63, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S22", "Galaxy S23"] },
+    "features": {
+      "storage": 512,
+      "colors": ["Titanium Black", "Titanium Violet", "Titanium Gray", "Titanium Yellow"],
+      "battery": 5000,
+      "noOfBackCamera": 4,
+      "backCameraLensSpec": ["200MP Main", "12MP Ultra-Wide", "50MP 5x Telephoto", "10MP 3x Telephoto"],
+      "screenSize": 6.8
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S24",
+    "price": {
+      "deviceRetailPrice": 1179,
+      "bellConsumer": { "Elite": 28.30, "Ultimate": 28.30, "deviceReturnOption": 10.00 },
+      "bellSMB": { "Elite": 28.30, "Ultimate": 28.30, "deviceReturnOption": 10.00 },
+      "virgin": { "sweetpay": 49.13, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S22", "Galaxy S23"] },
+    "features": {
+      "storage": 128,
+      "colors": ["Cobalt Violet", "Amber Yellow", "Onyx Black", "Marble Gray"],
+      "battery": 4000,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "10MP 3x Telephoto"],
+      "screenSize": 6.2
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S24",
+    "price": {
+      "deviceRetailPrice": 1279,
+      "bellConsumer": { "Elite": 32.46, "Ultimate": 32.46, "deviceReturnOption": 14.17 },
+      "bellSMB": { "Elite": 32.46, "Ultimate": 32.46, "deviceReturnOption": 14.17 },
+      "virgin": { "sweetpay": 53.30, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S22", "Galaxy S23"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Cobalt Violet", "Amber Yellow", "Onyx Black", "Marble Gray"],
+      "battery": 4000,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "10MP 3x Telephoto"],
+      "screenSize": 6.2
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S24+",
+    "price": {
+      "deviceRetailPrice": 1459,
+      "bellConsumer": { "Elite": 38.71, "Ultimate": 38.71, "deviceReturnOption": 20.00 },
+      "bellSMB": { "Elite": 38.71, "Ultimate": 38.71, "deviceReturnOption": 20.00 },
+      "virgin": { "sweetpay": 60.80, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Galaxy S22", "Galaxy S23"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Cobalt Violet", "Amber Yellow", "Onyx Black", "Marble Gray"],
+      "battery": 4900,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "10MP 3x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy Z Fold5",
+    "price": {
+      "deviceRetailPrice": 2399,
+      "bellConsumer": { "Elite": 79.13, "Ultimate": 79.13, "deviceReturnOption": 55.00 },
+      "bellSMB": { "Elite": 79.13, "Ultimate": 79.13, "deviceReturnOption": 55.00 },
+      "virgin": { "sweetpay": 99.96, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Icy Blue", "Phantom Black"],
+      "battery": 4400,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "10MP 3x Telephoto"],
+      "screenSize": 7.6
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy Z Fold5",
+    "price": {
+      "deviceRetailPrice": 2579,
+      "bellConsumer": { "Elite": 86.63, "Ultimate": 86.63, "deviceReturnOption": 62.46 },
+      "bellSMB": { "Elite": 86.63, "Ultimate": 86.63, "deviceReturnOption": 62.46 },
+      "virgin": { "sweetpay": 107.46, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 512,
+      "colors": ["Icy Blue", "Phantom Black"],
+      "battery": 4400,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "10MP 3x Telephoto"],
+      "screenSize": 7.6
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy Z Flip5",
+    "price": {
+      "deviceRetailPrice": 1399,
+      "bellConsumer": { "Elite": 36.63, "Ultimate": 36.63, "deviceReturnOption": 16.63 },
+      "bellSMB": { "Elite": 36.63, "Ultimate": 36.63, "deviceReturnOption": 16.63 },
+      "virgin": { "sweetpay": 58.30, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Mint", "Graphite", "Lavender", "Cream"],
+      "battery": 3700,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["12MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy S23 FE",
+    "price": {
+      "deviceRetailPrice": 949,
+      "bellConsumer": { "Elite": 13.71, "Ultimate": 13.71, "deviceReturnOption": 1.00 },
+      "bellSMB": { "Elite": 13.71, "Ultimate": 13.71, "deviceReturnOption": 1.00 },
+      "virgin": { "sweetpay": 39.55, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Mint", "Graphite", "Purple", "Cream"],
+      "battery": 4500,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide", "8MP 3x Telephoto"],
+      "screenSize": 6.4
+    }
+  },
+  {
+    "manufacturer": "Samsung",
+    "model": "Galaxy A15",
+    "price": {
+      "deviceRetailPrice": 329,
+      "bellConsumer": { "Elite": 0, "Ultimate": 0, "deviceReturnOption": 0 },
+      "bellSMB": { "Elite": 0, "Ultimate": 0, "deviceReturnOption": 0 },
+      "virgin": { "sweetpay": 13.71, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": false,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Blue Black"],
+      "battery": 5000,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "5MP Ultra-Wide", "2MP Macro"],
+      "screenSize": 6.5
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8 Pro",
+    "price": {
+      "deviceRetailPrice": 1399,
+      "bellConsumer": { "Elite": 36.63, "Ultimate": 36.63, "deviceReturnOption": 16.63 },
+      "bellSMB": { "Elite": 36.63, "Ultimate": 36.63, "deviceReturnOption": 16.63 },
+      "virgin": { "sweetpay": 58.30, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Pixel 6", "Pixel 7"] },
+    "features": {
+      "storage": 128,
+      "colors": ["Obsidian", "Porcelain", "Bay"],
+      "battery": 5050,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "48MP Ultra-Wide", "48MP 5x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8 Pro",
+    "price": {
+      "deviceRetailPrice": 1499,
+      "bellConsumer": { "Elite": 40.79, "Ultimate": 40.79, "deviceReturnOption": 20.80 },
+      "bellSMB": { "Elite": 40.79, "Ultimate": 40.79, "deviceReturnOption": 20.80 },
+      "virgin": { "sweetpay": 62.46, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Pixel 6", "Pixel 7"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Obsidian", "Porcelain", "Bay"],
+      "battery": 5050,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "48MP Ultra-Wide", "48MP 5x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8 Pro",
+    "price": {
+      "deviceRetailPrice": 1649,
+      "bellConsumer": { "Elite": 46.21, "Ultimate": 46.21, "deviceReturnOption": 26.21 },
+      "bellSMB": { "Elite": 46.21, "Ultimate": 46.21, "deviceReturnOption": 26.21 },
+      "virgin": { "sweetpay": 68.71, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Pixel 6", "Pixel 7"] },
+    "features": {
+      "storage": 512,
+      "colors": ["Obsidian"],
+      "battery": 5050,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["50MP Main", "48MP Ultra-Wide", "48MP 5x Telephoto"],
+      "screenSize": 6.7
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8",
+    "price": {
+      "deviceRetailPrice": 949,
+      "bellConsumer": { "Elite": 13.71, "Ultimate": 13.71, "deviceReturnOption": 1.00 },
+      "bellSMB": { "Elite": 13.71, "Ultimate": 13.71, "deviceReturnOption": 1.00 },
+      "virgin": { "sweetpay": 39.55, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Pixel 6", "Pixel 7"] },
+    "features": {
+      "storage": 128,
+      "colors": ["Obsidian", "Hazel", "Rose"],
+      "battery": 4575,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.2
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8",
+    "price": {
+      "deviceRetailPrice": 1049,
+      "bellConsumer": { "Elite": 17.88, "Ultimate": 17.88, "deviceReturnOption": 5.17 },
+      "bellSMB": { "Elite": 17.88, "Ultimate": 17.88, "deviceReturnOption": 5.17 },
+      "virgin": { "sweetpay": 43.71, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": true, "eligibleTradeInDevices": ["Pixel 6", "Pixel 7"] },
+    "features": {
+      "storage": 256,
+      "colors": ["Obsidian"],
+      "battery": 4575,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.2
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8a",
+    "price": {
+      "deviceRetailPrice": 699,
+      "bellConsumer": { "Elite": 7.46, "Ultimate": 7.46, "deviceReturnOption": 0 },
+      "bellSMB": { "Elite": 7.46, "Ultimate": 7.46, "deviceReturnOption": 0 },
+      "virgin": { "sweetpay": 29.13, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Obsidian", "Porcelain", "Bay"],
+      "battery": 4492,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["64MP Main", "13MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 8a",
+    "price": {
+      "deviceRetailPrice": 789,
+      "bellConsumer": { "Elite": 11.21, "Ultimate": 11.21, "deviceReturnOption": 2.00 },
+      "bellSMB": { "Elite": 11.21, "Ultimate": 11.21, "deviceReturnOption": 2.00 },
+      "virgin": { "sweetpay": 32.88, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Obsidian"],
+      "battery": 4492,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["64MP Main", "13MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel Fold",
+    "price": {
+      "deviceRetailPrice": 2399,
+      "bellConsumer": { "Elite": 79.13, "Ultimate": 79.13, "deviceReturnOption": 55.00 },
+      "bellSMB": { "Elite": 79.13, "Ultimate": 79.13, "deviceReturnOption": 55.00 },
+      "virgin": { "sweetpay": 99.96, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": true,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 256,
+      "colors": ["Obsidian", "Porcelain"],
+      "battery": 4821,
+      "noOfBackCamera": 3,
+      "backCameraLensSpec": ["48MP Main", "10.8MP Ultra-Wide", "10.8MP 5x Telephoto"],
+      "screenSize": 7.6
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 7a",
+    "price": {
+      "deviceRetailPrice": 599,
+      "bellConsumer": { "Elite": 3.29, "Ultimate": 3.29, "deviceReturnOption": 0 },
+      "bellSMB": { "Elite": 3.29, "Ultimate": 3.29, "deviceReturnOption": 0 },
+      "virgin": { "sweetpay": 24.96, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": false,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Charcoal", "Sea", "Snow"],
+      "battery": 4385,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["64MP Main", "13MP Ultra-Wide"],
+      "screenSize": 6.1
+    }
+  },
+  {
+    "manufacturer": "Google",
+    "model": "Pixel 7",
+    "price": {
+      "deviceRetailPrice": 799,
+      "bellConsumer": { "Elite": 10.00, "Ultimate": 10.00, "deviceReturnOption": 0 },
+      "bellSMB": { "Elite": 10.00, "Ultimate": 10.00, "deviceReturnOption": 0 },
+      "virgin": { "sweetpay": 33.30, "sweetpayLite": 0 },
+      "dfEligible": true
+    },
+    "eligibleForHUG": false,
+    "tradeInBonus": { "tradeInBonus": false, "eligibleTradeInDevices": [] },
+    "features": {
+      "storage": 128,
+      "colors": ["Obsidian", "Snow", "Lemongrass"],
+      "battery": 4355,
+      "noOfBackCamera": 2,
+      "backCameraLensSpec": ["50MP Main", "12MP Ultra-Wide"],
+      "screenSize": 6.3
+    }
+  }
+]
