@@ -1,0 +1,165 @@
+{
+  "BYOD": {
+    "BellConsumer": {
+      "Essential_75GB": {
+        "data": 75,
+        "internationalMinutes1000": true,
+        "canUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "dataShare": false,
+        "speed": "5G",
+        "price": [75, 70, 65],
+        "additionalFeature": ["SD Video Streaming"]
+      },
+      "Ultimate_100GB_CAN_US": {
+        "data": 100,
+        "internationalMinutes1000": true,
+        "canUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": false,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [90, 85, 80],
+        "additionalFeature": ["HD Video Streaming", "Crave Mobile Included (24mo)"]
+      },
+      "Ultimate_150GB_CAN_US_MX": {
+        "data": 150,
+        "internationalMinutes1000": true,
+        "canUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": true,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [105, 100, 95],
+        "additionalFeature": ["HD Video Streaming", "Crave Mobile Included (24mo)", "Roam Better - World perks"]
+      }
+    },
+    "BellSMB": {
+      "SMB_Essential_100GB": {
+        "data": 100,
+        "internationalMinutes1000": false,
+        "canUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [70, 65, 60],
+        "additionalFeature": ["Business Support Queue"]
+      },
+      "SMB_Ultimate_150GB_CAN_US": {
+        "data": 150,
+        "internationalMinutes1000": true,
+        "canUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": false,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [85, 80, 75],
+        "additionalFeature": ["Business Support Queue", "Microsoft 365 Basic (6mo)"]
+      }
+    },
+    "Virgin": {
+      "Starter_4G_20GB": {
+        "data": 20,
+        "internationalMinutes1000": false,
+        "caUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "minutes200": false,
+        "dataShare": false,
+        "speed": "4G",
+        "price": [39]
+      },
+      "Unlimited_5G_60GB": {
+        "data": 60,
+        "internationalMinutes1000": true,
+        "caUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "minutes200": false,
+        "dataShare": false,
+        "speed": "5G",
+        "price": [55, 50]
+      },
+      "Unlimited_5G_75GB_CAN_US": {
+        "data": 75,
+        "internationalMinutes1000": true,
+        "caUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": false,
+        "minutes200": false,
+        "dataShare": false,
+        "speed": "5G",
+        "price": [65, 60]
+      }
+    },
+    "Lucky": {
+      "Cheap_Talk_Text": {
+        "data": 1,
+        "price": 25,
+        "bonusData": 1,
+        "caUsCalling": false
+      },
+      "Unlimited_Canada_US": {
+        "data": 75,
+        "price": 50,
+        "bonusData": 25,
+        "caUsCalling": true
+      }
+    }
+  },
+  "Financing": {
+    "BellConsumer": {
+      "Promo_Financing_100GB": {
+        "data": 100,
+        "internationalMinutes1000": false,
+        "canUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "dataShare": false,
+        "speed": "5G",
+        "price": [80],
+        "additionalFeature": ["Required for Device Return Option"]
+      },
+      "Premium_Financing_200GB_CAN_US_MX": {
+        "data": 200,
+        "internationalMinutes1000": true,
+        "canUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": true,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [115],
+        "additionalFeature": ["Maximum Device Subsidy", "Crave + HBO Included"]
+      }
+    },
+    "BellSMB": {
+      "SMB_Financing_150GB": {
+        "data": 150,
+        "internationalMinutes1000": false,
+        "canUsCallingText": true,
+        "usRoam": true,
+        "usMxRoam": false,
+        "dataShare": true,
+        "speed": "5G+",
+        "price": [80],
+        "additionalFeature": ["Business Dedicated Support"]
+      }
+    },
+    "Virgin": {
+      "SweetPay_5G_75GB": {
+        "data": 75,
+        "internationalMinutes1000": true,
+        "caUsCallingText": false,
+        "usRoam": false,
+        "usMxRoam": false,
+        "minutes200": false,
+        "dataShare": false,
+        "speed": "5G",
+        "price": [65],
+        "additionalFeature": []
+      }
+    }
+  }
+}

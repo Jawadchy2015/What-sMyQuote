@@ -18,6 +18,10 @@ const bellPlanSchema = new mongoose.Schema({
     price: {
         type: [Number],
         default: []
+    },
+    additionalFeature: {
+        type: [String],
+        default: [] 
     }
 }, { _id: false }); // _id: false - these are embedded, not standalone documents
 
@@ -38,6 +42,10 @@ const virginPlanSchema = new mongoose.Schema({
     price: {
         type: [Number],
         default: []
+    },
+    additionalFeature: {
+        type: [String],
+        default: [] 
     }
 }, { _id: false });
 
@@ -56,7 +64,15 @@ const luckyPlanSchema = new mongoose.Schema({
 const planSchema = new mongoose.Schema({
     // The top-level key you requested
     BYOD: {
-        Bell: {
+        BellConsumer: {
+            // This says "Bell" will be an object (a Map) where
+            // keys ("P1", "P2", etc.) map to a value
+            // that MUST follow the 'bellPlanSchema' structure.
+            type: Map,
+            of: bellPlanSchema,
+            default: {}
+        },
+        BellSMB: {
             // This says "Bell" will be an object (a Map) where
             // keys ("P1", "P2", etc.) map to a value
             // that MUST follow the 'bellPlanSchema' structure.
@@ -74,6 +90,29 @@ const planSchema = new mongoose.Schema({
             of: luckyPlanSchema,
             default: {}
         }
+    },
+    Financing: {
+        BellConsumer: {
+        // This says "Bell" will be an object (a Map) where
+        // keys ("P1", "P2", etc.) map to a value
+        // that MUST follow the 'bellPlanSchema' structure.
+            type: Map,
+            of: bellPlanSchema,
+            default: {}
+        },
+        BellSMB: {
+            // This says "Bell" will be an object (a Map) where
+            // keys ("P1", "P2", etc.) map to a value
+            // that MUST follow the 'bellPlanSchema' structure.
+            type: Map,
+            of: bellPlanSchema,
+            default: {}
+        },
+        Virgin: {
+            type: Map,
+            of: virginPlanSchema,
+            default: {}
+        },
     }
     // You could add other top-level keys here later, like "Financing"
     // Financing: { ... }
