@@ -1,375 +1,1128 @@
 <!DOCTYPE html>
 <html lang="en" class="h-full">
-
-<head>
+  <head>
     <title>What's My Quote - Dashboard</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <!-- NEW: Tailwind Dark Mode Configuration -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <script>
       tailwind.config = {
-        darkMode: 'class', // This tells Tailwind to use the 'dark' class on the <html> tag
-      }
+        darkMode: "class",
+      };
     </script>
 
-    <!-- 1. Tailwind CSS (for the entire layout) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- 2. Bootstrap CSS (We keep this *only* for the modal pop-ups to work) -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    
-    <!-- 3. Font Awesome (for sidebar icons) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 
     <style>
-        /* A small tweak so Bootstrap Modals work nicely with the Tailwind background */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .modal-backdrop {
-            --bs-backdrop-zindex: 1050; /* Ensure backdrop is behind modal */
-        }
-        .modal {
-            --bs-modal-zindex: 1055;
-        }
-        
-        /* --- NEW: Dark Mode Styles for Bootstrap Modals --- */
-        .dark .modal-content {
-            background-color: #1f2937; /* dark:bg-gray-800 */
-            color: #f3f4f6; /* dark:text-gray-100 */
-        }
-        .dark .modal-header, .dark .modal-footer {
-            border-color: #374151; /* dark:border-gray-700 */
-        }
-        .dark .modal-body {
-            color: #d1d5db; /* dark:text-gray-300 */
-        }
-        .dark .form-label {
-             color: #d1d5db; /* dark:text-gray-300 */
-        }
-        .dark .form-control[readonly] {
-            background-color: #374151; /* dark:bg-gray-700 */
-            color: #d1d5db; /* dark:text-gray-300 */
-            border-color: #4b5563; /* dark:border-gray-600 */
-        }
-        .dark .btn-close {
-            /* This inverts the color of the 'X' button to make it visible */
-            filter: invert(1) grayscale(100%) brightness(200%);
-        }
+      body {
+        font-family: "Inter", sans-serif;
+      }
+
+      /* Bootstrap Modal Tweaks for Dark Mode */
+      .modal-backdrop {
+        --bs-backdrop-zindex: 1050;
+      }
+      .modal {
+        --bs-modal-zindex: 1055;
+      }
+      .dark .modal-content {
+        background-color: #1f2937;
+        color: #f3f4f6;
+      }
+      .dark .modal-header,
+      .dark .modal-footer {
+        border-color: #374151;
+      }
+      .dark .modal-body,
+      .dark .form-label {
+        color: #d1d5db;
+      }
+      .dark .form-control[readonly] {
+        background-color: #374151;
+        color: #d1d5db;
+        border-color: #4b5563;
+      }
+      .dark .btn-close {
+        filter: invert(1) grayscale(100%) brightness(200%);
+      }
+
+      /* Custom Modal Transitions */
+      .phone-modal-backdrop,
+      .plan-modal-backdrop {
+        transition: opacity 0.3s ease-in-out;
+      }
+      .phone-modal-content,
+      .plan-modal-content {
+        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+      }
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
     </style>
 
-    <!-- NEW: Anti-Flicker Dark Mode Script -->
     <script>
-        // Run this script immediately to prevent a "flash"
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
-        } else {
-          document.documentElement.classList.remove('dark');
-        }
+      if (
+        localStorage.getItem("theme") === "dark" ||
+        (!("theme" in localStorage) &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches)
+      ) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     </script>
-</head>
+  </head>
 
-<body class="h-full bg-gray-100 dark:bg-gray-900">
-    
-    <!-- Sidebar Navigation -->
-    <nav class="fixed inset-y-0 left-0 z-10 w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 hidden md:block">
-        <div class="flex flex-col h-full">
-            <!-- Logo/Header -->
-            <div class="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
-                <span class="text-2xl font-bold text-blue-700">What's My Quote</span>
-            </div>
-            
-            <!-- Navigation Links -->
-            <div class="flex-1 overflow-y-auto p-4 space-y-2">
-                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Tools</h3>
-                
-                <!-- Link: Phone Price -->
-                <a href="./Phone.html" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-mobile-alt w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Phone Price</span>
-                </a>
-                
-                <!-- Link: Plan Price -->
-                <a href="./Plan.html" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-list-alt w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Plan Price</span>
-                </a>
-
-                <!-- Link: Saved Quote -->
-                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-save w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Saved Quote</span>
-                </a>
-
-                <h3 class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider pt-4 mb-2">Customer</h3>
-                
-                <!-- Link: Customer Follow up -->
-                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-users w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Customer Follow up</span>
-                </a>
-
-                <!-- Link: Lucky P2P -->
-                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-exchange-alt w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Lucky P2P</span>
-                </a>
-
-                <!-- Link: Featured -->
-                <a href="#" class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-star w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Featured</span>
-                </a>
-            </div>
-            
-            <!-- NEW: Dark Mode Toggle -->
-            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between">
-                    <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Dark Mode (soon)</span>
-                    <button id="darkModeToggle" class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors bg-gray-200 dark:bg-gray-700">
-                        <span class="inline-block w-4 h-4 transform bg-white dark:translate-x-5 translate-x-1 rounded-full transition-transform"></span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Logout Button (Bottom of Sidebar) -->
-            <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-                <a href="/" class="flex items-center w-full px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors">
-                    <i class="fas fa-sign-out-alt w-6 text-center text-gray-400"></i>
-                    <span class="ml-3 font-medium">Logout</span>
-                </a>
-            </div>
+  <body class="h-full bg-gray-100 dark:bg-gray-900">
+    <nav
+      class="fixed inset-y-0 left-0 z-10 w-64 bg-white dark:bg-gray-800 shadow-lg border-r border-gray-200 dark:border-gray-700 hidden md:block"
+    >
+      <div class="flex flex-col h-full">
+        <div
+          class="flex items-center justify-center h-16 border-b border-gray-200 dark:border-gray-700 flex-shrink-0"
+        >
+          <span class="text-2xl font-bold text-blue-700">What's My Quote</span>
         </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-2">
+          <h3
+            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2"
+          >
+            Tools
+          </h3>
+          <a
+            href="#"
+            id="nav-phone-price"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-mobile-alt w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Phone Price</span>
+          </a>
+          <a
+            href="#"
+            id="nav-plan-price"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-list-alt w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Plan Price</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-save w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Saved Quote</span>
+          </a>
+          <h3
+            class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider pt-4 mb-2"
+          >
+            Customer
+          </h3>
+          <a
+            href="#"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-users w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Customer Follow up</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-exchange-alt w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Lucky P2P</span>
+          </a>
+          <a
+            href="#"
+            class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-star w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Featured</span>
+          </a>
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <span class="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >Dark Mode</span
+            >
+            <button
+              id="darkModeToggle"
+              class="relative inline-flex items-center h-6 rounded-full w-11 transition-colors bg-gray-200 dark:bg-gray-700"
+            >
+              <span
+                class="inline-block w-4 h-4 transform bg-white dark:translate-x-5 translate-x-1 rounded-full transition-transform"
+              ></span>
+            </button>
+          </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
+          <a
+            href="/"
+            class="flex items-center w-full px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
+          >
+            <i class="fas fa-sign-out-alt w-6 text-center text-gray-400"></i>
+            <span class="ml-3 font-medium">Logout</span>
+          </a>
+        </div>
+      </div>
     </nav>
 
-    <!-- Main Content Wrapper -->
     <div class="md:pl-64 flex flex-col min-h-full">
-        
-        <!-- Header -->
-        <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700">
-            <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-16">
-                    
-                    <!-- Search Bar -->
-                    <div class="flex-1">
-                        <div class="relative max-w-md">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                </svg>
-                            </div>
-                            <input type_text placeholder="Search..." class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-                        </div>
-                    </div>
-                    
-                    <!-- Profile/User Icon -->
-                    <div class="ml-4">
-                        <div class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-                            <i class="fas fa-user"></i>
-                        </div>
-                    </div>
+      <header
+        class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700"
+      >
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between h-16">
+            <div class="flex-1">
+              <div class="relative max-w-md">
+                <div
+                  class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
+                >
+                  <svg
+                    class="h-5 w-5 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+                    />
+                  </svg>
                 </div>
+                <input
+                  type="text"
+                  placeholder="Search..."
+                  class="block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-full bg-gray-50 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                />
+              </div>
             </div>
-        </header>
-
-        <!-- Main Content Area -->
-        <main class="w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex-1">
-            
-            <!-- Quick Stats Boxes -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <!-- Generate Quote -->
-                <div class="bg-blue-600 text-white p-6 rounded-xl shadow-lg flex items-center space-x-4 cursor-pointer hover:bg-blue-700 transition-colors">
-                    <!-- ... (SVG code is unchanged) ... -->
-                    <div class="bg-white/30 p-3 rounded-full">
-                        <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75v-2.625a3.375 3.375 0 0 1 3.375-3.375h1.5A1.125 1.125 0 0 0 13.5 7.125v-1.5a3.375 3.375 0 0 1 3.375-3.375H15.75m-7.5 12.75-3-3m0 0 3-3m-3 3h12.75" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-xl font-semibold">Generate Quote</h2>
-                    </div>
-                </div>
-
-                <!-- Postpaid (Triggers Modal) -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#postpaidModal">
-                    <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
-                        <svg class="h-6 w-6 text-green-700 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Postpaid</h2>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">80%</p>
-                    </div>
-                </div>
-
-                <!-- Hug/Migration (Triggers Modal) -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#hugModal">
-                    <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
-                        <svg class="h-6 w-6 text-purple-700 dark:text-purple-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                           <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Hug/Migration</h2>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">30%</p>
-                    </div>
-                </div>
-
-                <!-- Prepaid (Triggers Modal) -->
-                <div class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4" data-bs-toggle="modal" data-bs-target="#prepaidModal">
-                    <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
-                         <svg class="h-6 w-6 text-yellow-700 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6m6 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Prepaid</h2>
-                        <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">20%</p>
-                    </div>
-                </div>
+            <div class="ml-4">
+              <div
+                class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400"
+              >
+                <i class="fas fa-user"></i>
+              </div>
             </div>
-            
-        </main>
-    </div>
-
-    <!-- 
-      BOOTSTRAP MODALS
-      (HTML is unchanged, but now respects dark mode via CSS)
-    -->
-    <div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
-        <!-- ... (modal content) ... -->
-    </div>
-    <div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="hugModalLabel" aria-hidden="true">
-        <!-- ... (modal content) ... -->
-    </div>
-    <div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="prepaidModalLabel" aria-hidden="true">
-        <!-- ... (modal content) ... -->
-    </div>
-    <!-- ... (All modal HTML is unchanged) ... -->
-    <div class="modal fade" id="postpaidModal" tabindex="-1" aria-labelledby="postpaidModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="postpaidModalLabel">Postpaid Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Track your monthly targets:</p>
-                
-                <div class="mb-3">
-                <label for="infoField1" class="form-label">MTD target attained</label>
-                <input type="text" class="form-control" id="infoField1" value="This is some info" readonly>
-                </div>
-                <div class="mb-3">
-                <label for="infoField2" class="form-label">Montly target</label>
-                <input type="text" class="form-control" id="infoField2" value="This is other info" readonly>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-            </div>
+          </div>
         </div>
-    </div>
-    
-    <div class="modal fade" id="hugModal" tabindex="-1" aria-labelledby="hugModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="hugModalLabel">HUG Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Track your monthly targets:</p>
-                
-                <div class="mb-3">
-                <label for="infoField1_hug" class="form-label">MTD target attained</label>
-                <input type="text" class="form-control" id="infoField1_hug" value="This is some info" readonly>
-                </div>
-                <div class="mb-3">
-                <label for="infoField2_hug" class="form-label">Montly target</label>
-                <input type="text" class="form-control" id="infoField2_hug" value="This is other info" readonly>
-                </div>
+      </header>
 
+      <main class="w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div
+            class="bg-blue-600 text-white p-6 rounded-xl shadow-lg flex items-center space-x-4 cursor-pointer hover:bg-blue-700 transition-colors"
+          >
+            <div class="bg-white/30 p-3 rounded-full">
+              <svg
+                class="h-6 w-6 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75v-2.625a3.375 3.375 0 0 1 3.375-3.375h1.5A1.125 1.125 0 0 0 13.5 7.125v-1.5a3.375 3.375 0 0 1 3.375-3.375H15.75m-7.5 12.75-3-3m0 0 3-3m-3 3h12.75"
+                />
+              </svg>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <div><h2 class="text-xl font-semibold">Generate Quote</h2></div>
+          </div>
+          <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4"
+            data-bs-toggle="modal"
+            data-bs-target="#postpaidModal"
+          >
+            <div class="bg-green-100 dark:bg-green-900 p-3 rounded-full">
+              <svg
+                class="h-6 w-6 text-green-700 dark:text-green-300"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.5 1.5H8.25A2.25 2.25 0 0 0 6 3.75v16.5a2.25 2.25 0 0 0 2.25 2.25h7.5A2.25 2.25 0 0 0 18 20.25V3.75a2.25 2.25 0 0 0-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
+                />
+              </svg>
             </div>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Postpaid
+              </h2>
+              <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                80%
+              </p>
             </div>
+          </div>
+          <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4"
+            data-bs-toggle="modal"
+            data-bs-target="#hugModal"
+          >
+            <div class="bg-purple-100 dark:bg-purple-900 p-3 rounded-full">
+              <svg
+                class="h-6 w-6 text-purple-700 dark:text-purple-300"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Hug/Migration
+              </h2>
+              <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                30%
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow cursor-pointer transition-all hover:shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 flex items-center space-x-4"
+            data-bs-toggle="modal"
+            data-bs-target="#prepaidModal"
+          >
+            <div class="bg-yellow-100 dark:bg-yellow-900 p-3 rounded-full">
+              <svg
+                class="h-6 w-6 text-yellow-700 dark:text-yellow-300"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6m6 5.25h6m-6 2.25h6m3-7.5l-3 3m0 0l-3-3m3 3v-6"
+                />
+              </svg>
+            </div>
+            <div>
+              <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
+                Prepaid
+              </h2>
+              <p class="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                20%
+              </p>
+            </div>
+          </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="prepaidModal" tabindex="-1" aria-labelledby="prepaidModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="prepaidModalLabel">Prepaid Information</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p>Track your monthly targets:</p>
-                
-                <div class="mb-3">
-                <label for="infoField1_prepaid" class="form-label">MTD target attained</label>
-                <input type="text" class="form-control" id="infoField1_prepaid" value="This is some info" readonly>
-                </div>
-                <div class="mb-3">
-                <label for="infoField2_prepaid" class="form-label">Montly target</label>
-                <input type="text" class="form-control" id="infoField2_prepaid" value="This is other info" readonly>
-                </div>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-            </div>
+        <div
+          id="main-content-container"
+          class="mt-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6 min-h-[550px] flex-1 flex flex-col"
+        >
+          <div
+            id="welcome-message"
+            class="flex flex-col items-center justify-center h-full min-h-[500px]"
+          >
+            <i class="fas fa-bell fa-3x text-blue-500 dark:text-blue-700"></i>
+            <h2
+              class="mt-4 text-2xl font-semibold text-gray-800 dark:text-gray-20 flex-10"
+            >
+              Welcome to your Dashboard!
+            </h2>
+            <p class="mt-2 text-gray-500 dark:text-gray-400">
+              Select from the sidebar to get started.
+            </p>
+          </div>
         </div>
+      </main>
     </div>
 
-    <!-- 
-      SCRIPTS
-    -->
+    <div
+      class="modal fade"
+      id="postpaidModal"
+      tabindex="-1"
+      aria-labelledby="postpaidModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="postpaidModalLabel">
+              Postpaid Information
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Track your monthly targets:</p>
+            <div class="mb-3">
+              <label for="infoField1" class="form-label"
+                >MTD target attained</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField1"
+                value="This is some info"
+                readonly
+              />
+            </div>
+            <div class="mb-3">
+              <label for="infoField2" class="form-label">Montly target</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField2"
+                value="This is other info"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="hugModal"
+      tabindex="-1"
+      aria-labelledby="hugModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="hugModalLabel">HUG Information</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Track your monthly targets:</p>
+            <div class="mb-3">
+              <label for="infoField1_hug" class="form-label"
+                >MTD target attained</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField1_hug"
+                value="This is some info"
+                readonly
+              />
+            </div>
+            <div class="mb-3">
+              <label for="infoField2_hug" class="form-label"
+                >Montly target</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField2_hug"
+                value="This is other info"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal fade"
+      id="prepaidModal"
+      tabindex="-1"
+      aria-labelledby="prepaidModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="prepaidModalLabel">
+              Prepaid Information
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <p>Track your monthly targets:</p>
+            <div class="mb-3">
+              <label for="infoField1_prepaid" class="form-label"
+                >MTD target attained</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField1_prepaid"
+                value="This is some info"
+                readonly
+              />
+            </div>
+            <div class="mb-3">
+              <label for="infoField2_prepaid" class="form-label"
+                >Montly target</label
+              ><input
+                type="text"
+                class="form-control"
+                id="infoField2_prepaid"
+                value="This is other info"
+                readonly
+              />
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+	<div
+		id="price-modal"
+		class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 overflow-y-auto"
+		aria-labelledby="modal-title"
+		role="dialog"
+		aria-modal="true"
+		>
+		<!-- Backdrop -->
+		<div
+			id="modal-backdrop"
+			class="fixed inset-0 bg-gray-500/60 dark:bg-gray-900/70 opacity-0 transition-opacity duration-200"
+			aria-hidden="true"
+		></div>
+
+		<!-- Modal Content -->
+		<div
+			id="modal-content"
+			class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 w-full max-w-3xl mx-auto overflow-hidden"
+		>
+			<!-- Header -->
+			<div class="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700 text-center">
+			<div class="flex justify-center mb-3">
+				<div class="w-12 h-12 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full text-2xl">
+				💲
+				</div>
+			</div>
+			<h3
+				id="modal-title"
+				class="text-2xl font-semibold text-gray-900 dark:text-white"
+			></h3>
+			</div>
+
+			<!-- Modal Body -->
+			<div class="p-6 space-y-5 overflow-y-auto max-h-[80vh]">
+			<div
+				id="modal-body"
+				class="space-y-4 text-base text-gray-700 dark:text-gray-200"
+			>
+				<!-- Dynamic pricing content goes here -->
+			</div>
+			</div>
+
+			<!-- Footer -->
+			<div
+			class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex justify-end"
+			>
+			<button
+				id="modal-close-button"
+				type="button"
+				class="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-5 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+			>
+				Close
+			</button>
+			</div>
+		</div>
+	</div>
+
+
+
+
+    <div
+		id="plan-price-modal"
+		class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 overflow-y-auto"
+		aria-labelledby="plan-modal-title"
+		role="dialog"
+		aria-modal="true"
+		>
+		<!-- Backdrop -->
+		<div
+			id="plan-modal-backdrop"
+			class="fixed inset-0 bg-gray-500/60 dark:bg-gray-900/70 opacity-0 transition-opacity duration-200"
+			aria-hidden="true"
+		></div>
+
+		<!-- Modal Content -->
+		<div
+			id="plan-modal-content"
+			class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 w-full max-w-3xl mx-auto overflow-hidden"
+		>
+			<!-- Header -->
+			<div
+			class="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700 text-center"
+			>
+			<div class="flex justify-center mb-3">
+				<div
+				class="w-12 h-12 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full text-xl"
+				>
+				<i class="fas fa-dollar-sign"></i>
+				</div>
+			</div>
+			<h3
+				id="plan-modal-title"
+				class="text-2xl font-semibold text-gray-900 dark:text-white"
+			></h3>
+			</div>
+
+			<!-- Body -->
+			<div class="p-6 space-y-5 overflow-y-auto max-h-[80vh]">
+			<div
+				id="plan-modal-body"
+				class="space-y-4 text-base text-gray-700 dark:text-gray-200"
+			>
+				<!-- Dynamic plan details get inserted here -->
+			</div>
+			</div>
+
+			<!-- Footer -->
+			<div
+			class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 flex justify-end"
+			>
+			<button
+				id="plan-modal-close-button"
+				type="button"
+				class="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-5 py-2 bg-white dark:bg-gray-800 text-base font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+			>
+				Close
+			</button>
+			</div>
+		</div>
+	</div>
+
+
     <script src="scripts/login_signup/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
 
-    <!-- NEW: Dark Mode Toggle Logic -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const toggleButton = document.getElementById('darkModeToggle');
-            const toggleKnob = toggleButton.querySelector('span'); // The moving knob
-            const root = document.documentElement; // The <html> tag
+      document.addEventListener("DOMContentLoaded", () => {
+        const mainContentContainer = document.getElementById(
+          "main-content-container"
+        );
+        const welcomeMessage = document.getElementById("welcome-message");
+        const toggleButton = document.getElementById("darkModeToggle");
+        const toggleKnob = toggleButton.querySelector("span");
+        const root = document.documentElement;
 
-            // Set initial state of the knob based on the theme
-            if (root.classList.contains('dark')) {
-                toggleKnob.classList.remove('translate-x-1');
-                toggleKnob.classList.add('translate-x-5');
+        if (root.classList.contains("dark")) {
+          toggleKnob.classList.remove("translate-x-1");
+          toggleKnob.classList.add("translate-x-5");
+        }
+        toggleButton.addEventListener("click", () => {
+          root.classList.toggle("dark");
+          if (root.classList.contains("dark")) {
+            toggleKnob.classList.remove("translate-x-1");
+            toggleKnob.classList.add("translate-x-5");
+            localStorage.setItem("theme", "dark");
+          } else {
+            toggleKnob.classList.remove("translate-x-5");
+            toggleKnob.classList.add("translate-x-1");
+            localStorage.setItem("theme", "light");
+          }
+        });
+
+        document
+          .getElementById("nav-phone-price")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            loadPhoneUI();
+          });
+        document
+          .getElementById("nav-plan-price")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            loadPlanUI();
+          });
+        function hideWelcomeMessage() {
+          if (welcomeMessage) welcomeMessage.classList.add("hidden");
+        }
+
+        // --- Phone UI Logic ---
+        const priceModal = document.getElementById("price-modal");
+        const modalBackdrop = document.getElementById("modal-backdrop");
+        const modalContent = document.getElementById("modal-content");
+        const modalTitle = document.getElementById("modal-title");
+        const modalBody = document.getElementById("modal-body");
+        const modalCloseButton = document.getElementById("modal-close-button");
+        async function loadPhoneUI() {
+          hideWelcomeMessage();
+          mainContentContainer.innerHTML = `<div id="phone-loading-spinner" class="flex justify-center items-center h-64"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600 dark:border-blue-400"></div></div><div id="phone-error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert"><strong class="font-bold">Error:</strong> <span class="block sm:inline">Could not load phone data.</span></div><div id="phone-grid-container" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>`;
+          modalCloseButton.addEventListener("click", closePriceModal);
+          modalBackdrop.addEventListener("click", closePriceModal);
+          await fetchPhones();
+        }
+        async function fetchPhones() {
+          try {
+            const response = await fetch("/api/phones");
+            if (!response.ok)
+              throw new Error(`HTTP error! status: ${response.status}`);
+            displayPhones(await response.json());
+          } catch (error) {
+            console.error("Failed to fetch phones:", error);
+            document
+              .getElementById("phone-error-message")
+              .classList.remove("hidden");
+          } finally {
+            document
+              .getElementById("phone-loading-spinner")
+              .classList.add("hidden");
+          }
+        }
+        function displayPhones(phones) {
+          const phoneContainer = document.getElementById(
+            "phone-grid-container"
+          );
+          if (!phoneContainer) return;
+          if (phones.length === 0) {
+            phoneContainer.innerHTML =
+              '<p class="text-gray-500 dark:text-gray-400 col-span-full text-center">No phones found.</p>';
+            return;
+          }
+          phoneContainer.innerHTML = "";
+          phones.forEach((phone) => {
+            const card = document.createElement("div");
+            card.className =
+              "bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1";
+            const features = phone.features || {};
+            const price = phone.price || {};
+            card.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-4">
+                                <div><p class="text-sm font-medium text-indigo-600 dark:text-indigo-400">${
+                                  phone.manufacturer
+                                }</p><h3 class="text-2xl font-bold text-gray-900 dark:text-white">${
+              phone.model
+            }</h3></div>
+                                <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Retail $${
+                                  price.deviceRetailPrice || "N/A"
+                                }</span>
+                            </div>
+                            <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
+                                <div class="flex items-center"><svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg><span>${
+                                  features.screenSize || "N/A"
+                                }" Screen</span></div>
+                                <div class="flex items-center"><svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 012-2h2a2 2 0 012 2v6m-6 0h6M9 19H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v10a2 2 0 01-2 2h-4M9 19v-6a2 2 0 012-2h2a2 2 0 012 2v6"/></svg><span>${
+                                  features.storage || "N/A"
+                                }GB Storage</span></div>
+                                <div class="flex items-center"><svg class="h-5 w-5 text-gray-400 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg><span>${
+                                  Array.isArray(features.colors)
+                                    ? features.colors.join(", ")
+                                    : features.colors || "N/A"
+                                }</span></div>
+                                <div class="flex items-start"><svg class="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg><span class="truncate">${
+                                  Array.isArray(features.backCameraLensSpec)
+                                    ? features.backCameraLensSpec.join(" / ")
+                                    : features.backCameraLensSpec || "N/A"
+                                }</span></div>
+                            </div>
+                            <div class="mt-6"><button class="w-full view-prices-btn bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">View All Prices</button></div>
+                        </div>`;
+            phoneContainer.appendChild(card);
+            card
+              .querySelector(".view-prices-btn")
+              .addEventListener("click", () => openPriceModal(phone));
+          });
+        }
+        // function openPriceModal(phone) {
+        //     modalTitle.textContent = `${phone.manufacturer} ${phone.model} - Pricing`;
+        //     const prices = phone.price || {};
+        //     const formatCamelCase = (key) => key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        //     const formatPriceSection = (title, priceData) => {
+        //         if (!priceData) return '';
+        //         let entries = Object.entries(priceData).map(([key, value]) => `<div class="flex justify-between py-1"><span class="text-gray-500 dark:text-gray-400">${formatCamelCase(key)}:</span><span class="font-medium text-gray-900 dark:text-white">$${value}</span></div>`).join('');
+        //         if (title === 'Bell Consumer') entries += `<div class="flex justify-between py-1"><span class="text-gray-500 dark:text-gray-400">DF Eligible:</span><span class="font-medium text-gray-900 dark:text-white">${prices.dfEligible ? 'Yes' : 'No'}</span></div>`;
+        //         return `<h4 class="font-semibold text-gray-800 dark:text-gray-200 mt-3 mb-1">${title}</h4><div class="divide-y divide-gray-200 dark:divide-gray-600">${entries}</div>`;
+        //     };
+        //     modalBody.innerHTML = `<div class="space-y-4"><div class="flex justify-between py-2 bg-gray-100 dark:bg-gray-700 px-3 rounded-lg"><span class="text-lg font-bold text-gray-900 dark:text-white">Device Retail Price:</span><span class="text-lg font-bold text-blue-600 dark:text-blue-400">$${prices.deviceRetailPrice || 'N/A'}</span></div>${formatPriceSection('Bell Consumer', prices.bellConsumer)}${formatPriceSection('Bell SMB', prices.bellSMB)}${formatPriceSection('Virgin', prices.virgin)}</div>`;
+        //     priceModal.classList.remove('hidden');
+        //     setTimeout(() => { modalBackdrop.classList.add('opacity-100'); modalContent.classList.add('opacity-100', 'scale-100'); }, 10);
+        // }
+        function openPriceModal(phone) {
+          modalTitle.textContent = `${phone.manufacturer} ${phone.model} - Pricing`;
+          const prices = phone.price || {};
+
+          const formatCamelCase = (key) =>
+            key
+              .replace(/([A-Z])/g, " $1")
+              .replace(/^./, (str) => str.toUpperCase());
+
+          const formatPriceSection = (title, priceData) => {
+            if (!priceData) return "";
+
+            let entries = Object.entries(priceData)
+              .map(
+                ([key, value]) => `
+						<div class="grid grid-cols-2 gap-y-1 py-1 text-sm">
+							<span class="text-gray-500 dark:text-gray-400">${formatCamelCase(key)}:</span>
+							<span class="text-right font-medium text-gray-900 dark:text-white">
+							$${value}
+							</span>
+						</div>
+						`
+              )
+              .join("");
+
+            if (title === "Bell Consumer") {
+              entries += `
+						<div class="grid grid-cols-2 gap-y-1 py-1 text-sm">
+						<span class="text-gray-500 dark:text-gray-400">DF Eligible:</span>
+						<span class="text-right font-medium ${
+              prices.dfEligible
+                ? "text-green-600 dark:text-green-400"
+                : "text-red-500 dark:text-red-400"
+            }">
+							${prices.dfEligible ? "Yes" : "No"}
+						</span>
+						</div>`;
             }
 
-            toggleButton.addEventListener('click', () => {
-                // Toggle the 'dark' class on <html>
-                root.classList.toggle('dark');
-                
-                if (root.classList.contains('dark')) {
-                    // 1. Move knob
-                    toggleKnob.classList.remove('translate-x-1');
-                    toggleKnob.classList.add('translate-x-5');
-                    // 2. Save choice
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    // 1. Move knob
-                    toggleKnob.classList.remove('translate-x-5');
-                    toggleKnob.classList.add('translate-x-1');
-                    // 2. Save choice
-                    localStorage.setItem('theme', 'light');
-                }
-            });
-        });
+            // section card
+            return `
+					<div class="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 shadow-sm">
+						<h4 class="text-base font-semibold text-gray-800 dark:text-gray-200 mb-2 border-l-4 pl-2 ${
+              title.includes("Bell") ? "border-blue-500" : "border-pink-500"
+            }">${title}</h4>
+						<div>${entries}</div>
+					</div>
+					`;
+          };
+
+          modalBody.innerHTML = `
+					<div class="space-y-5">
+					<!-- Retail Price -->
+					<div class="bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-700 rounded-lg p-4 flex justify-between items-center">
+						<span class="text-base font-semibold text-gray-800 dark:text-gray-200">Device Retail Price</span>
+						<span class="text-2xl font-bold text-blue-600 dark:text-blue-400">
+						$${prices.deviceRetailPrice || "N/A"}
+						</span>
+					</div>
+
+					<!-- Carrier Sections -->
+					${formatPriceSection("Bell Consumer", prices.bellConsumer)}
+					${formatPriceSection("Bell SMB", prices.bellSMB)}
+					${formatPriceSection("Virgin", prices.virgin)}
+					</div>
+				`;
+
+          priceModal.classList.remove("hidden");
+
+          // small open animation
+          setTimeout(() => {
+            modalBackdrop.classList.add("opacity-100");
+            modalContent.classList.add("opacity-100", "scale-100");
+          }, 10);
+        }
+
+        function closePriceModal() {
+          modalBackdrop.classList.add("opacity-0");
+          modalContent.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            priceModal.classList.add("hidden");
+            modalBackdrop.classList.remove("opacity-100");
+            modalContent.classList.remove("opacity-100", "scale-100");
+          }, 300);
+        }
+
+        // --- Plan UI Logic ---
+        let allPlanData = null,
+          currentMainType = "BYOD",
+          currentProvider = "BellConsumer";
+        const planPriceModal = document.getElementById("plan-price-modal");
+        const planModalBackdrop = document.getElementById(
+          "plan-modal-backdrop"
+        );
+        const planModalContent = document.getElementById("plan-modal-content");
+        const planModalTitle = document.getElementById("plan-modal-title");
+        const planModalBody = document.getElementById("plan-modal-body");
+        const planModalCloseButton = document.getElementById(
+          "plan-modal-close-button"
+        );
+        async function loadPlanUI() {
+          hideWelcomeMessage();
+          mainContentContainer.innerHTML = `<div class="bg-gray-100 dark:bg-gray-700 p-1 rounded-lg flex max-w-sm mx-auto"><button id="btn-byod" class="w-1/2 px-4 py-2 text-sm font-medium rounded-md transition-colors bg-white dark:bg-gray-800 shadow text-blue-600 dark:text-blue-400">BYOD</button><button id="btn-financing" class="w-1/2 px-4 py-2 text-sm font-medium rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors ml-1">Financing</button></div><div class="flex space-x-4 border-b border-gray-200 dark:border-gray-700 overflow-x-auto no-scrollbar mt-4" id="plan-provider-tabs"></div><div id="plans-grid-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6"></div><div id="plan-loading-spinner" class="flex justify-center items-center h-64"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 dark:border-blue-400"></div></div>`;
+          document
+            .getElementById("btn-byod")
+            .addEventListener("click", () => setMainPlanType("BYOD"));
+          document
+            .getElementById("btn-financing")
+            .addEventListener("click", () => setMainPlanType("Financing"));
+          planModalCloseButton.addEventListener("click", closePlanPriceModal);
+          planModalBackdrop.addEventListener("click", closePlanPriceModal);
+          await fetchPlans();
+        }
+        async function fetchPlans() {
+          try {
+            const res = await fetch("/api/plans");
+            if (!res.ok) throw new Error("Failed");
+            allPlanData = await res.json();
+            renderProviderTabs();
+            renderPlans();
+          } catch (err) {
+            console.error(err);
+          } finally {
+            document
+              .getElementById("plan-loading-spinner")
+              .classList.add("hidden");
+          }
+        }
+        function setMainPlanType(type) {
+          currentMainType = type;
+          const btnByod = document.getElementById("btn-byod"),
+            btnFinancing = document.getElementById("btn-financing");
+          if (type === "BYOD") {
+            btnByod.classList.add(
+              "bg-white",
+              "dark:bg-gray-800",
+              "shadow",
+              "text-blue-600",
+              "dark:text-blue-400"
+            );
+            btnByod.classList.remove("text-gray-500", "dark:text-gray-400");
+            btnFinancing.classList.remove(
+              "bg-white",
+              "dark:bg-gray-800",
+              "shadow",
+              "text-blue-600",
+              "dark:text-blue-400"
+            );
+            btnFinancing.classList.add("text-gray-500", "dark:text-gray-400");
+          } else {
+            btnFinancing.classList.add(
+              "bg-white",
+              "dark:bg-gray-800",
+              "shadow",
+              "text-blue-600",
+              "dark:text-blue-400"
+            );
+            btnFinancing.classList.remove(
+              "text-gray-500",
+              "dark:text-gray-400"
+            );
+            btnByod.classList.remove(
+              "bg-white",
+              "dark:bg-gray-800",
+              "shadow",
+              "text-blue-600",
+              "dark:text-blue-400"
+            );
+            btnByod.classList.add("text-gray-500", "dark:text-gray-400");
+          }
+          currentProvider =
+            Object.keys(allPlanData[currentMainType] || {}).length > 0
+              ? Object.keys(allPlanData[currentMainType])[0]
+              : null;
+          renderProviderTabs();
+          renderPlans();
+        }
+        function renderProviderTabs() {
+          const container = document.getElementById("plan-provider-tabs");
+          if (!container) return;
+          container.innerHTML = "";
+          Object.keys(allPlanData[currentMainType] || {}).forEach((key) => {
+            const tab = document.createElement("button");
+            tab.className = `py-4 px-1 border-b-2 font-medium text-sm whitespace-nowrap ${
+              currentProvider === key
+                ? "border-blue-600 text-blue-600 dark:text-blue-400"
+                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+            }`;
+            tab.textContent = key.replace(/([A-Z])/g, " $1").trim();
+            tab.onclick = () => {
+              currentProvider = key;
+              renderProviderTabs();
+              renderPlans();
+            };
+            container.appendChild(tab);
+          });
+        }
+        function renderPlans() {
+          const container = document.getElementById("plans-grid-container");
+          if (!container) return;
+          container.innerHTML = "";
+          if (
+            !allPlanData ||
+            !currentProvider ||
+            !allPlanData[currentMainType] ||
+            !allPlanData[currentMainType][currentProvider]
+          ) {
+            container.innerHTML =
+              '<p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">No plans available.</p>';
+            return;
+          }
+          Object.entries(allPlanData[currentMainType][currentProvider]).forEach(
+            ([key, plan]) => {
+              const card = document.createElement("div");
+              card.className =
+                "bg-white dark:bg-gray-700 rounded-xl shadow-sm border border-gray-200 dark:border-gray-600 overflow-hidden flex flex-col";
+              let priceHtml = "",
+                buttonHtml = "";
+              if (Array.isArray(plan.price) && plan.price.length > 0) {
+                priceHtml = `<div class="text-right"><span class="block text-2xl font-bold text-blue-600 dark:text-blue-400">$${plan.price[0]}</span><span class="text-xs text-gray-500 dark:text-gray-400">Line 1 / month</span></div>`;
+                if (plan.price.length > 1)
+                  buttonHtml = `<div class="mt-4"><button class="w-full view-plan-prices-btn bg-gray-100 dark:bg-gray-600 text-blue-600 dark:text-blue-300 py-2 px-4 rounded-lg font-semibold hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors text-lg">View Multi-Line Pricing</button></div>`;
+              } else {
+                priceHtml = `<div class="text-right"><span class="block text-2xl font-bold text-blue-600 dark:text-blue-400">$${
+                  plan.price || "N/A"
+                }</span><span class="text-xs text-gray-500 dark:text-gray-400">per month</span></div>`;
+              }
+              card.innerHTML = `
+                        <div class="p-6 flex-grow">
+                            <div class="flex justify-between items-start mb-4"><h3 class="text-lg font-bold text-gray-900 dark:text-white">${key.replace(
+                              /_/g,
+                              " "
+                            )}</h3>${priceHtml}</div>
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-center bg-blue-50 dark:bg-blue-900 text-blue-700 dark:text-blue-200 py-3 rounded-lg font-bold text-xl">${
+                                  plan.data
+                                } GB <span class="text-sm font-normal ml-1 text-blue-600 dark:text-blue-300">(${
+                plan.speed || "4G"
+              })</span></div>
+                                <ul class="space-y-2 text-lg text-gray-600 dark:text-gray-300 pt-4">
+                                    ${renderFeature(
+                                      "Unlimited Canada calling",
+                                      true
+                                    )}${renderFeature(
+                "Unlimited CAN/US calling",
+                plan.canUsCallingText ||
+                  plan.caUsCallingText ||
+                  plan.caUsCalling
+              )}${renderFeature("US Roaming", plan.usRoam)}${renderFeature(
+                "Mexico Roaming",
+                plan.usMxRoam
+              )}${renderFeature("Data Share", plan.dataShare)}${renderFeature(
+                "1000 Int'l Mins",
+                plan.internationalMinutes1000
+              )}${
+                plan.bonusData
+                  ? renderFeature(`${plan.bonusData}GB Bonus Data`, true)
+                  : ""
+              }
+                                </ul>
+                                ${
+                                  plan.additionalFeature &&
+                                  plan.additionalFeature.length > 0
+                                    ? `<div class="flex flex-wrap gap-2 pt-2">${plan.additionalFeature
+                                        .map(
+                                          (f) =>
+                                            `<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-md font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">${f}</span>`
+                                        )
+                                        .join("")}</div>`
+                                    : ""
+                                }
+                            </div>
+                        </div>
+                        ${
+                          buttonHtml
+                            ? `<div class="p-6 pt-0">${buttonHtml}</div>`
+                            : ""
+                        }`;
+              container.appendChild(card);
+              if (buttonHtml)
+                card
+                  .querySelector(".view-plan-prices-btn")
+                  .addEventListener("click", () =>
+                    openPlanPriceModal(key.replace(/_/g, " "), plan)
+                  );
+            }
+          );
+        }
+        function renderFeature(label, isIncluded) {
+          return isIncluded
+            ? `<li class="flex items-center"><svg class="h-5 w-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>${label}</li>`
+            : "";
+        }
+        function openPlanPriceModal(name, plan) {
+          planModalTitle.textContent = `${name} - Price Breakdown`;
+          planModalBody.innerHTML = `<ul class="divide-y divide-gray-200 dark:divide-gray-600">${plan.price
+            .map(
+              (p, i) =>
+                `<li class="flex justify-between items-center py-3"><span class="text-lg font-medium text-gray-600 dark:text-gray-300">Line ${
+                  i + 1
+                }</span><span class="text-lg font-semibold text-gray-900 dark:text-white">$${p} / month</span></li>`
+            )
+            .join("")}</ul>`;
+          planPriceModal.classList.remove("hidden");
+          setTimeout(() => {
+            planModalBackdrop.classList.add("opacity-100");
+            planModalContent.classList.add("opacity-100", "scale-100");
+          }, 10);
+        }
+        function closePlanPriceModal() {
+          planModalBackdrop.classList.add("opacity-0");
+          planModalContent.classList.add("opacity-0", "scale-95");
+          setTimeout(() => {
+            planPriceModal.classList.add("hidden");
+            planModalBackdrop.classList.remove("opacity-100");
+            planModalContent.classList.remove("opacity-100", "scale-100");
+          }, 300);
+        }
+      });
     </script>
-
-</body>
-
+  </body>
 </html>
