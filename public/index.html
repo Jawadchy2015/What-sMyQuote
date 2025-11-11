@@ -3,451 +3,283 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>What's My Quote - Login</title>
+    <title>What's My Quote – Login / Sign Up</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: [
+                'Inter',
+                'ui-sans-serif',
+                'system-ui',
+                '-apple-system',
+                'Segoe UI',
+                'Roboto',
+                'Ubuntu',
+                'Cantarell',
+                'Noto Sans',
+                'Helvetica Neue',
+                'Arial',
+                'sans-serif',
+              ],
+            },
+            boxShadow: {
+              soft: '0 20px 50px -15px rgba(0,0,0,0.25)',
+            },
+          },
+        },
+      };
+    </script>
 
-    <!-- Font Awesome (for icons) -->
+    <!-- Font Awesome (icons) -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
 
     <style>
-      /*
-          We define the button styles directly in CSS now
-          since the Tailwind @apply directive failed.
-        */
-      .customBtn {
-        display: block;
-        width: 100%;
-        max-width: 20rem; /* 320px */
-        margin-left: auto;
-        margin-right: auto;
-        text-align: center;
-        padding: 0.5rem 1rem; /* 8px 16px */
-        border-radius: 9999px; /* full */
-        font-weight: 600; /* semibold */
-        font-size: 0.875rem; /* text-sm */
-        transition: all 200ms ease-in-out;
-      }
-
-      /* The "active" state: solid white, blue text */
-      .activeBtn {
-        background-color: white;
-        color: #2563eb; /* blue-700 */
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-          0 2px 4px -2px rgba(0, 0, 0, 0.1);
-      }
-
-      /* The "inactive" state: white border, white text */
-      .customBtn:not(.activeBtn) {
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        color: white;
-      }
-      .customBtn:not(.activeBtn):hover {
-        background-color: rgba(255, 255, 255, 0.2);
-      }
+      .btn-pill { border-radius: 9999px; }
+      .fade-enter { opacity: 0; transform: translateY(6px); }
+      .fade-enter-active { opacity: 1; transform: translateY(0); transition: all .25s ease; }
+      .fade-exit { opacity: 1; transform: translateY(0); }
+      .fade-exit-active { opacity: 0; transform: translateY(-6px); transition: all .2s ease; }
     </style>
   </head>
-  <body
-    class="bg-gradient-to-br from-gray-50 to-blue-100 flex items-center justify-center min-h-screen p-4"
-  >
+  <body class="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100 text-slate-800 font-sans">
     <!-- Dashboard Link -->
     <a
       href="/dashboard"
-      class="absolute top-4 right-4 text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors"
+      class="absolute top-4 right-4 inline-flex items-center gap-1 text-sm font-medium text-slate-600 hover:text-blue-700 transition-colors"
     >
-      Go to Dashboard &rarr;
+      Go to Dashboard <span aria-hidden>→</span>
     </a>
 
-    <!-- Main Login/Signup Card -->
-    <div
-      class="w-full max-w-4xl bg-white rounded-xl shadow-[0_20px_50px_-15px_rgba(0,0,0,0.2)] overflow-hidden flex flex-col md:flex-row"
-    >
-      <!-- Left Panel (Branding & Toggles) -->
-      <div
-        class="w-full md:w-2/5 bg-gradient-to-r from-blue-600 to-blue-700 p-8 text-white flex flex-col justify-center items-center"
-      >
-        <i class="fas fa-bell fa-3x"></i>
-
-        <h2 class="text-3xl font-bold mt-4">What's My Quote</h2>
-        <p class="text-blue-100 mt-2 text-center text-sm">
-          Your all-in-one tool for Bell and Virgin quotes.
-        </p>
-
-        <div class="mt-8 w-full space-y-4">
-          <!-- 
-                  These buttons will now be controlled by our
-                  new, built-in JavaScript.
-                -->
-          <a href="#" class="customBtn activeBtn" id="largeLoginBtn">Login</a>
-          <a href="#" class="customBtn" id="largeSignupBtn">Signup</a>
-        </div>
-      </div>
-
-      <!-- Right Panel (Forms) -->
-      <div class="w-full md:w-3/5 p-8 relative overflow-hidden">
-        <!-- Login Form (Visible by default) -->
-        <div
-          id="loginFormContainer"
-          class="transition-all duration-500 ease-in-out opacity-100 max-h-[600px]"
-        >
-          <h2 class="text-3xl font-bold text-gray-900 text-center">Login</h2>
-          <form id="loginForm" class="mt-6 space-y-4">
-            <div>
-              <label
-                for="login-email"
-                class="block text-sm font-medium text-gray-700"
-                >Email</label
-              >
-              <div class="relative mt-1">
-                <span
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
-                >
-                  <i class="far fa-envelope"></i>
-                </span>
-                <!-- ADDED autocomplete="email" -->
-                <input
-                  id="login-email"
-                  type="email"
-                  autocomplete="email"
-                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                for="login-password"
-                class="block text-sm font-medium text-gray-700"
-                >Password</label
-              >
-              <div class="relative mt-1">
-                <span
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
-                >
-                  <i class="far fa-eye-slash"></i>
-                </span>
-                <!-- ADDED autocomplete="current-password" -->
-                <input
-                  id="login-password"
-                  type="password"
-                  autocomplete="current-password"
-                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="flex items-center justify-between pt-2">
-              <a class="text-sm text-blue-600 hover:underline" href="#"
-                ><small>Forgot Password?</small></a
-              >
-              <button
-                type="submit"
-                class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                LOGIN
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Signup Form (Hidden by default) -->
-        <!-- 
-              This is now hidden with Tailwind classes.
-              It's positioned absolutely so the forms can cross-fade.
-            -->
-        <div
-          id="signupFormContainer"
-          class="absolute top-8 left-0 w-full px-8 transition-all duration-500 ease-in-out opacity-0 max-h-0 invisible"
-        >
-          <h2 class="text-3xl font-bold text-gray-900 text-center">Sign Up</h2>
-          <form id="signupForm" class="mt-6 space-y-4">
-            <div>
-              <label
-                for="signup-username"
-                class="block text-sm font-medium text-gray-700"
-                >Username</label
-              >
-              <div class="relative mt-1">
-                <span
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
-                >
-                  <i class="far fa-user"></i>
-                </span>
-                <!-- ADDED autocomplete="username" -->
-                <input
-                  id="signup-username"
-                  type="text"
-                  autocomplete="username"
-                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
-                  placeholder="YourUsername"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                for="signup-email"
-                class="block text-sm font-medium text-gray-700"
-                >Email</label
-              >
-              <div class="relative mt-1">
-                <span
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
-                >
-                  <i class="far fa-envelope"></i>
-                </span>
-                <!-- ADDED autocomplete="email" -->
-                <input
-                  id="signup-email"
-                  type="email"
-                  autocomplete="email"
-                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
-                  placeholder="you@example.com"
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <label
-                for="signup-password"
-                class="block text-sm font-medium text-gray-700"
-                >Create Password</label
-              >
-              <div class="relative mt-1">
-                <span
-                  class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400"
-                >
-                  <i class="far fa-eye-slash"></i>
-                </span>
-                <!-- ADDED autocomplete="new-password" -->
-                <input
-                  id="signup-password"
-                  type="password"
-                  autocomplete="new-password"
-                  class="pl-10 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm py-3"
-                  placeholder="••••••••"
-                  required
-                />
-              </div>
-            </div>
-
-            <div class="flex items-center justify-end pt-2">
-              <button
-                type="submit"
-                class="bg-blue-600 text-white px-5 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
-                id="signUpNewUser"
-              >
-                SIGN UP
-              </button>
-            </div>
-          </form>
-        </div>
-
-        <!-- Social Login Footer -->
-        <div class="mt-8">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center">
-              <div class="w-full border-t border-gray-300"></div>
-            </div>
-            <div class="relative flex justify-center text-sm">
-              <span id="lsHeading" class="px-2 bg-white text-gray-500">
-                LOGIN WITH
-              </span>
-            </div>
+    <!-- Wrapper -->
+    <main class="min-h-screen w-full flex items-center justify-center p-4">
+      <div class="w-full max-w-5xl bg-white rounded-2xl shadow-soft overflow-hidden grid grid-cols-1 md:grid-cols-2">
+        <!-- Left: Brand & Switcher -->
+        <section class="relative bg-gradient-to-br from-blue-600 to-blue-700 text-white p-8 flex flex-col items-center justify-center">
+          <div class="absolute inset-0 opacity-10 pointer-events-none" aria-hidden>
+            <div class="w-[600px] h-[600px] rounded-full bg-white blur-3xl absolute -bottom-20 -left-20"></div>
           </div>
 
-          <div class="mt-6 flex justify-center space-x-6">
-            <a
-              href="#"
-              class="text-gray-400 hover:text-blue-600 transition-colors"
-            >
-              <i class="fab fa-facebook-square fa-2x"></i>
-            </a>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-red-600 transition-colors"
-            >
-              <i class="fab fa-google fa-2x"></i>
-            </a>
-            <a
-              href="#"
-              class="text-gray-400 hover:text-blue-400 transition-colors"
-            >
-              <i class="fab fa-twitter fa-2x"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
+          <div class="relative flex flex-col items-center text-center">
+            <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 grid place-items-center">
+              <i class="fas fa-bell text-2xl"></i>
+            </div>
+            <h1 class="mt-4 text-3xl font-semibold tracking-tight">What's My Quote</h1>
+            <p class="mt-2 text-blue-100 max-w-xs">Your all‑in‑one tool for Bell and Virgin quotes.</p>
 
-    <!-- 
-      NEW SCRIPT TO HANDLE TOGGLES
-      This replaces your external 'index.js' file for the toggle logic.
-    -->
+            <div class="mt-8 w-full flex items-center justify-center gap-3">
+              <button id="tabLogin" class="btn-pill px-5 py-2.5 bg-white text-blue-700 font-semibold shadow hover:shadow-md transition">Login</button>
+              <button id="tabSignup" class="btn-pill px-5 py-2.5 border border-white/60 text-white font-semibold hover:bg-white/10 transition">Sign Up</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right: Forms -->
+        <section class="relative p-8 md:p-10 overflow-hidden">
+          <!-- Alert -->
+          <div id="alert" class="hidden mb-4 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm" role="alert"></div>
+
+          <!-- Login Form -->
+          <form id="loginForm" class="space-y-5" autocomplete="on" novalidate>
+            <h2 class="text-2xl font-semibold">Login</h2>
+
+            <div>
+              <label for="login-email" class="block text-sm font-medium text-slate-700">Email</label>
+              <div class="mt-1 relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="far fa-envelope"></i></span>
+                <input id="login-email" type="email" autocomplete="email" required class="pl-10 w-full rounded-xl border border-slate-200 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="you@example.com" />
+              </div>
+            </div>
+
+            <div>
+              <label for="login-password" class="block text-sm font-medium text-slate-700">Password</label>
+              <div class="mt-1 relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="far fa-lock"></i></span>
+                <input id="login-password" type="password" autocomplete="current-password" required class="pl-10 pr-10 w-full rounded-xl border border-slate-200 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="••••••••" />
+                <button type="button" id="toggleLoginPw" class="absolute inset-y-0 right-0 pr-3 text-slate-400 hover:text-slate-600" aria-label="Show password"><i class="far fa-eye"></i></button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <a class="text-sm text-blue-700 hover:underline" href="#">Forgot password?</a>
+              <button type="submit" id="loginBtn" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Login</span>
+                <span id="loginSpinner" class="hidden h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden></span>
+              </button>
+            </div>
+
+            <div class="pt-3">
+              <div class="relative text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                <span class="relative bg-white px-2 text-xs text-slate-500">OR LOGIN WITH</span>
+              </div>
+              <div class="mt-4 flex justify-center gap-6 text-slate-400">
+                <a href="#" aria-label="Login with Facebook" class="hover:text-blue-600"><i class="fab fa-facebook-square fa-2x"></i></a>
+                <a href="#" aria-label="Login with Google" class="hover:text-red-600"><i class="fab fa-google fa-2x"></i></a>
+                <a href="#" aria-label="Login with X" class="hover:text-blue-400"><i class="fab fa-twitter fa-2x"></i></a>
+              </div>
+            </div>
+          </form>
+
+          <!-- Signup Form -->
+          <form id="signupForm" class="space-y-5 absolute top-8 left-0 right-0 opacity-0 pointer-events-none" autocomplete="on" novalidate>
+            <h2 class="text-2xl font-semibold">Create your account</h2>
+
+            <div>
+              <label for="signup-username" class="block text-sm font-medium text-slate-700">Username</label>
+              <div class="mt-1 relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="far fa-user"></i></span>
+                <input id="signup-username" type="text" autocomplete="username" required class="pl-10 w-full rounded-xl border border-slate-200 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="yourname" />
+              </div>
+            </div>
+
+            <div>
+              <label for="signup-email" class="block text-sm font-medium text-slate-700">Email</label>
+              <div class="mt-1 relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="far fa-envelope"></i></span>
+                <input id="signup-email" type="email" autocomplete="email" required class="pl-10 w-full rounded-xl border border-slate-200 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="you@example.com" />
+              </div>
+            </div>
+
+            <div>
+              <label for="signup-password" class="block text-sm font-medium text-slate-700">Create password</label>
+              <div class="mt-1 relative">
+                <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="far fa-lock"></i></span>
+                <input id="signup-password" type="password" autocomplete="new-password" minlength="8" required class="pl-10 pr-10 w-full rounded-xl border border-slate-200 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" placeholder="At least 8 characters" />
+                <button type="button" id="toggleSignupPw" class="absolute inset-y-0 right-0 pr-3 text-slate-400 hover:text-slate-600" aria-label="Show password"><i class="far fa-eye"></i></button>
+              </div>
+              <p class="mt-1 text-xs text-slate-500">Use at least 8 characters, including a number.</p>
+            </div>
+
+            <div class="flex items-center justify-end">
+              <button type="submit" id="signupBtn" class="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 font-semibold disabled:opacity-50 disabled:cursor-not-allowed">
+                <span>Create account</span>
+                <span id="signupSpinner" class="hidden h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden></span>
+              </button>
+            </div>
+
+            <div class="pt-3">
+              <div class="relative text-center">
+                <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-slate-200"></div></div>
+                <span class="relative bg-white px-2 text-xs text-slate-500">OR SIGN UP WITH</span>
+              </div>
+              <div class="mt-4 flex justify-center gap-6 text-slate-400">
+                <a href="#" aria-label="Continue with Facebook" class="hover:text-blue-600"><i class="fab fa-facebook-square fa-2x"></i></a>
+                <a href="#" aria-label="Continue with Google" class="hover:text-red-600"><i class="fab fa-google fa-2x"></i></a>
+                <a href="#" aria-label="Continue with X" class="hover:text-blue-400"><i class="fab fa-twitter fa-2x"></i></a>
+              </div>
+            </div>
+          </form>
+
+          <!-- SR-only live region for messages -->
+          <p id="live" class="sr-only" aria-live="polite"></p>
+        </section>
+      </div>
+    </main>
+
+    <!-- Toast -->
+    <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-soft text-sm"></div>
+
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const largeLoginBtn = document.getElementById("largeLoginBtn");
-        const largeSignupBtn = document.getElementById("largeSignupBtn");
-        const loginFormContainer =
-          document.getElementById("loginFormContainer");
-        const signupFormContainer = document.getElementById(
-          "signupFormContainer"
-        );
-        const loginSocialText = document.getElementById("lsHeading");
+      const $ = (s, r=document) => r.querySelector(s);
+      const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+      const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.remove('hidden'); setTimeout(()=> t.classList.add('hidden'), 1800); };
+      const showAlert = (msg) => { const a = $('#alert'); a.textContent = msg; a.classList.remove('hidden'); };
+      const hideAlert = () => { $('#alert').classList.add('hidden'); };
 
-        const loginForm = document.getElementById("loginForm");
-        const signupForm = document.getElementById("signupForm");
+      // Tabs
+      const tabLogin = $('#tabLogin');
+      const tabSignup = $('#tabSignup');
+      const loginForm = $('#loginForm');
+      const signupForm = $('#signupForm');
+      const live = $('#live');
 
-        // ========================
-        // Toggle Logic
-        // ========================
-        function showLogin() {
-          largeLoginBtn.classList.add("activeBtn");
-          largeSignupBtn.classList.remove("activeBtn");
+      function toLogin(){
+        // styles
+        tabLogin.classList.add('bg-white','text-blue-700','shadow');
+        tabSignup.classList.remove('bg-white','text-blue-700','shadow');
+        tabSignup.classList.add('border','border-white/60','text-white');
+        // forms
+        signupForm.style.opacity = 0; signupForm.style.pointerEvents = 'none';
+        loginForm.style.opacity = 1; loginForm.style.pointerEvents = 'auto';
+        hideAlert();
+        live.textContent = 'Showing login form';
+      }
 
-          loginFormContainer.classList.remove(
-            "opacity-0",
-            "max-h-0",
-            "invisible",
-            "absolute"
-          );
-          signupFormContainer.classList.add(
-            "opacity-0",
-            "max-h-0",
-            "invisible",
-            "absolute"
-          );
+      function toSignup(){
+        tabSignup.classList.add('bg-white','text-blue-700','shadow');
+        tabLogin.classList.remove('bg-white','text-blue-700','shadow');
+        tabLogin.classList.add('border','border-white/60','text-white');
+        loginForm.style.opacity = 0; loginForm.style.pointerEvents = 'none';
+        signupForm.style.opacity = 1; signupForm.style.pointerEvents = 'auto';
+        hideAlert();
+        live.textContent = 'Showing signup form';
+      }
 
-          loginSocialText.textContent = "LOGIN WITH";
-        }
+      tabLogin.addEventListener('click', toLogin);
+      tabSignup.addEventListener('click', toSignup);
 
-        function showSignup() {
-          largeSignupBtn.classList.add("activeBtn");
-          largeLoginBtn.classList.remove("activeBtn");
-
-          // Clear signup fields (prevents autofill bleed)
-          document.getElementById("signup-username").value = "";
-          document.getElementById("signup-email").value = "";
-          document.getElementById("signup-password").value = "";
-
-          signupFormContainer.classList.remove(
-            "opacity-0",
-            "max-h-0",
-            "invisible",
-            "absolute"
-          );
-          loginFormContainer.classList.add(
-            "opacity-0",
-            "max-h-0",
-            "invisible",
-            "absolute"
-          );
-
-          loginSocialText.textContent = "SIGN UP WITH";
-        }
-
-        largeLoginBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          showLogin();
+      // Password toggles
+      function bindToggle(btnId, inputId){
+        const btn = document.getElementById(btnId);
+        const input = document.getElementById(inputId);
+        btn.addEventListener('click', ()=>{
+          const show = input.type === 'password';
+          input.type = show ? 'text' : 'password';
+          btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+          btn.innerHTML = show ? '<i class="far fa-eye-slash"></i>' : '<i class="far fa-eye"></i>';
         });
+      }
+      bindToggle('toggleLoginPw','login-password');
+      bindToggle('toggleSignupPw','signup-password');
 
-        largeSignupBtn.addEventListener("click", (e) => {
-          e.preventDefault();
-          showSignup();
-        });
+      // Submit handlers (same endpoints you already wired)
+      async function submitLogin(e){
+        e.preventDefault(); hideAlert();
+        const btn = $('#loginBtn'); const spinner = $('#loginSpinner');
+        const email = $('#login-email').value.trim();
+        const password = $('#login-password').value.trim();
+        try{
+          btn.disabled = true; spinner.classList.remove('hidden');
+          const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+          const data = await res.json();
+          if(!res.ok){ showAlert(data.message || 'Login failed.'); return; }
+          localStorage.setItem('token', data.token);
+          toast('Welcome back!');
+          window.location.href = '/dashboard';
+        } catch(err){ console.error(err); showAlert('Server error during login.'); }
+        finally { btn.disabled = false; spinner.classList.add('hidden'); }
+      }
 
-        // ========================
-        // FORM SUBMISSIONS
-        // ========================
+      async function submitSignup(e){
+        e.preventDefault(); hideAlert();
+        const btn = $('#signupBtn'); const spinner = $('#signupSpinner');
+        const username = $('#signup-username').value.trim();
+        const email = $('#signup-email').value.trim();
+        const password = $('#signup-password').value.trim();
+        try{
+          btn.disabled = true; spinner.classList.remove('hidden');
+          const res = await fetch('/api/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, email, password }) });
+          const data = await res.json();
+          if(!res.ok){ showAlert(data.message || 'Signup failed.'); return; }
+          toast('Signup successful! Please log in.');
+          toLogin();
+        } catch(err){ console.error(err); showAlert('Server error during signup.'); }
+        finally { btn.disabled = false; spinner.classList.add('hidden'); }
+      }
 
-        // ---- LOGIN ----
-        loginForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
+      loginForm.addEventListener('submit', submitLogin);
+      signupForm.addEventListener('submit', submitSignup);
 
-          const email = document.getElementById("login-email").value.trim();
-          const password = document
-            .getElementById("login-password")
-            .value.trim();
-
-          try {
-            const res = await fetch("/api/login", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ email, password }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-              alert(data.message || "Login failed.");
-              return;
-            }
-
-            // Success — store JWT and redirect
-            localStorage.setItem("token", data.token);
-            alert("Login successful!");
-            window.location.href = "/dashboard"; // redirect
-          } catch (err) {
-            console.error("Login error:", err);
-            alert("Server error during login.");
-          }
-        });
-
-        // ---- SIGNUP ----
-        signupForm.addEventListener("submit", async (e) => {
-          e.preventDefault();
-
-          const username = document
-            .getElementById("signup-username")
-            .value.trim();
-          const email = document.getElementById("signup-email").value.trim();
-          const password = document
-            .getElementById("signup-password")
-            .value.trim();
-
-          try {
-            const res = await fetch("/api/signup", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ username, email, password }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-              alert(data.message || "Signup failed.");
-              return;
-            }
-
-            alert("Signup successful! Please log in.");
-            showLogin();
-          } catch (err) {
-            console.error("Signup error:", err);
-            alert("Server error during signup.");
-          }
-        });
-      });
+      // Default state
+      toLogin();
     </script>
-
-    <!-- 
-      *** IMPORTANT ***
-      You should now REMOVE the line below from your code,
-      as this file now handles its own logic.
-    -->
-    <!-- <script src="scripts/login_signup/index.js"></script> -->
   </body>
 </html>
