@@ -42,8 +42,14 @@
   <div class="max-w-7xl mx-auto min-h-screen px-4 md:px-6 lg:px-8 py-6 flex flex-col">
     <!-- Header -->
     <header class="flex items-start md:items-center justify-between gap-4">
+	  <div class="hidden md:flex items-center gap-3">
+		<a href="dashboard.html">
+        	<button id="resetForm" class="px-3 py-2 text-sm rounded-lg border border-slate-200 hover:bg-slate-100">Back</button>
+		</a>
+        
+      </div>
       <div>
-        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">Quote Builder</h1>
+        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight text-center">Quote Builder</h1>
         <p class="text-slate-500">Slide through, capture requirements, then save & send the quote.</p>
       </div>
       <div class="hidden md:flex items-center gap-3">
@@ -72,13 +78,13 @@
           <button id="prevBtn" class="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">◀ Back</button>
           <div class="flex items-center gap-3">
             <button id="saveDraft" class="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-100">Save Draft</button>
-            <button id="nextBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-soft">Next ▶</button>
+            <button id="nextBtn" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white shadow-2xl">Next ▶</button>
           </div>
         </div>
       </section>
 
       <!-- Live Summary -->
-      <aside class="bg-white rounded-2xl shadow-soft p-4 md:p-6 h-fit sticky top-4">
+      <aside class="bg-white rounded-2xl shadow-2xl p-4 md:p-6 h-full sticky top-4">
         <h2 class="text-lg font-semibold">Quote Summary</h2>
         <p class="text-sm text-slate-500">Auto-updates as you move through steps.</p>
 
@@ -119,7 +125,7 @@
   </div>
 
   <!-- SUCCESS TOAST -->
-  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-soft">Saved!</div>
+  <div id="toast" class="hidden fixed bottom-6 left-1/2 -translate-x-1/2 bg-emerald-600 text-white px-4 py-2.5 rounded-xl shadow-2xl">Saved!</div>
 
   <!-- SEND MODAL -->
   <div id="sendModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 p-4">

@@ -26,6 +26,17 @@ const customerSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Customer phone number is required'],
         trim: true
+    },
+	Notes: {
+        type: String,
+        trim: true
+    },
+	  // New: Customer category choice
+    category: {
+        type: String,
+        enum: ['Bell Consumer', 'Bell SMB', 'Virgin', 'Lucky'],
+        required: [true, 'Customer category is required'],
+        trim: true
     }
 }, {
     // Automatically adds createdAt and updatedAt timestamps

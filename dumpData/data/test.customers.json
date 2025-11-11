@@ -1,0 +1,50 @@
+[{
+  "_id": {
+    "$oid": "6912de3fdb6520c5793b7765"
+  },
+  "name": "Jawad Chowdhury",
+  "email": "jawad.chowdhury@gmail.com",
+  "phone": "780-111-2222",
+  "category": "Bell Consumer",
+  "Notes": "Interested in Bell Consumer plans"
+},
+{
+  "_id": {
+    "$oid": "6912de3fdb6520c5793b7766"
+  },
+  "name": "Jawad Chowdhury (UAlberta)",
+  "email": "jchowdhu@ualberta.ca",
+  "phone": "780-333-4444",
+  "category": "Bell SMB",
+  "Notes": "University SMB client"
+},
+{
+  "_id": {
+    "$oid": "6912de3fdb6520c5793b7767"
+  },
+  "name": "Alice Smith",
+  "email": "alice.smith@example.com",
+  "phone": "403-555-0101",
+  "category": "Lucky",
+  "Notes": "Interested in Lucky P2P"
+},
+{
+  "_id": {
+    "$oid": "6912de3fdb6520c5793b7768"
+  },
+  "name": "Bob Johnson",
+  "email": "bob.johnson@example.net",
+  "phone": "587-555-0102",
+  "category": "Virgin",
+  "Notes": "Virgin Mobile user, potential upgrade"
+},
+{
+  "_id": {
+    "$oid": "6912de3fdb6520c5793b7769"
+  },
+  "name": "Meghan Patel",
+  "email": "meghan.patel@email-provider.com",
+  "phone": "780-555-0103",
+  "category": "Bell Consumer",
+  "Notes": "Returning Bell customer"
+}]

@@ -14,6 +14,8 @@ const port = 3000
 // Model calls
 const Phone = require('./models/Phone');
 const Plan = require('./models/Plan');
+const P2PReminder = require('./models/p2pReminder'); // path same style as other models
+const Customer = require('./models/customer');
 
 // import functions
 const { sendWelcomeEmail } = require('./public/scripts/login_signup/success_email');
@@ -43,6 +45,60 @@ app.get('/dashboard', (req, res) => {
 // ===================================
 // API ENDPOINTS FOR AUTHENTICATION
 // ===================================
+
+
+// server.js
+
+app.get('/api/customers', async (_req, res) => {
+  try {
+    const customers = await Customer.find(
+      {},
+      { name: 1, email: 1, phone: 1, category: 1, Notes: 1, createdAt: 1 }
+    );
+    res.json(customers);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Failed to fetch customers' });
+  }
+});
+
+
+// List P2P reminders (populated with customer info)
+app.get('/api/p2p-reminders', async (req, res) => {
+  try {
+    const reminders = await P2PReminder.find({})
+      .populate('CustomerInfo'); // brings in name/email/phone
+    res.json(reminders);
+  } catch (e) {
+    console.error('Error fetching p2p reminders:', e);
+    res.status(500).json({ error: 'Failed to fetch p2p reminders' });
+  }
+});
+
+// Create a new P2P reminder
+app.post('/api/p2p-reminders', async (req, res) => {
+  try {
+    const { TransactionDate, CustomerInfo, Notes } = req.body;
+    const reminder = new P2PReminder({ TransactionDate, CustomerInfo, Notes });
+    await reminder.save(); // ReminderDate will default to +28d if not provided
+    const populated = await reminder.populate('CustomerInfo');
+    res.status(201).json(populated);
+  } catch (e) {
+    console.error('Error creating p2p reminder:', e);
+    res.status(400).json({ error: 'Failed to create p2p reminder' });
+  }
+});
+
+// (Optional) Customers list for the "New Reminder" form
+app.get('/api/customers', async (_req, res) => {
+  try {
+    const customers = await Customer.find({}, { name: 1, email: 1, phone: 1 });
+    res.json(customers);
+  } catch (e) {
+    console.error('Error fetching customers:', e);
+    res.status(500).json({ error: 'Failed to fetch customers' });
+  }
+});
 
 // --- SIGNUP / REGISTER ROUTE ---
 app.post('/api/signup', async (req, res) => {
@@ -125,6 +181,19 @@ app.post('/api/login', async (req, res) => {
         console.error(error);
         res.status(500).json({ message: 'Server error during login.' });
     }
+});
+
+// Return distinct manufacturers (handles 'manufacturer' vs 'brand' fallbacks)
+app.get('/api/phones/manufacturers', async (_req, res) => {
+  try {
+    const m1 = await Phone.distinct('manufacturer');
+    const m2 = await Phone.distinct('brand'); // if some docs used 'brand'
+    const all = [...new Set([...(m1 || []), ...(m2 || [])])].filter(Boolean).sort((a,b)=>(''+a).localeCompare(''+b));
+    res.json(all);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: 'Failed to load manufacturers' });
+  }
 });
 
 // fetch phones
