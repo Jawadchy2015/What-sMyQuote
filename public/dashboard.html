@@ -135,7 +135,7 @@
           </h3>
           <a
             href="#"
-			id="nav-customer-followup"
+            id="nav-customer-followup"
             class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <i class="fas fa-users w-6 text-center text-gray-400"></i>
@@ -143,7 +143,7 @@
           </a>
           <a
             href="#"
-			id="nav-lucky-p2p"
+            id="nav-lucky-p2p"
             class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <i class="fas fa-exchange-alt w-6 text-center text-gray-400"></i>
@@ -185,20 +185,22 @@
     </nav>
 
     <div class="md:pl-64 flex flex-col min-h-full">
-		<header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 font-[Inter]">
-			<div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-				<div class="flex items-center h-16">
-
-					<!-- Push avatar all the way right -->
-					<div class="ml-auto">
-					<div class="h-9 w-9 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-lg">
-						<i class="fas fa-user"></i>
-					</div>
-					</div>
-
-				</div>
-			</div>
-	</header>
+      <header
+        class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 font-[Inter]"
+      >
+        <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center h-16">
+            <!-- Push avatar all the way right -->
+            <div class="ml-auto">
+              <div
+                class="h-9 w-9 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-lg"
+              >
+                <i class="fas fa-user"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
 
       <main class="w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -222,7 +224,7 @@
               </svg>
             </div>
             <div>
-              <a href="generateQuote.html"
+              <a href="quote.html"
                 ><h2 class="text-xl font-semibold">Generate Quote</h2></a
               >
             </div>
@@ -570,36 +572,92 @@
         </div>
       </div>
     </div>
-	<div id="p2p-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
-		<div id="p2p-backdrop" class="fixed inset-0 bg-gray-500/60 dark:bg-gray-900/70 opacity-0 transition-opacity"></div>
-		<div id="p2p-content" class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all w-full max-w-xl mx-auto overflow-hidden">
-			<div class="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700 text-center">
-			<h3 class="text-2xl font-semibold text-gray-900 dark:text-white">New Lucky P2P Reminder</h3>
-			</div>
-			<div class="p-6 space-y-4">
-			<form id="p2p-form" class="space-y-4">
-				<div>
-				<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Customer</label>
-				<select id="p2p-customer" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"></select>
-				</div>
-				<div>
-				<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Transaction Date</label>
-				<input type="date" id="p2p-tdate" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"/>
-				<p class="text-xs text-gray-500 mt-1">Reminder will default to +28 days from transaction.</p>
-				</div>
-				<div>
-				<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Notes</label>
-				<textarea id="p2p-notes" rows="3" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"></textarea>
-				</div>
-				<div class="flex justify-end gap-2 pt-2">
-				<button type="button" id="p2p-cancel" class="px-4 py-2 rounded-md border dark:border-gray-600">Cancel</button>
-				<button type="submit" class="px-4 py-2 rounded-md bg-blue-600 text-white">Save</button>
-				</div>
-			</form>
-			</div>
-		</div>
-	</div>
+    <!-- existing form -->
+<!-- Main modal -->
+<div id="crud-modal" tabindex="-1" aria-hidden="true" class="hidden fixed inset-0 z-50 overflow-y-auto overflow-x-hidden flex items-center justify-center p-4 md:inset-0 h-[calc(100%-1rem)] max-h-full">
+  <div class="relative w-full max-w-md max-h-full">
+    <!-- Modal content -->
+    <div id="p2p-content"  class="relative bg-white dark:bg-gray-700 rounded-lg shadow-lg">
+      <!-- Modal header -->
+      <div class="flex items-center justify-between p-4 md:p-5 border-b border-gray-200 dark:border-gray-600 rounded-t-lg">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">P2P Reminder client</h3>
+        <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 dark:hover:bg-gray-600 hover:text-gray-900 dark:hover:text-white rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center"
+                data-modal-toggle="crud-modal" aria-label="Close modal" id="p2p-cancel">
+          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+               fill="none" viewBox="0 0 14 14" stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+          </svg>
+          <span class="sr-only">Close modal</span>
+        </button>
+      </div>
+      <!-- Modal body -->
+      <form class="p-4 md:p-5 space-y-4" id="p2p-form">
+        <div class="grid gap-4 mb-4 grid-cols-2">
+          
+          <div class="col-span-2 sm:col-span-1">
+            <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Date</label>
+            <input type="date" id="p2p-tdate"
+                   class="bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                   placeholder="$2999" required>
+          </div>
+          <div class="col-span-2 sm:col-span-1">
+            <label for="category" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Customer</label>
+            <select id="p2p-customer" name="category"
+                    class="bg-gray-50 dark:bg-gray-600 border border-gray-300 dark:border-gray-500 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5">
 
+            </select>
+          </div>
+          <div class="col-span-2">
+            <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Notes</label>
+            <textarea id="p2p-notes" name="description" rows="4"
+                      class="block p-2.5 w-full text-sm text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-500 focus:ring-blue-500 focus:border-blue-500"
+                      placeholder="Write product description here"></textarea>
+          </div>
+        </div>
+        <div class="col-span-6">
+			<button type="submit"
+					class="inline-flex items-center px-5 py-2.5 text-sm font-medium text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+				<svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20"
+					xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd"
+					d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"></path></svg>
+				Create reminder
+			</button>
+		</div>
+
+      </form>
+    </div>
+  </div>
+</div>
+    <!-- <div id="crud-modal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4">
+		<div id="p2p-backdrop" class="fixed inset-0 bg-gray-500/60 dark:bg-gray-900/70 opacity-0 transition-opacity"></div>
+			<div id="p2p-content" class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all w-full max-w-xl mx-auto overflow-hidden">
+				<div class="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700 text-center">
+					<h3 class="text-2xl font-semibold text-gray-900 dark:text-white">New Lucky P2P Reminder</h3>
+				</div>
+				<div class="p-6 space-y-4">
+					<form id="p2p-form" class="space-y-4">
+						<div>
+							<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Customer</label>
+							<select id="p2p-customer" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"></select>
+						</div>
+						<div>
+							<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Transaction Date</label>
+							<input type="date" id="p2p-tdate" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"/>
+							<p class="text-xs text-gray-500 mt-1">Reminder will default to +28 days from transaction.</p>
+						</div>
+						<div>
+							<label class="block text-sm mb-1 text-gray-600 dark:text-gray-300">Notes</label>
+							<textarea id="p2p-notes" rows="3" class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700"></textarea>
+						</div>
+						<div class="flex justify-end gap-2 pt-2">
+							<button type="button" id="p2p-cancel" class="px-4 py-2 rounded-md border dark:border-gray-600">Cancel</button>
+							<button type="submit" class="px-4 py-2 rounded-md bg-blue-600 text-white">Save</button>
+						</div>
+					</form>
+				</div>
+			</div>
+	</div> -->
 
     <div
       id="plan-price-modal"
@@ -696,26 +754,35 @@
           }
         });
 
-		// ---- Customer Follow-up (simple list) ----
-		document.getElementById('nav-customer-followup').addEventListener('click', (e) => {
-		e.preventDefault();
-		loadCustomerFollowupUI();
-		});
+        // ---- Customer Follow-up (simple list) ----
+        document
+          .getElementById("nav-customer-followup")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            loadCustomerFollowupUI();
+          });
 
-		function catBadgeClass(cat) {
-		const map = {
-			'Bell Consumer': 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200',
-			'Bell SMB': 'bg-blue-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200',
-			'Virgin': 'bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200',
-			'Lucky': 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200',
-		};
-		return map[cat] || 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200';
-		}
+        function catBadgeClass(cat) {
+          const map = {
+            "Bell Consumer":
+              "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-200",
+            "Bell SMB":
+              "bg-blue-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-200",
+            Virgin:
+              "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-200",
+            Lucky:
+              "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200",
+          };
+          return (
+            map[cat] ||
+            "bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-200"
+          );
+        }
 
-		async function loadCustomerFollowupUI() {
-		hideWelcomeMessage();
+        async function loadCustomerFollowupUI() {
+          hideWelcomeMessage();
 
-		mainContentContainer.innerHTML = `
+          mainContentContainer.innerHTML = `
 			<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 			<h2 class="text-2xl font-bold text-gray-900 dark:text-white">Customer Follow-up</h2>
 			<div class="flex items-center gap-2">
@@ -741,60 +808,65 @@
 			<div id="custfu-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6"></div>
 		`;
 
-		try {
-			const res = await fetch('/api/customers');
-			if (!res.ok) throw new Error();
-			const data = await res.json();
-			
+          try {
+            const res = await fetch("/api/customers");
+            if (!res.ok) throw new Error();
+            const data = await res.json();
 
-			// default sort by name
-			data.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-			console.log(data)
-			renderCustomerFollowupGrid(data);
+            // default sort by name
+            data.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+            console.log(data);
+            renderCustomerFollowupGrid(data);
 
-			// search & filter
-			const search = document.getElementById('custfu-search');
-			const filter = document.getElementById('custfu-filter');
+            // search & filter
+            const search = document.getElementById("custfu-search");
+            const filter = document.getElementById("custfu-filter");
 
-			function applyFilters() {
-			const q = (search.value || '').toLowerCase();
-			const f = filter.value;
-			const filtered = data.filter(c => {
-				const matchesText =
-				(c.name || '').toLowerCase().includes(q) ||
-				(c.email || '').toLowerCase().includes(q) ||
-				(c.phone || '').toLowerCase().includes(q);
-				const matchesCat = !f || c.category === f;
-				return matchesText && matchesCat;
-			});
-			renderCustomerFollowupGrid(filtered);
-			}
+            function applyFilters() {
+              const q = (search.value || "").toLowerCase();
+              const f = filter.value;
+              const filtered = data.filter((c) => {
+                const matchesText =
+                  (c.name || "").toLowerCase().includes(q) ||
+                  (c.email || "").toLowerCase().includes(q) ||
+                  (c.phone || "").toLowerCase().includes(q);
+                const matchesCat = !f || c.category === f;
+                return matchesText && matchesCat;
+              });
+              renderCustomerFollowupGrid(filtered);
+            }
 
-			search.addEventListener('input', applyFilters);
-			filter.addEventListener('change', applyFilters);
+            search.addEventListener("input", applyFilters);
+            filter.addEventListener("change", applyFilters);
+          } catch (e) {
+            console.error(e);
+            document.getElementById("custfu-error").classList.remove("hidden");
+          } finally {
+            document.getElementById("custfu-loading").classList.add("hidden");
+          }
+        }
 
-		} catch (e) {
-			console.error(e);
-			document.getElementById('custfu-error').classList.remove('hidden');
-		} finally {
-			document.getElementById('custfu-loading').classList.add('hidden');
-		}
-		}
+        function renderCustomerFollowupGrid(items) {
+          const cont = document.getElementById("custfu-grid");
+          if (!items?.length) {
+            cont.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">No customers to show.</p>`;
+            return;
+          }
+          // console.log(items)
 
-		function renderCustomerFollowupGrid(items) {
-		const cont = document.getElementById('custfu-grid');
-		if (!items?.length) {
-			cont.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">No customers to show.</p>`;
-			return;
-		}
-		// console.log(items)
+          cont.innerHTML = items
+            .map((c) => {
+              const initials = (c.name || "?")
+                .split(" ")
+                .filter(Boolean)
+                .slice(0, 2)
+                .map((s) => s[0].toUpperCase())
+                .join("");
+              const created = c.createdAt
+                ? new Date(c.createdAt).toLocaleDateString()
+                : "—";
 
-		cont.innerHTML = items.map(c => {
-			const initials = (c.name || '?')
-			.split(' ').filter(Boolean).slice(0,2).map(s => s[0].toUpperCase()).join('');
-			const created = c.createdAt ? new Date(c.createdAt).toLocaleDateString() : '—';
-
-			return `
+              return `
 			<div class="group bg-white dark:bg-gray-700 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600
 						hover:shadow-lg transition-shadow">
 				<div class="p-5">
@@ -805,12 +877,14 @@
 						${initials}
 					</div>
 					<div>
-						<div class="text-lg font-semibold text-gray-900 dark:text-white">${c.name || '—'}</div>
+						<div class="text-lg font-semibold text-gray-900 dark:text-white">${
+              c.name || "—"
+            }</div>
 						
 					</div>
 					</div>
 					<span class="px-2 py-2 rounded-full text-xs ${catBadgeClass(c.category)}">
-					${c.category || '—'}
+					${c.category || "—"}
 					</span>
 				</div>
 
@@ -823,33 +897,44 @@
 					</div>
 					<div class="rounded-xl bg-gray-50 dark:bg-gray-800 p-3">
 					<div class="text-gray-500 dark:text-gray-400">Email</div>
-					<div class="font-medium text-gray-900 dark:text-white truncate">${c.email || '—'}</div>
+					<div class="font-medium text-gray-900 dark:text-white truncate">${
+            c.email || "—"
+          }</div>
 				</div>
-				${c.Notes ? `
+				${
+          c.Notes
+            ? `
 					</div>
 					<div class="mt-3 text-sm text-green-700 dark:text-gray-200">
 						<span class=" text-sm text-green-700 dark:text-white">NOTES:</span> 
 				${c.Notes}
-					</div>` : ''}
+					</div>`
+            : ""
+        }
 
 				</div>
 			</div>
 			`;
-		}).join('');
-		}
+            })
+            .join("");
+        }
 
-		// --- Lucky P2P UI ---
-		document.getElementById('nav-lucky-p2p').addEventListener('click', (e) => {
-			e.preventDefault();
-			loadP2PUI();
-		});
-		async function loadP2PUI() {
-			hideWelcomeMessage();
-			mainContentContainer.innerHTML = `
+        // --- Lucky P2P UI ---
+        document
+          .getElementById("nav-lucky-p2p")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            loadP2PUI();
+          });
+        async function loadP2PUI() {
+          hideWelcomeMessage();
+          mainContentContainer.innerHTML = `
 				<div class="flex items-center justify-between">
 				<h2 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Lucky P2P Reminders</h2>
-				<button id="btn-new-p2p" class="inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-					<i class="fas fa-plus"></i> New Reminder
+				
+				<!-- Modal toggle -->
+				<button id="btn-new-p2p" data-modal-target="crud-modal" data-modal-toggle="crud-modal" class="block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+				<i class="fas fa-plus"></i> New Reminder
 				</button>
 				</div>
 				<div id="p2p-loading" class="flex justify-center items-center h-48 mt-6">
@@ -859,126 +944,157 @@
 				<div id="p2p-list" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6"></div>
 			`;
 
-			document.getElementById('btn-new-p2p').addEventListener('click', openP2PModal);
+          document
+            .getElementById("btn-new-p2p")
+            .addEventListener("click", openP2PModal);
 
-			try {
-				const res = await fetch('/api/p2p-reminders');
-				if (!res.ok) throw new Error();
-				const items = await res.json();
-				renderP2PList(items);
-			} catch {
-				document.getElementById('p2p-error').classList.remove('hidden');
-			} finally {
-				document.getElementById('p2p-loading').classList.add('hidden');
-			}
-			}
+          try {
+            const res = await fetch("/api/p2p-reminders");
+            if (!res.ok) throw new Error();
+            const items = await res.json();
+            renderP2PList(items);
+          } catch {
+            document.getElementById("p2p-error").classList.remove("hidden");
+          } finally {
+            document.getElementById("p2p-loading").classList.add("hidden");
+          }
+        }
 
-			function renderP2PList(items) {
-			const cont = document.getElementById('p2p-list');
-			if (!items || items.length === 0) {
-				cont.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">No reminders yet.</p>`;
-				return;
-			}
-			const today = new Date();
-			cont.innerHTML = items.map(x => {
-				console.log(x)
-				const c = x.CustomerInfo || {};
-				const t = x.TransactionDate ? new Date(x.TransactionDate) : null;
-				const r = x.ReminderDate ? new Date(x.ReminderDate) : null;
-				const status = r ? (r < today ? 'Overdue' : 'Upcoming') : '—';
-				const badge = status === 'Overdue'
-				? 'bg-red-100 text-lg text-red-700 dark:bg-red-900 dark:text-red-200'
-				: 'bg-yellow-100 text-lg text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200';
+        function renderP2PList(items) {
+          const cont = document.getElementById("p2p-list");
+          if (!items || items.length === 0) {
+            cont.innerHTML = `<p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">No reminders yet.</p>`;
+            return;
+          }
+          const today = new Date();
+          cont.innerHTML = items
+            .map((x) => {
+              console.log(x);
+              const c = x.CustomerInfo || {};
+              const t = x.TransactionDate ? new Date(x.TransactionDate) : null;
+              const r = x.ReminderDate ? new Date(x.ReminderDate) : null;
+              const status = r ? (r < today ? "Overdue" : "Upcoming") : "—";
+              const badge =
+                status === "Overdue"
+                  ? "bg-red-100 text-lg text-red-700 dark:bg-red-900 dark:text-red-200"
+                  : "bg-yellow-100 text-lg text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200";
 
-				return `
+              return `
 				<div class="bg-white dark:bg-gray-700 rounded-xl shadow-lg p-5 border border-gray-200 dark:border-gray-600">
 					<div class="flex items-start justify-between">
 					<div>
-						<div class="text-md font-bold text-gray-900 dark:text-white">${c.name || 'Unknown Customer'}</div>
-						<div class="text-md text-gray-500 dark:text-gray-300 text-no-wrap">${c.email || ''}</div>
-						<div class="text-md font-semibold text-gray-500 dark:text-gray-300">${c.phone || ''}</div>
+						<div class="text-md font-bold text-gray-900 dark:text-white">${
+              c.name || "Unknown Customer"
+            }</div>
+						<div class="text-md text-gray-500 dark:text-gray-300 text-no-wrap">${
+              c.email || ""
+            }</div>
+						<div class="text-md font-semibold text-gray-500 dark:text-gray-300">${
+              c.phone || ""
+            }</div>
 					</div>
 					<span class="px-2 py-1 rounded-full text-md ${badge}">${status}</span>
 					</div>
 					<div class="mt-4 grid grid-cols-2 gap-3">
 					<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
 						<div class="text-gray-500 dark:text-gray-400">Transaction</div>
-						<div class="font-medium text-gray-900 dark:text-white">${t ? t.toLocaleDateString() : '—'}</div>
+						<div class="font-medium text-gray-900 dark:text-white">${
+              t ? t.toLocaleDateString() : "—"
+            }</div>
 					</div>
 					<div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
 						<div class="text-gray-500 dark:text-gray-400">Reminder</div>
-						<div class="font-medium text-gray-900 dark:text-white">${r ? r.toLocaleDateString() : '—'}</div>
+						<div class="font-medium text-gray-900 dark:text-white">${
+              r ? r.toLocaleDateString() : "—"
+            }</div>
 					</div>
 					</div>
-					${x.Notes ? `<div class="mt-3 text-green-700 dark:text-green-400 text-sm">NOTE: ${x.Notes}</div>` : ''}
+					${
+            x.Notes
+              ? `<div class="mt-3 text-green-700 dark:text-green-400 text-sm">NOTE: ${x.Notes}</div>`
+              : ""
+          }
 				</div>
 				`;
-			}).join('');
-			}
+            })
+            .join("");
+        }
 
-		// Modal behavior
-		const p2pModal = document.getElementById('p2p-modal');
-		const p2pBackdrop = document.getElementById('p2p-backdrop');
-		const p2pContent = document.getElementById('p2p-content');
+        // Modal behavior
+        const p2pModal = document.getElementById("crud-modal");
+        // const p2pBackdrop = document.getElementById("p2p-backdrop");
+        const p2pContent = document.getElementById("p2p-content");
 
-		function openP2PModal() {
-		p2pModal.classList.remove('hidden');
-		setTimeout(() => {
-			p2pBackdrop.classList.add('opacity-100');
-			p2pContent.classList.add('opacity-100','scale-100');
-		}, 10);
-		setupP2PForm();
-		}
+        function openP2PModal() {
+          p2pModal.classList.remove("hidden");
+          setTimeout(() => {
+            // p2pBackdrop.classList.add("opacity-100");
+            p2pContent.classList.add("opacity-100", "scale-100");
+          }, 10);
+          setupP2PForm();
+        }
 
-		function closeP2PModal() {
-		p2pBackdrop.classList.remove('opacity-100');
-		p2pContent.classList.remove('opacity-100','scale-100');
-		setTimeout(() => p2pModal.classList.add('hidden'), 250);
-		}
+        function closeP2PModal() {
+        //   p2pBackdrop.classList.remove("opacity-100");
+          p2pContent.classList.remove("opacity-100", "scale-100");
+          setTimeout(() => p2pModal.classList.add("hidden"), 250);
+        }
 
-		p2pBackdrop.addEventListener('click', closeP2PModal);
-		document.getElementById('p2p-cancel').addEventListener('click', closeP2PModal);
+        // p2pBackdrop.addEventListener("click", closeP2PModal);
+        document
+          .getElementById("p2p-cancel")
+          .addEventListener("click", closeP2PModal);
 
-		async function setupP2PForm() {
-		// Fill customers
-		const sel = document.getElementById('p2p-customer');
-		sel.innerHTML = '<option value="" disabled selected>Loading customers...</option>';
-		try {
-			const res = await fetch('/api/customers');
-			const customers = await res.json();
-			sel.innerHTML = '<option value="" disabled selected>Select a customer</option>' +
-			customers.map(c => `<option value="${c._id}">${c.name} — ${c.phone}</option>`).join('');
-		} catch {
-			sel.innerHTML = '<option value="" disabled selected>Failed to load customers</option>';
-		}
+        async function setupP2PForm() {
+          // Fill customers
+          const sel = document.getElementById("p2p-customer");
+          sel.innerHTML =
+            '<option value="" disabled selected>Loading customers...</option>';
+          try {
+            const res = await fetch("/api/customers");
+            const customers = await res.json();
+            sel.innerHTML =
+              '<option value="" disabled selected>Select a customer</option>' +
+              customers
+                .map(
+                  (c) =>
+                    `<option value="${c._id}">${c.name} — ${c.phone}</option>`
+                )
+                .join("");
+          } catch {
+            sel.innerHTML =
+              '<option value="" disabled selected>Failed to load customers</option>';
+          }
 
-		// Default TransactionDate = today
-		const tInput = document.getElementById('p2p-tdate');
-		tInput.value = new Date().toISOString().split('T')[0];
+          // Default TransactionDate = today
+          const tInput = document.getElementById("p2p-tdate");
+          tInput.value = new Date().toISOString().split("T")[0];
 
-		// Submit
-		document.getElementById('p2p-form').onsubmit = async (e) => {
-			e.preventDefault();
-			const payload = {
-			CustomerInfo: sel.value,
-			TransactionDate: tInput.value ? new Date(tInput.value) : undefined,
-			Notes: document.getElementById('p2p-notes').value || undefined,
-			};
-			try {
-			const res = await fetch('/api/p2p-reminders', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify(payload)
-			});
-			if (!res.ok) throw new Error();
-			closeP2PModal();
-			// refresh list
-			loadP2PUI();
-			} catch {
-			alert('Failed to save reminder.');
-			}
-		};
-		}
+          // Submit
+          document.getElementById("p2p-form").onsubmit = async (e) => {
+            e.preventDefault();
+            const payload = {
+              CustomerInfo: sel.value,
+              TransactionDate: tInput.value
+                ? new Date(tInput.value)
+                : undefined,
+              Notes: document.getElementById("p2p-notes").value || undefined,
+            };
+            try {
+              const res = await fetch("/api/p2p-reminders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+              });
+              if (!res.ok) throw new Error();
+              closeP2PModal();
+              // refresh list
+              loadP2PUI();
+            } catch {
+              alert("Failed to save reminder.");
+            }
+          };
+        }
 
         document
           .getElementById("nav-phone-price")
@@ -1025,126 +1141,145 @@
 		  <div id="phone-loading-spinner" class="flex justify-center items-center h-64"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-600 dark:border-blue-400"></div></div><div id="phone-error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg" role="alert"><strong class="font-bold">Error:</strong> <span class="block sm:inline">Could not load phone data.</span></div><div id="phone-grid-container" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"></div>`;
           modalCloseButton.addEventListener("click", closePriceModal);
           modalBackdrop.addEventListener("click", closePriceModal);
-		//   fetch phone api call
-        //   await fetchPhones();
+          //   fetch phone api call
+          //   await fetchPhones();
 
-		// NEW: Fetch phone as per filter 
-		try {
-			const res = await fetch("/api/phones");
-			if (!res.ok) throw new Error();
-			const data = await res.json();
+          // NEW: Fetch phone as per filter
+          try {
+            const res = await fetch("/api/phones");
+            if (!res.ok) throw new Error();
+            const data = await res.json();
 
-			// default sort by manufacturer and then model name
-			data.sort((a, b) => {
-				const manCmp = (a.manufacturer || '').localeCompare(b.manufacturer || '');
-				return manCmp !== 0 ? manCmp : (a.name || '').localeCompare(b.name || '');
-			});
+            // default sort by manufacturer and then model name
+            data.sort((a, b) => {
+              const manCmp = (a.manufacturer || "").localeCompare(
+                b.manufacturer || ""
+              );
+              return manCmp !== 0
+                ? manCmp
+                : (a.name || "").localeCompare(b.name || "");
+            });
 
+            // search & filter
+            const phoneLoadSpinner = document.getElementById(
+              "phone-loading-spinner"
+            );
+            const search = document.getElementById("phone-search");
+            const mfrSel = document.getElementById("phone-filter");
+            const grid = document.getElementById("phone-grid-container"); // results container
 
-			
+            // load manufacturer into filter
+            const phonesRes = await fetch("/api/phones");
+            if (!phonesRes.ok) throw new Error("phones fetch failed");
+            const rawPhones = await phonesRes.json();
+            console.log(rawPhones);
 
-			// search & filter
-			const phoneLoadSpinner = document.getElementById('phone-loading-spinner')
-			const search = document.getElementById('phone-search');
-			const mfrSel = document.getElementById('phone-filter');
-			const grid   = document.getElementById('phone-grid-container');     // results container
-			
-			// load manufacturer into filter
-			const phonesRes = await fetch('/api/phones');
-			if (!phonesRes.ok) throw new Error('phones fetch failed');
-			const rawPhones = await phonesRes.json();
-			console.log(rawPhones)
-			
-			// normalize fields to be safe
-			const phones = rawPhones.map(p => ({
-				id: p._id,
-				battery:p.features.battery,
-				noOfBackCamera:p.features.noOfBackCamera,
-				backCameraLensSpec:p.features.backCameraLensSpec,
-				screenSize:p.features.screenSize,
-				manufacturer: p.manufacturer || '',
-				model: p.model || '',
-				// schema: features.storage (Number), features.colors (Array<String>)
-				storage: p.features?.storage != null ? String(p.features.storage) : '',
+            // normalize fields to be safe
+            const phones = rawPhones.map((p) => ({
+              id: p._id,
+              battery: p.features.battery,
+              noOfBackCamera: p.features.noOfBackCamera,
+              backCameraLensSpec: p.features.backCameraLensSpec,
+              screenSize: p.features.screenSize,
+              manufacturer: p.manufacturer || "",
+              model: p.model || "",
+              // schema: features.storage (Number), features.colors (Array<String>)
+              storage:
+                p.features?.storage != null ? String(p.features.storage) : "",
 
-				colors: Array.isArray(p.features?.colors) ? p.features.colors : [],
-				// optional helpers
-				colorText: Array.isArray(p.features?.colors) ? p.features.colors.join(' ') : '',
-				retailPrice:p.price.deviceRetailPrice,
-				eachLinePrice:p.price
-			}));
-						
-			// 2) Fetch manufacturers and populate filter
-			(async function fillManufacturers() {
-			try {
-				const res = await fetch('/api/phones/manufacturers');
-				const list = res.ok ? await res.json() : [];
-				mfrSel.innerHTML = `<option value="">All manufacturers</option>` +
-				list.map(m => `<option value="${escapeHtml(m)}">${escapeHtml(m)}</option>`).join('');
-			} catch {
-				mfrSel.innerHTML = `<option value="">All manufacturers</option>`;
-			}
-			})();
+              colors: Array.isArray(p.features?.colors)
+                ? p.features.colors
+                : [],
+              // optional helpers
+              colorText: Array.isArray(p.features?.colors)
+                ? p.features.colors.join(" ")
+                : "",
+              retailPrice: p.price.deviceRetailPrice,
+              eachLinePrice: p.price,
+            }));
 
-			function escapeHtml(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/"/g,'&quot;'); }
+            // 2) Fetch manufacturers and populate filter
+            (async function fillManufacturers() {
+              try {
+                const res = await fetch("/api/phones/manufacturers");
+                const list = res.ok ? await res.json() : [];
+                mfrSel.innerHTML =
+                  `<option value="">All manufacturers</option>` +
+                  list
+                    .map(
+                      (m) =>
+                        `<option value="${escapeHtml(m)}">${escapeHtml(
+                          m
+                        )}</option>`
+                    )
+                    .join("");
+              } catch {
+                mfrSel.innerHTML = `<option value="">All manufacturers</option>`;
+              }
+            })();
 
-			displayPhones(phones);
+            function escapeHtml(s) {
+              return (s || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/"/g, "&quot;");
+            }
 
-			function applyFilters() {
-				const q = (search.value || '').toLowerCase().trim();
-				const selectedMfr = mfrSel.value || '';
+            displayPhones(phones);
 
-				let rows = phones.filter(p => {
-				// manufacturer dropdown filter
-				const matchesMfr = !selectedMfr || p.manufacturer === selectedMfr;
+            function applyFilters() {
+              const q = (search.value || "").toLowerCase().trim();
+              const selectedMfr = mfrSel.value || "";
 
-				// text search across fields
-				const haystack = [
-					p.manufacturer,
-					p.model,
-					p.colorText,
-					p.storage
-				].join(' ').toLowerCase();
+              let rows = phones.filter((p) => {
+                // manufacturer dropdown filter
+                const matchesMfr =
+                  !selectedMfr || p.manufacturer === selectedMfr;
 
-				const matchesText = !q || haystack.includes(q);
+                // text search across fields
+                const haystack = [
+                  p.manufacturer,
+                  p.model,
+                  p.colorText,
+                  p.storage,
+                ]
+                  .join(" ")
+                  .toLowerCase();
 
-				return matchesMfr && matchesText;
-				});
+                const matchesText = !q || haystack.includes(q);
 
-				// default sort by manufacturer, then series, then model
-				rows.sort((a, b) => {
-					const byMan = (a.manufacturer || '').localeCompare(b.manufacturer || '');
-					if (byMan !== 0) return byMan;
-					const bySeries = (a.series || '').localeCompare(b.series || '');
-					if (bySeries !== 0) return bySeries;
-					return (a.model || '').localeCompare(b.model || '');
-				});
-				
+                return matchesMfr && matchesText;
+              });
 
-				displayPhones(rows)
-				// document.getElementById("phone-loading-spinner").classList.add("hidden");
-			}; // your existing renderer
+              // default sort by manufacturer, then series, then model
+              rows.sort((a, b) => {
+                const byMan = (a.manufacturer || "").localeCompare(
+                  b.manufacturer || ""
+                );
+                if (byMan !== 0) return byMan;
+                const bySeries = (a.series || "").localeCompare(b.series || "");
+                if (bySeries !== 0) return bySeries;
+                return (a.model || "").localeCompare(b.model || "");
+              });
 
-				
-			
-			
-			
+              displayPhones(rows);
+              // document.getElementById("phone-loading-spinner").classList.add("hidden");
+            } // your existing renderer
 
-			search.addEventListener('input', applyFilters);
-			mfrSel.addEventListener('change', applyFilters);
-			// initial render
-			applyFilters();
+            search.addEventListener("input", applyFilters);
+            mfrSel.addEventListener("change", applyFilters);
+            // initial render
+            applyFilters();
+          } catch (e) {
+            console.error(e);
+          } finally {
+            document
+              .getElementById("phone-loading-spinner")
+              .classList.add("hidden");
+          }
+        }
 
-		} catch (e) {
-			console.error(e);
-			
-		} finally {
-			document.getElementById("phone-loading-spinner").classList.add("hidden");
-		}
-	}
-
-
-		// display cards in main area
+        // display cards in main area
         function displayPhones(phones) {
           const phoneContainer = document.getElementById(
             "phone-grid-container"
@@ -1157,15 +1292,15 @@
           }
           phoneContainer.innerHTML = "";
           phones.forEach((phone) => {
-			// console.log(phone.eachLinePrice.bellConsumer)
+            // console.log(phone.eachLinePrice.bellConsumer)
             const card = document.createElement("div");
             card.className =
               "bg-white dark:bg-gray-700 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:shadow-2xl hover:-translate-y-1";
             // const features = phone.features || {};
-			const storage = phone.storage
-			const screenSize = phone.screenSize
+            const storage = phone.storage;
+            const screenSize = phone.screenSize;
             const price = phone.retailPrice || {};
-			
+
             card.innerHTML = `
                         <div class="p-6">
                             <div class="flex justify-between items-start mb-4">
@@ -1175,7 +1310,7 @@
               phone.model
             }</h3></div>
                                 <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Retail $${
-                                price || "N/A"
+                                  price || "N/A"
                                 }</span>
                             </div>
                             <div class="space-y-3 text-sm text-gray-700 dark:text-gray-300">
@@ -1219,10 +1354,9 @@
         //     setTimeout(() => { modalBackdrop.classList.add('opacity-100'); modalContent.classList.add('opacity-100', 'scale-100'); }, 10);
         // }
         function openPriceModal(phone) {
-		
           modalTitle.textContent = `${phone.manufacturer} ${phone.model} - Pricing`;
           const prices = phone.eachLinePrice || {};
-		  console.log(prices)
+          console.log(prices);
 
           const formatCamelCase = (key) =>
             key
