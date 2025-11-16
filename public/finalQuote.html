@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>Final Quote</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Tailwind CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -11,207 +11,283 @@
       tailwind.config = {
         theme: {
           extend: {
-            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
-            boxShadow: {
-              card: "0 4px 20px rgba(0,0,0,0.08)",
-            },
             colors: {
-              soft: {
-                bg: "#f7f9fc",
-                card: "#ffffff",
-                border: "#e4e7ec",
-                subtle: "#8a94a6",
-                accent: "#2563eb",
+              brand: {
+                50: "#eff6ff",
+                100: "#dbeafe",
+                500: "#3b82f6",
+                600: "#2563eb",
+                700: "#1d4ed8",
               },
+              soft: {
+                bg: "#f3f4f6",
+                card: "#ffffff",
+                border: "#e5e7eb",
+              },
+            },
+            boxShadow: {
+              card: "0 10px 30px rgba(15, 23, 42, 0.08)",
             },
           },
         },
       };
     </script>
   </head>
-
-  <body class="h-full bg-soft-bg text-gray-700">
-    <!-- HEADER -->
-    <header
-      class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-soft-border"
-    >
-      <div
-        class=" mx-2 px-4 sm:px-6 py-4 flex items-center justify-between"
-      >
-        <div class="flex items-center gap-3">
-         
-
-          <div>
-            <div class="text-xs font-medium text-gray-500 uppercase">
-              Final Quote
-            </div>
-            <div class="text-lg font-semibold text-gray-900">
-              Best Options for Customer
-            </div>
-          </div>
-        </div>
+  <body class="h-full bg-slate-50 text-slate-900">
+    <div class="min-h-screen flex flex-col">
+      <!-- Top Bar -->
 
 
-      </div>
-    </header>
-
-    <!-- MAIN CONTENT -->
-    <main class=" mx-2 px-4 sm:px-6 py-6">
-      <!-- SMALL SUMMARY BAR -->
-      <div class="grid sm:grid-cols-3 gap-4 mb-6">
-        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
-          <div class="text-xs text-gray-500 uppercase mb-1">Customer</div>
-          <div
-            id="summaryCustomerName"
-            class="font-semibold text-gray-700"
-          ></div>
-          <div
-            id="summaryCustomerContact"
-            class="text-xs text-gray-500 mt-0.5"
-          ></div>
-        </div>
-
-        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
-          <div class="text-xs text-gray-500 uppercase mb-1">Lines & Provider</div>
-          <div id="summaryLines" class="font-semibold text-gray-700"></div>
-          <div
-            id="summaryProvider"
-            class="text-xs text-gray-500 mt-0.5"
-          ></div>
-        </div>
-
-        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
-          <div class="text-xs text-gray-500 uppercase mb-1">Scenarios</div>
-          <div id="summaryScenarioCount" class="font-semibold text-gray-700"></div>
-          <div
-            id="summaryScenarioCaption"
-            class="text-xs text-gray-500 mt-0.5"
+      <!-- Main Content -->
+      <main class="flex-1">
+        <div class="mx-2  px-4 sm:px-6 py-6">
+			<!-- Overview -->
+          <section
+            class="mb-4 sm:mb-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 px-4 sm:px-6 py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3"
           >
-            Up to 3 recommended options
-          </div>
-        </div>
-      </div>
-
-      <!-- SCENARIO CAROUSEL -->
-      <section
-        class="bg-white shadow-card border border-soft-border rounded-3xl overflow-hidden"
-      >
-        <!-- TOP BAR -->
-        <div
-          class="px-6 py-4 flex items-center justify-between border-b border-soft-border bg-gray-50"
-        >
-          <div>
-            <div id="scenarioTitle" class="text-lg font-semibold"></div>
-            <div id="scenarioSubtitle" class="text-xs text-gray-500"></div>
-          </div>
-
-          <!-- DOTS + BUTTONS -->
-          <div class="flex items-center gap-3">
-            <div class="hidden sm:flex gap-2" id="scenarioDots"></div>
-
-            <button
-              id="btnPrev"
-              class="px-3 py-1.5 rounded-lg border border-soft-border bg-white hover:bg-gray-50 disabled:opacity-30"
+            <div>
+              <h1 class="text-lg sm:text-xl font-semibold text-slate-900">
+                Best Options for Customer
+              </h1>
+              <p class="text-xs sm:text-sm text-slate-600 mt-0.5">
+                Review per-line configuration on the left and full customer
+                monthly summary on the right.
+              </p>
+            </div>
+          </section>
+          <!-- SMALL SUMMARY BAR -->
+          <div class="grid sm:grid-cols-3 gap-4 mb-6">
+            <!-- Customer card -->
+            <div
+              class="bg-white shadow-card border border-soft-border p-4 rounded-xl flex flex-col justify-between"
             >
-              ‹
-            </button>
-            <button
-              id="btnNext"
-              class="px-3 py-1.5 rounded-lg border border-soft-border bg-white hover:bg-gray-50 disabled:opacity-30"
+              <div>
+                <div class="text-xs text-gray-500 uppercase mb-1">
+                  Customer
+                </div>
+                <div
+                  id="summaryCustomerName"
+                  class="font-semibold text-gray-700 truncate"
+                >
+                  —
+                </div>
+                <div
+                  id="summaryCustomerContact"
+                  class="text-xs text-gray-500 mt-0.5 break-all"
+                >
+                  —
+                </div>
+              </div>
+            </div>
+
+            <!-- Lines & Provider -->
+            <div
+              class="bg-white shadow-card border border-soft-border p-4 rounded-xl flex flex-col justify-between"
             >
-              ›
-            </button>
-          </div>
-        </div>
+              <div>
+                <div class="text-xs text-gray-500 uppercase mb-1">
+                  Lines &amp; Provider
+                </div>
+                <div
+                  id="summaryLinesPrimary"
+                  class="font-semibold text-gray-700"
+                >
+                  0 lines
+                </div>
+                <div
+                  id="summaryProviderPrimary"
+                  class="text-xs text-gray-500 mt-0.5"
+                >
+                  Provider: —
+                </div>
+              </div>
+            </div>
 
-        <!-- SLIDES -->
-        <div id="carouselTrack" class="overflow-hidden relative">
-          <div id="carouselInner" class="flex transition-transform duration-500">
-            <!-- slides added by JS -->
-          </div>
-        </div>
-
-        <!-- FOOTER -->
-        <div
-          class="px-6 py-4 flex flex-col sm:flex-row justify-between items-center border-t border-soft-border bg-gray-50 text-sm"
-        >
-          <div class="text-gray-500">
-            Taxes based on Alberta GST (5%) + $0.95/line 911 fee.
-          </div>
-
-          <div class="flex gap-2 mt-3 sm:mt-0">
-            <button
-              class="px-4 py-2 rounded-xl border border-soft-border bg-white hover:bg-gray-50"
+            <!-- Scenarios -->
+            <div
+              class="bg-white shadow-card border border-soft-border p-4 rounded-xl flex flex-col justify-between"
             >
-              Export PDF (Coming Soon)
-            </button>
-            <button
-              class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-500 shadow"
-            >
-              Send to Customer (Coming Soon)
-            </button>
+              <div>
+                <div class="text-xs text-gray-500 uppercase mb-1">
+                  Scenarios
+                </div>
+                <div
+                  id="summaryScenarioCountPrimary"
+                  class="font-semibold text-gray-700"
+                >
+                  0 scenarios
+                </div>
+                <div
+                  id="summaryScenarioCaption"
+                  class="text-xs text-gray-500 mt-0.5"
+                >
+                  Up to 3 recommended options
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-    </main>
 
-    <!-- JS BELOW (same logic but updated small details) -->
+          
+
+          <!-- Carousel -->
+          <section
+            class="relative bg-white rounded-2xl shadow-card border border-slate-200 overflow-hidden"
+          >
+            <!-- Scenario chips -->
+            <div
+              class=" border-slate-200 px-6 sm:px-6 pt-6 flex items-center justify-between"
+            >
+              <div
+                id="scenarioDots"
+                class="flex flex-wrap gap-2 text-xs sm:text-sm"
+              ></div>
+              <div class="text-[13px] text-slate-900" id="scenarioIndicator">
+                Scenario 1 of 1
+              </div>
+			  
+            </div>
+
+            <!-- Slides -->
+            <div
+              id="carouselOuter"
+              class="overflow-x-hidden relative bg-slate-50/60"
+            >
+              <div
+                id="carouselInner"
+                class="flex transition-transform duration-500 ease-out"
+              >
+                <!-- Slides injected by JS -->
+              </div>
+            </div>
+          </section>
+
+          <!-- Footer hint -->
+          <p class="mt-3 text-[11px] text-slate-500 text-center">
+            Tip: Use ← and → arrow keys to move between scenarios.
+          </p>
+        </div>
+      </main>
+    </div>
+
     <script>
-      // ------------------------------ SAMPLE DATA ------------------------------
-      let quoteData = {
-        customer: {
-          name: "Alice Smith",
-          phone: "403-555-0101",
-          email: "alice@example.com",
-        },
-        meta: { createdAt: new Date().toISOString(), quoteId: "QT-2025-01" },
-        phoneSection: { currProvider: "Koodo", numLines: 2 },
-
-        scenarios: [
-          {
-            title: "Best Overall Value",
-            tag: "Balanced choice: cost + data",
-            devices: [
-              { model: "iPhone 15 128GB", monthlyPrice: 45, qty: 1 },
-              { model: "Galaxy S24 256GB", monthlyPrice: 40, qty: 1 },
-            ],
-            plan: { label: "Premium 150GB 5G", data: "150GB", basePricePerLine: 70 },
-            addOns: [
-              { label: "US Roaming", price: 10, active: true },
-              { label: "1000 Intl Minutes", price: 5, active: true },
-            ],
-            credits: { dfCredit: 20, tradeIn: 10, upfront: 0, planDiscount: 15 },
-          },
-
-          {
-            title: "Lowest Monthly Price",
-            tag: "Minimize cost",
-            devices: [{ model: "Pixel 9", monthlyPrice: 30, qty: 2 }],
-            plan: { label: "Value 60GB", data: "60GB", basePricePerLine: 55 },
-            addOns: [{ label: "US Roaming", price: 10, active: false }],
-            credits: { dfCredit: 10, tradeIn: 0, upfront: 0, planDiscount: 20 },
-          },
-        ],
-      };
-
-      // ------------------------------ CONSTANTS ------------------------------
       const TAX = 0.05;
       const E911 = 0.95;
 
       const $ = (id) => document.getElementById(id);
 
       function money(v) {
-        return "$" + v.toFixed(2);
+        const n = Number(v || 0);
+        return "$" + n.toFixed(2);
       }
 
-      function computeTotals(s, lines) {
-        const devices = s.devices || [];
-        const addOns = s.addOns || [];
-        const c = s.credits || {};
+      // --- Compute totals for a scenario ---
+      function computeTotals(s, linesCount) {
+        const hasLines = Array.isArray(s.lines) && s.lines.length > 0;
 
-        const dTotal = devices.reduce((t, d) => t + d.monthlyPrice * d.qty, 0);
-        const pTotal = s.plan.basePricePerLine * lines;
-        const aTotal = addOns.filter((a) => a.active).reduce((t, a) => t + a.price, 0);
+        if (hasLines) {
+          const lineResults = s.lines.map((ln, idx) => {
+            const devices = Array.isArray(ln.devices) ? ln.devices : [];
+            const addOnsRaw = Array.isArray(ln.addOns) ? ln.addOns : [];
+            const addOns = addOnsRaw.filter((a) => a && a.active !== false);
+            const creditsObj = ln.credits || {};
+
+            const dTotal = devices.reduce(
+              (t, d) =>
+                t + (d.monthlyPrice || d.price || 0) * (d.qty || 1),
+              0
+            );
+
+            const planObj = ln.plan || s.plan || {};
+            const planPrice =
+              planObj.basePricePerLine ??
+              planObj.pricePerLine ??
+              planObj.price ??
+              0;
+
+            const pTotal = planPrice;
+            const aTotal = addOns.reduce(
+              (t, a) => t + (a.price || 0),
+              0
+            );
+
+            const credits =
+              (creditsObj.dfCredit || 0) +
+              (creditsObj.tradeIn || 0) +
+              (creditsObj.upfront || 0) +
+              (creditsObj.planDiscount || 0);
+
+            const subtotal = dTotal + pTotal + aTotal - credits;
+            const tax = subtotal * TAX;
+            const e911 = E911;
+            const total = subtotal + tax + e911;
+
+            return {
+              lineNumber: ln.lineNumber || idx + 1,
+              label: ln.label || `Line ${ln.lineNumber || idx + 1}`,
+              devices,
+              plan: planObj,
+              addOns,
+              creditsObj,
+              dTotal,
+              pTotal,
+              aTotal,
+              credits,
+              subtotal,
+              tax,
+              e911,
+              total,
+            };
+          });
+
+          const agg = lineResults.reduce(
+            (acc, ln) => {
+              acc.dTotal += ln.dTotal;
+              acc.pTotal += ln.pTotal;
+              acc.aTotal += ln.aTotal;
+              acc.credits += ln.credits;
+              acc.subtotal += ln.subtotal;
+              acc.tax += ln.tax;
+              acc.e911 += ln.e911;
+              acc.total += ln.total;
+              return acc;
+            },
+            {
+              dTotal: 0,
+              pTotal: 0,
+              aTotal: 0,
+              credits: 0,
+              subtotal: 0,
+              tax: 0,
+              e911: 0,
+              total: 0,
+            }
+          );
+
+          return {
+            ...agg,
+            lines: lineResults,
+          };
+        }
+
+        // Fallback: single aggregate based on scenario-level data
+        const devices = Array.isArray(s.devices) ? s.devices : [];
+        const addOnsRaw = Array.isArray(s.addOns) ? s.addOns : [];
+        const addOns = addOnsRaw.filter((a) => a && a.active !== false);
+        const c = s.credits || {};
+        const lineCount = linesCount || 1;
+
+        const dTotal = devices.reduce(
+          (t, d) =>
+            t + (d.monthlyPrice || d.price || 0) * (d.qty || 1),
+          0
+        );
+        const basePricePerLine = s.plan?.basePricePerLine || 0;
+        const pTotal = basePricePerLine * lineCount;
+        const aTotal = addOns.reduce(
+          (t, a) => t + (a.price || 0),
+          0
+        );
+
         const credits =
           (c.dfCredit || 0) +
           (c.tradeIn || 0) +
@@ -220,7 +296,8 @@
 
         const subtotal = dTotal + pTotal + aTotal - credits;
         const tax = subtotal * TAX;
-        const e911 = lines * E911;
+        const e911 = lineCount * E911;
+        const total = subtotal + tax + e911;
 
         return {
           dTotal,
@@ -230,251 +307,470 @@
           subtotal,
           tax,
           e911,
-          total: subtotal + tax + e911,
+          total,
+          lines: [
+            {
+              lineNumber: 1,
+              label: lineCount > 1 ? `All ${lineCount} lines` : "Line 1",
+              devices,
+              plan: s.plan || {},
+              addOns,
+              creditsObj: c,
+              dTotal,
+              pTotal,
+              aTotal,
+              credits,
+              subtotal,
+              tax,
+              e911,
+              total,
+            },
+          ],
         };
       }
 
-      // ------------------------------ RENDERING ------------------------------
-      function renderHeader() {
-        const c = quoteData.customer || {};
+      function slideHTML(s, i) {
+        const p = quoteData.phoneSection || {};
+        const t = computeTotals(s, p.numLines);
+        const lines = Array.isArray(t.lines) && t.lines.length ? t.lines : [];
 
-        // $("customerName").textContent = c.name;
-        // $("customerPhone").textContent = c.phone;
-        $("summaryCustomerName").textContent = c.name;
-        $("summaryCustomerContact").textContent =
-          c.phone + " • " + (c.email || "");
+        const linesHtml = lines
+          .map((ln, idx) => {
+            const lineLabel = ln.label || `Line ${ln.lineNumber || idx + 1}`;
+            const devices = Array.isArray(ln.devices) ? ln.devices : [];
+            const addOns = Array.isArray(ln.addOns) ? ln.addOns : [];
 
-        const p = quoteData.phoneSection;
-        $("summaryLines").textContent = p.numLines + " lines";
-        $("summaryProvider").textContent = "Provider: " + p.currProvider;
+            const devicesHtml =
+              devices.length > 0
+                ? devices
+                    .map((d) => {
+                      const name =
+                        [d.manufacturer, d.model].filter(Boolean).join(" ") ||
+                        d.name ||
+                        "Device";
+                      const qty = d.qty || 1;
+                      const linePrice =
+                        (d.monthlyPrice || d.price || 0) * qty;
 
-        $("summaryScenarioCount").textContent =
-          quoteData.scenarios.length + " scenarios";
+                      return `
+                        <div class="flex justify-between text-sm">
+                          <span class="text-gray-600">
+                            Device · ${name}${qty > 1 ? ` × ${qty}` : ""}
+                          </span>
+                          <span class="text-right">${money(
+                            linePrice
+                          )}/mo</span>
+                        </div>
+                      `;
+                    })
+                    .join("")
+                : `
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-600">Device</span>
+                    <span class="text-right text-gray-400">—</span>
+                  </div>
+                `;
 
-        // $("quoteMeta").textContent =
-        //   new Date(quoteData.meta.createdAt).toLocaleString();
+            const addOnNames = addOns
+              .filter((a) => a && a.active !== false)
+              .map((a) => a.label || a.name)
+              .filter(Boolean)
+              .join(", ");
+
+            return `
+              <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
+                <div class="flex items-baseline justify-between mb-2">
+                  <div>
+                    <div class="text-[15px] font-bold uppercase tracking-wide text-gray-800">
+                      ${lineLabel}
+                    </div>
+                    <div class="text-md text-gray-400">
+                      Configuration & monthly cost
+                    </div>
+                  </div>
+                  <div class="text-md font-semibold text-gray-900 text-right">
+                    ${money(ln.total)}/mo
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  ${devicesHtml}
+
+                  <div class="flex justify-between text-md">
+                    <span class="text-gray-600">
+                      Plan${
+                        ln.plan && (ln.plan.label || ln.plan.name)
+                          ? ` · ${ln.plan.label || ln.plan.name}`
+                          : ""
+                      }
+                    </span>
+                    <span class="text-right">
+                      ${money(ln.pTotal || 0)}/mo
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between text-md">
+                    <span class="text-gray-600">
+                      Add-ons${addOnNames ? ` · ${addOnNames}` : ""}
+                    </span>
+                    <span class="text-right">
+                      ${money(ln.aTotal || 0)}/mo
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between text-md">
+                    <span class="text-gray-600">Credits</span>
+                    <span class="text-right text-emerald-600">
+                      -${money(ln.credits || 0)}
+                    </span>
+                  </div>
+
+                  <hr class="my-4" />
+
+                  <div class="flex justify-between text-md font-medium">
+                    <span>Subtotal</span>
+                    <span class="text-right">${money(ln.subtotal || 0)}</span>
+                  </div>
+
+                  <div class="flex justify-between text-md text-gray-500">
+                    <span>Tax (5%) + 911</span>
+                    <span class="text-right">
+                      ${money((ln.tax || 0) + (ln.e911 || 0))}
+                    </span>
+                  </div>
+
+                  <div class="flex justify-between text-md font-semibold mt-1">
+                    <span>Total</span>
+                    <span class="text-right">${money(ln.total || 0)}</span>
+                  </div>
+                </div>
+              </div>
+            `;
+          })
+          .join("");
+
+        return `
+          <div class="w-full p-6 flex-none">
+            <div class="grid lg:grid-cols-[1.6fr,1fr] gap-6">
+              <!-- LEFT: per-line breakdown -->
+              <div class="space-y-5">
+                ${linesHtml}
+              </div>
+
+              <!-- RIGHT: scenario summary -->
+              <aside
+                class="p-5 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl border border-blue-100 shadow-md flex flex-col justify-between"
+              >
+                <div>
+                  <div class="text-xs text-gray-500 mb-1">
+                    Scenario ${i + 1}
+                  </div>
+                  <div class="text-lg font-semibold mb-3">
+                    ${s.title}
+                  </div>
+
+                  <div class="space-y-3 text-sm">
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Devices</span>
+                      <span class="font-medium">${money(t.dTotal)}/mo</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Plans</span>
+                      <span class="font-medium">${money(t.pTotal)}/mo</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Add-ons</span>
+                      <span class="font-medium">${money(t.aTotal)}/mo</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Credits</span>
+                      <span class="font-medium text-emerald-600">
+                        -${money(t.credits)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 border-t border-blue-100 pt-4 space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Subtotal</span>
+                      <span class="font-semibold">${money(t.subtotal)}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-500 text-xs">
+                      <span>Tax (5%)</span>
+                      <span>${money(t.tax)}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-500 text-xs">
+                      <span>911 fees</span>
+                      <span>${money(t.e911)}</span>
+                    </div>
+                    <div class="flex justify-between pt-2 border-t border-blue-100">
+                      <span class="font-semibold text-gray-800">
+                        Total Monthly
+                      </span>
+                      <span class="text-lg font-bold text-blue-700">
+                        ${money(t.total)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <p class="mt-3 text-xs text-gray-400">
+                    Taxes based on Alberta GST. 911 fees estimated at $0.95 per line.
+                  </p>
+                </div>
+
+              </aside>
+            </div>
+          </div>
+        `;
+      }
+
+      let current = 0;
+
+      // Data source: from window / localStorage, with fallback sample
+      const quoteData =
+        window.__FINAL_QUOTE__ ||
+        JSON.parse(localStorage.getItem("wmq_final_quote") || "null") || {
+          customer: {
+            name: "Alice Smith",
+            phone: "780-000-0000",
+            email: "alice@example.com",
+          },
+          phoneSection: {
+            currProvider: "Rogers",
+            numLines: 2,
+          },
+          scenarios: [
+            {
+              title: "Keep premium devices, max credits",
+              lines: [
+                {
+                  lineNumber: 1,
+                  devices: [
+                    {
+                      manufacturer: "Apple",
+                      model: "iPhone 15",
+                      qty: 1,
+                      monthlyPrice: 45,
+                    },
+                  ],
+                  plan: {
+                    label: "Bell 5G 100GB",
+                    pricePerLine: 70,
+                  },
+                  addOns: [
+                    { name: "US Roam", label: "US Roam", price: 10 },
+                  ],
+                  credits: {
+                    dfCredit: 15,
+                    tradeIn: 10,
+                    upfront: 0,
+                    planDiscount: 5,
+                  },
+                },
+                {
+                  lineNumber: 2,
+                  devices: [
+                    {
+                      manufacturer: "Apple",
+                      model: "iPhone 15",
+                      qty: 1,
+                      monthlyPrice: 45,
+                    },
+                  ],
+                  plan: {
+                    label: "Bell 5G 100GB",
+                    pricePerLine: 70,
+                  },
+                  addOns: [],
+                  credits: {
+                    dfCredit: 10,
+                    tradeIn: 0,
+                    upfront: 0,
+                    planDiscount: 0,
+                  },
+                },
+              ],
+            },
+            {
+              title: "Mix of premium & value devices",
+              lines: [
+                {
+                  lineNumber: 1,
+                  devices: [
+                    {
+                      manufacturer: "Apple",
+                      model: "iPhone 15",
+                      qty: 1,
+                      monthlyPrice: 40,
+                    },
+                  ],
+                  plan: {
+                    label: "Bell 5G 80GB",
+                    pricePerLine: 65,
+                  },
+                  addOns: [],
+                  credits: {
+                    dfCredit: 20,
+                    tradeIn: 10,
+                    upfront: 0,
+                    planDiscount: 5,
+                  },
+                },
+                {
+                  lineNumber: 2,
+                  devices: [
+                    {
+                      manufacturer: "Samsung",
+                      model: "Galaxy A55",
+                      qty: 1,
+                      monthlyPrice: 30,
+                    },
+                  ],
+                  plan: {
+                    label: "Bell 5G 80GB",
+                    pricePerLine: 65,
+                  },
+                  addOns: [],
+                  credits: {
+                    dfCredit: 0,
+                    tradeIn: 0,
+                    upfront: 0,
+                    planDiscount: 0,
+                  },
+                },
+              ],
+            },
+          ],
+        };
+
+      function renderSlides() {
+        const inner = $("carouselInner");
+        inner.innerHTML = (quoteData.scenarios || [])
+          .map((s, i) => slideHTML(s, i))
+          .join("");
+
+        renderDots();
+        updateSummary();
+        syncCarouselPosition();
       }
 
       function renderDots() {
         const dots = $("scenarioDots");
         dots.innerHTML = "";
-        quoteData.scenarios.forEach((_, i) => {
+        const scenarios = quoteData.scenarios || [];
+        scenarios.forEach((_, i) => {
           const btn = document.createElement("button");
           btn.className =
             "px-3 py-1.5 rounded-lg border text-xs transition " +
-            (i === current ? "bg-blue-600 text-white" : "bg-white border-gray-300");
+            (i === current
+              ? "bg-blue-600 text-white border-blue-600"
+              : "bg-white border-gray-300 text-slate-700 hover:bg-slate-50");
           btn.textContent = "Option " + (i + 1);
           btn.onclick = () => go(i);
           dots.appendChild(btn);
         });
       }
 
-      function slideHTML(s, i) {
-        const p = quoteData.phoneSection;
-        const t = computeTotals(s, p.numLines);
+      function updateSummary() {
+        const c = quoteData.customer || {};
+        const p = quoteData.phoneSection || {};
+        const scenarios = quoteData.scenarios || [];
+        const scenarioCount = scenarios.length || 0;
 
-        return `
-          <div class="w-full p-6 flex-none">
-            <div class="grid lg:grid-cols-[1.6fr,1fr] gap-6">
-              <!-- LEFT -->
-              <div class="space-y-5">
-                <!-- DEVICES -->
-                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
-                  <div class="flex justify-between mb-3">
-                    <div>
-                      <div class="font-semibold">Devices</div>
-                      <div class="text-xs text-gray-500">Monthly device financing</div>
-                    </div>
-                    <div class="font-semibold">${money(t.dTotal)}/mo</div>
-                  </div>
+        const customerName =
+          c.name || c.fullName || "Customer";
 
-                  ${
-                    s.devices.length
-                      ? s.devices
-                          .map(
-                            (d) => `
-                    <div class="flex justify-between text-sm py-1">
-                      <div>${d.model} <span class="text-gray-500">x${d.qty}</span></div>
-                      <div>${money(d.monthlyPrice * d.qty)}/mo</div>
-                    </div>`
-                          )
-                          .join("")
-                      : `<div class="text-sm text-gray-500">No devices selected.</div>`
-                  }
-                </div>
+        const customerContact = [c.phone, c.email]
+          .filter(Boolean)
+          .join(" • ") || "—";
 
-                <!-- PLAN -->
-                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
-                  <div class="flex justify-between mb-3">
-                    <div>
-                      <div class="font-semibold">Plan</div>
-                      <div class="text-xs text-gray-500">Base monthly cost</div>
-                    </div>
-                    <div class="font-semibold">${money(t.pTotal)}/mo</div>
-                  </div>
+        const linesText = (p.numLines || 0) + " lines";
+        const providerText = "Provider: " + (p.currProvider || "—");
+        const scenariosText = scenarioCount + " scenario" + (scenarioCount === 1 ? "" : "s");
 
-                  <div class="grid grid-cols-2 text-sm gap-3">
-                    <div>
-                      <div class="text-gray-500 text-xs">Plan Name</div>
-                      <div>${s.plan.label}</div>
-                    </div>
-                    <div>
-                      <div class="text-gray-500 text-xs">Data</div>
-                      <div>${s.plan.data}</div>
-                    </div>
-                    <div>
-                      <div class="text-gray-500 text-xs">Price / line</div>
-                      <div>${money(s.plan.basePricePerLine)}</div>
-                    </div>
-                    <div>
-                      <div class="text-gray-500 text-xs"># Lines</div>
-                      <div>${p.numLines}</div>
-                    </div>
-                  </div>
-                </div>
+        // Header
+        // const headerNameEl = $("headerCustomerName");
+        // if (headerNameEl) headerNameEl.textContent = customerName;
 
-                <!-- ADD-ONS -->
-                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
-                  <div class="flex justify-between mb-3">
-                    <div>
-                      <div class="font-semibold">Add-ons</div>
-                    </div>
-                    <div class="font-semibold">${money(t.aTotal)}/mo</div>
-                  </div>
+        // const headerScenEl = $("headerScenarioCount");
+        // if (headerScenEl) headerScenEl.textContent = scenariosText;
 
-                  ${
-                    s.addOns.filter((a) => a.active).length
-                      ? s.addOns
-                          .filter((a) => a.active)
-                          .map(
-                            (a) => `
-                    <div class="flex justify-between text-sm py-1">
-                      <div>${a.label}</div>
-                      <div>${money(a.price)}</div>
-                    </div>`
-                          )
-                          .join("")
-                      : `<div class="text-sm text-gray-500">No add-ons selected</div>`
-                  }
-                </div>
+        // Summary bar
+        const sumNameEl = $("summaryCustomerName");
+        if (sumNameEl) sumNameEl.textContent = customerName;
 
-                <!-- CREDITS -->
-                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
-                  <div class="flex justify-between mb-3">
-                    <div class="font-semibold">Credits</div>
-                    <div class="font-semibold text-green-600">-${money(t.credits)}/mo</div>
-                  </div>
+        const sumContactEl = $("summaryCustomerContact");
+        if (sumContactEl) sumContactEl.textContent = customerContact;
 
-                  <div class="grid grid-cols-2 gap-3 text-sm">
-                    <div>DF Credit: <span class="font-semibold">-${money(s.credits.dfCredit || 0)}</span></div>
-                    <div>Trade-in: <span class="font-semibold">-${money(s.credits.tradeIn || 0)}</span></div>
-                    <div>Upfront: <span class="font-semibold">-${money(s.credits.upfront || 0)}</span></div>
-                    <div>Plan Discount: <span class="font-semibold">-${money(s.credits.planDiscount || 0)}</span></div>
-                  </div>
-                </div>
-              </div>
+        const sumLinesPrimary = $("summaryLinesPrimary");
+        if (sumLinesPrimary) sumLinesPrimary.textContent = linesText;
 
-              <!-- RIGHT SIDE CALC -->
-              <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl shadow-card flex flex-col justify-between">
-                <div>
-                  <div class="text-xs text-gray-500 mb-1">Scenario ${i + 1}</div>
-                  <div class="text-lg font-semibold mb-3">${s.title}</div>
+        const sumProviderPrimary = $("summaryProviderPrimary");
+        if (sumProviderPrimary) sumProviderPrimary.textContent = providerText;
 
-                  <div class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                      <span>Devices</span>
-                      <span>${money(t.dTotal)}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>Plan</span>
-                      <span>${money(t.pTotal)}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>Add-ons</span>
-                      <span>${money(t.aTotal)}</span>
-                    </div>
-                    <div class="flex justify-between">
-                      <span>Credits</span>
-                      <span class="text-green-600">-${money(t.credits)}</span>
-                    </div>
+        const sumScenPrimary = $("summaryScenarioCountPrimary");
+        if (sumScenPrimary) sumScenPrimary.textContent = scenariosText;
 
-                    <hr />
+        // Overview pills
+        const pillLines = $("summaryLinesPill");
+        if (pillLines) pillLines.textContent = linesText;
 
-                    <div class="flex justify-between font-semibold">
-                      <span>Subtotal</span>
-                      <span>${money(t.subtotal)}</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-600">
-                      <span>Tax (5%)</span>
-                      <span>${money(t.tax)}</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-gray-600">
-                      <span>911 Fee</span>
-                      <span>${money(t.e911)}</span>
-                    </div>
-                  </div>
-
-                  <div class="mt-4 p-4 bg-white rounded-xl border border-soft-border shadow-inner">
-                    <div class="flex justify-between text-base font-bold text-blue-600">
-                      <span>Total Monthly</span>
-                      <span>${money(t.total)}</span>
-                    </div>
-                  </div>
-                </div>
-
-                <p class="text-xs text-gray-500 mt-3">
-                  Pricing estimates only; actual billing may vary.
-                </p>
-              </div>
-            </div>
-          </div>
-        `;
+        const pillProvider = $("summaryProviderPill");
+        if (pillProvider) pillProvider.textContent = providerText;
       }
 
-      // ------------------------------ CAROUSEL ------------------------------
-      let current = 0;
+      function syncCarouselPosition() {
+        const outer = $("carouselOuter");
+        const inner = $("carouselInner");
+        if (!outer || !inner) return;
 
-      function renderSlides() {
-        $("carouselInner").innerHTML = quoteData.scenarios
-          .map((s, i) => slideHTML(s, i))
-          .join("");
+        const width = outer.clientWidth || 1;
+        inner.style.transform = `translateX(-${current * width}px)`;
 
-        updateHeader();
-        updateTransform();
+        const indicator = $("scenarioIndicator");
+        if (indicator) {
+          const total = (quoteData.scenarios || []).length || 1;
+          indicator.textContent =
+            "Scenario " + (current + 1) + " of " + total;
+        }
+      }
+
+      function go(target) {
+        const total = (quoteData.scenarios || []).length || 0;
+        if (!total) return;
+
+        if (typeof target === "number") {
+          if (target < 0 || target >= total) return;
+          current = target;
+        } else {
+          const dir = target;
+          const next = current + dir;
+          if (next < 0 || next >= total) return;
+          current = next;
+        }
         renderDots();
+        syncCarouselPosition();
       }
 
-      function updateHeader() {
-        $("scenarioTitle").textContent = `Scenario ${current + 1} of ${
-          quoteData.scenarios.length
-        }`;
-        $("scenarioSubtitle").textContent =
-          quoteData.scenarios[current].tag || "";
-      }
-
-      function updateTransform() {
-        $("carouselInner").style.transform = `translateX(-${current * 100}%)`;
-      }
-
-      function go(i) {
-        const max = quoteData.scenarios.length - 1;
-        current = Math.max(0, Math.min(i, max));
-        updateHeader();
-        updateTransform();
-        renderDots();
-        $("btnPrev").disabled = current === 0;
-        $("btnNext").disabled = current === max;
-      }
-
-      $("btnPrev").onclick = () => go(current - 1);
-      $("btnNext").onclick = () => go(current + 1);
-
-      // ------------------------------ INIT ------------------------------
-      (function init() {
-        renderHeader();
+      document.addEventListener("DOMContentLoaded", () => {
         renderSlides();
-        go(0);
-      })();
+        updateSummary();
+
+        const prevBtn = $("prevScenario");
+        const nextBtn = $("nextScenario");
+
+        if (prevBtn)
+          prevBtn.addEventListener("click", () => go(-1));
+        if (nextBtn)
+          nextBtn.addEventListener("click", () => go(1));
+
+        window.addEventListener("resize", syncCarouselPosition);
+
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowLeft") go(-1);
+          if (e.key === "ArrowRight") go(1);
+        });
+      });
     </script>
   </body>
 </html>
