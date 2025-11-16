@@ -16,6 +16,8 @@ const Phone = require('./models/Phone');
 const Plan = require('./models/Plan');
 const P2PReminder = require('./models/p2pReminder'); // path same style as other models
 const Customer = require('./models/customer');
+const NewCust = require('./models/NewCust'); // ⬅ add this
+
 
 // import functions
 const { sendWelcomeEmail } = require('./public/scripts/login_signup/success_email');
@@ -61,6 +63,30 @@ app.get('/api/customers', async (_req, res) => {
     res.status(500).json({ error: 'Failed to fetch customers' });
   }
 });
+
+// Save "New Customer Quote" / intake flow
+app.post('/api/new-cust', async (req, res) => {
+  try {
+    // req.body is what you send from the frontend (buildPayload())
+    const payload = req.body;
+
+    const doc = await NewCust.create({
+      phoneSection: payload.phoneSection,
+      planSection: payload.planSection,
+      addOnSection: payload.addOnSection,
+      rawState: payload.rawState || null,
+      selectedCustomer: payload.selectedCustomer || null,
+      selectedPhones: payload.selectedPhones || [],
+      meta: payload.meta || {},
+    });
+
+    res.status(201).json({ message: 'NewCust saved', id: doc._id });
+  } catch (err) {
+    console.error('Error saving newCust:', err);
+    res.status(500).json({ message: 'Failed to save newCust' });
+  }
+});
+
 
 
 // List P2P reminders (populated with customer info)

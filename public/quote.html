@@ -115,11 +115,11 @@
             ◀ Back
           </button>
           <div class="flex items-center gap-3">
-            <!-- <button
-              id="saveDraft"
-              class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
-              Save Draft
-            </button> -->
+            <button
+              id="saveQuote"
+              class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 hidden">
+              Save Quote
+            </button>
             <button
               id="nextBtn"
               class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-soft">
@@ -446,6 +446,13 @@
       // Try to read any pre-computed pricing if you add it later:
       // state.finalQuote = { deviceTotal, planTotal, addonsTotal, subtotal, tax, total, taxRate }
       const fq = state.finalQuote || {};
+      document.querySelector("#saveQuote").classList.remove("hidden")
+
+      const btnSaveQuote = document.querySelector("#saveQuote")
+
+      btnSaveQuote.onclick = () => saveQuote();
+
+      
 
       // --- PHONES / DEVICES ---
       const phoneIds = state.phone.phoneChoice || [];
@@ -974,6 +981,15 @@
         slide.classList.remove("slide-enter");
       });
 
+      const saveBtn = document.querySelector("#saveQuote");
+      if (saveBtn) {
+        if (state.step === 5) {
+          saveBtn.classList.remove("hidden");
+        } else {
+          saveBtn.classList.add("hidden");
+        }
+      }
+
       // bind per-slide events
       if (state.step === 0) {
         populateCustomerSelect();
@@ -1424,10 +1440,43 @@
 
     // ---------- PAYLOAD ----------
     function buildPayload() {
+      // selected customer (from state.phone.selectedCustomer)
+      const cust = state.phone.selectedCustomer || null;
+
+      // selected phones (ids + label + qty)
+      const phoneIds = state.phone.phoneChoice || [];
+      const quantities = state.phone.phoneQuantities || {};
+      const selectedPhones = phoneIds
+        .map((id) => {
+          const p = state.phonesCatalog.find((x) => (x._id || x.id || "") == id);
+          if (!p) return null;
+          const label = [p.manufacturer, p.model].filter(Boolean).join(" ");
+          return {
+            phoneId: p._id || null,
+            label,
+            qty: quantities[id] || 1,
+          };
+        })
+        .filter(Boolean);
+
       return {
         phoneSection: { ...state.phone },
         planSection: { ...state.plan },
         addOnSection: { ...state.addons },
+
+        selectedCustomer: cust
+          ? {
+              customerId: cust._id || null,
+              name: cust.name,
+              email: cust.email,
+              phone: cust.phone,
+            }
+          : null,
+
+        selectedPhones,
+
+        rawState: { ...state }, // optional but handy
+
         meta: { createdAt: new Date().toISOString() },
       };
     }
@@ -1452,18 +1501,25 @@
     async function saveQuote() {
       const payload = buildPayload();
       try {
-        const res = await fetch("/api/quotes", {
+        const res = await fetch("/api/new-cust", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error("Save failed");
-        showToast("Quote saved");
+
+        if (!res.ok) {
+          throw new Error("Save failed: " + res.status);
+        }
+
+        const data = await res.json();
+        console.log("Saved NewCust with id:", data.id);
+        showToast("Quote saved to database");
       } catch (err) {
         console.error(err);
         showToast("Save failed");
       }
     }
+
 
     // Draft to localStorage
     function saveDraft() {
@@ -1481,6 +1537,12 @@
         return false;
       }
     }
+
+    // Save quote to db
+    // function saveQuote(){
+    //   console.log("HERE");
+
+    // } 
 
     function resetAll() {
       localStorage.removeItem("wmq_new_user_draft");
@@ -1594,7 +1656,7 @@
         if (state.step < state.steps.length - 1) go(1);
         else showToast("Review complete");
       });
-      // qs("#saveDraft").addEventListener("click", saveDraft);
+      // qs("#saveQuote").addEventListener("click", saveQuote);
       qs("#btnReset").addEventListener("click", resetAll);
       qs("#btnSubmit").addEventListener("click", submitForm);
       // qs("#btnSaveQuote").addEventListener("click", saveQuote);
