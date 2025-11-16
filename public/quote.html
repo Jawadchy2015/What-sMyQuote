@@ -4,149 +4,184 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>New User Intake — Quote Builder</title>
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: [
+              "Inter",
+              "ui-sans-serif",
+              "system-ui",
+              "-apple-system",
+              "Segoe UI",
+              "Roboto",
+              "Ubuntu",
+              "Cantarell",
+              "Noto Sans",
+              "Helvetica Neue",
+              "Arial",
+              "sans-serif",
+            ],
+          },
+          boxShadow: {
+            soft: "0 10px 25px -8px rgba(15,23,42,0.30)",
+          },
+        },
+      },
+    };
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+
   <style>
-    body { font-family: 'Inter', sans-serif; }
-    .card { @apply bg-white rounded-2xl border border-slate-200 shadow-sm; }
-    .label { @apply text-sm font-medium text-slate-700; }
-    .input { @apply w-full mt-1 rounded-xl border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500; }
-    .hint { @apply text-xs text-slate-500; }
-    .section-title { @apply text-sm font-semibold text-slate-800 uppercase tracking-wide; }
-    .pill { @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ring-1 ring-slate-200 text-slate-600; }
-    .btn { @apply px-4 py-2 rounded-xl transition; }
-    .btn-primary { @apply bg-indigo-600 hover:bg-indigo-700 text-white shadow; }
-    .btn-ghost { @apply bg-white border border-slate-200 hover:bg-slate-50 text-slate-700; }
-    .btn-alt { @apply bg-emerald-600 hover:bg-emerald-700 text-white shadow; }
-    .modal-backdrop { @apply fixed inset-0 bg-black/50 flex items-center justify-center z-50; }
-    .modal { @apply w-full max-w-lg card p-6; }
+    body { font-family: "Inter", sans-serif; }
+
+    .slide-enter { opacity: 0; transform: translateX(20px); }
+    .slide-enter-active { opacity: 1; transform: translateX(0); transition: all .25s ease; }
+
+    .select-card[aria-checked="true"] {
+      outline: 2px solid rgb(79 70 229);
+      outline-offset: 2px;
+      box-shadow: 0 0 0 1px rgb(199 210 254);
+    }
+
+    /* Hide number input arrows */
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] { -moz-appearance: textfield; }
   </style>
 </head>
 <body class="min-h-screen bg-slate-50 text-slate-900">
-  <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-10">
-    <div class="flex items-center justify-between mb-8">
+  <div class="mx-auto max-w-7xl px-4 md:px-6 lg:px-8 py-6 flex flex-col gap-6">
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-semibold text-slate-900">New User Form</h1>
-        <p class="text-slate-500">Fill out the intake form — live preview updates as you type.</p>
+        <h1 class="text-2xl md:text-3xl font-semibold tracking-tight">
+          Quote Builder
+        </h1>
+        <p class="text-slate-500 text-sm md:text-base">
+          Capture requirements in steps on the left. Live preview and actions are on the right.
+        </p>
       </div>
       <div class="flex items-center gap-3">
-        <button id="btnReset" class="btn btn-ghost">Reset</button>
-        <button id="btnSubmit" class="btn btn-primary">Submit</button>
+        <a href="dashboard.html">
+          <button
+            class="px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
+            Back to Dashboard
+          </button>
+        </a>
+        <button
+          id="btnReset"
+          class="px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
+          Reset
+        </button>
+        <button
+          id="btnSubmit"
+          class="px-3 py-2 text-sm rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-soft">
+          Submit Intake
+        </button>
       </div>
-    </div>
+    </header>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      <!-- Form -->
-      <form id="newUserForm" class="space-y-6 card p-6" onsubmit="return false;">
-        <!-- PHONE SECTION -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="section-title">Phone Section</h2>
-            <span class="pill">Step 1</span>
-          </div>
+    <!-- Step Progress -->
+    <section class="mt-2">
+      <ol id="progress" class="grid grid-cols-6 gap-3 text-sm"></ol>
+    </section>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="label">Current Provider</label>
-              <select id="currProvider" class="input">
-                <option value="">Select…</option>
-                <option>Rogers</option>
-                <option>Fido</option>
-                <option>Chatr</option>
-                <option>Telus</option>
-                <option>Koodo</option>
-                <option>Public</option>
-                <option>Others</option>
-              </select>
-              <p class="hint">If "Others" is selected, specify below.</p>
-            </div>
-            <div id="providerOtherWrap" class="hidden">
-              <label class="label">Other Provider</label>
-              <input id="providerOther" class="input" placeholder="Enter provider name" />
-            </div>
-
-            <div>
-              <label class="label">Number of Lines</label>
-              <input id="numLines" type="number" class="input" placeholder="e.g., 3" />
-            </div>
-
-            <div class="flex items-center gap-3 mt-6">
-              <input id="smb" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
-              <label for="smb" class="label">SMB</label>
-            </div>
-
-            <div>
-              <label class="label">Number of Phones</label>
-              <input id="numPhones" type="number" class="input" placeholder="e.g., 2" />
-            </div>
-
-            <div>
-              <label class="label">Phone Choice <span class="text-slate-400">(from catalog)</span></label>
-              <select id="phoneChoice" class="input" multiple size="5"></select>
-              <p class="hint">Hold Ctrl/Cmd to select multiple. Loaded from <code>/api/phones</code>.</p>
-            </div>
-          </div>
+    <!-- Main layout: Carousel left, Preview & actions right -->
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1">
+      <!-- Carousel -->
+      <section class="lg:col-span-2 bg-white rounded-2xl shadow-soft border border-slate-100 p-4 md:p-6 flex flex-col min-h-[70vh]">
+        <div id="slides" class="relative flex-1">
+          <!-- Slides rendered by JS -->
         </div>
 
-        <hr class="border-slate-200" />
-
-        <!-- PLAN SECTION -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="section-title">Plan Section</h2>
-            <span class="pill">Step 2</span>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <label class="flex items-center gap-3"><input id="plan5g" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">5G</span></label>
-            <label class="flex items-center gap-3"><input id="planZeroOveruse" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">$0 Data Overuse</span></label>
-            <label class="flex items-center gap-3"><input id="planMin1000" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">1000 min</span></label>
-            <label class="flex items-center gap-3"><input id="planMin200" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">200 min</span></label>
-            <label class="flex items-center gap-3"><input id="planUsRoam" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">US Roam</span></label>
-            <label class="flex items-center gap-3"><input id="planCaUsCalling" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">CA/US Calling</span></label>
-            <label class="flex items-center gap-3"><input id="planUsMxRoam" type="checkbox" class="h-5 w-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"><span class="label">US/MX Roam</span></label>
-          </div>
-        </div>
-
-        <hr class="border-slate-200" />
-
-        <!-- ADD-ON SECTION -->
-        <div class="space-y-4">
-          <div class="flex items-center justify-between">
-            <h2 class="section-title">Add-On Section</h2>
-            <span class="pill">Step 3</span>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><label class="label">Num of SPC</label><input id="addonSpc" type="number" class="input" /></div>
-            <div><label class="label">DF / Line</label><input id="addonDfPerLine" type="number" class="input" /></div>
-            <div><label class="label"># of CC Waiver</label><input id="addonCcWaiver" type="number" class="input" /></div>
-            <div><label class="label">Trade-In</label><input id="addonTradeIn" type="number" class="input" /></div>
-            <div><label class="label">Upfront / Line</label><input id="addonUpfrontPerLine" type="number" class="input" /></div>
+        <!-- Nav buttons -->
+        <div class="mt-6 flex items-center justify-between gap-3">
+          <button
+            id="prevBtn"
+            class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed">
+            ◀ Back
+          </button>
+          <div class="flex items-center gap-3">
+            <button
+              id="saveDraft"
+              class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
+              Save Draft
+            </button>
+            <button
+              id="nextBtn"
+              class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-soft">
+              Next ▶
+            </button>
           </div>
         </div>
-      </form>
+      </section>
 
-      <!-- Preview + Actions -->
-      <div class="space-y-6">
-        <div class="card p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="section-title">Live Preview</h2>
-            <span class="pill">Overview</span>
-          </div>
-          <div class="space-y-4 text-slate-700">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200"><div class="text-xs text-slate-500 mb-1">Provider</div><div id="pvProvider" class="font-medium">—</div></div>
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200"><div class="text-xs text-slate-500 mb-1">Lines</div><div id="pvLines" class="font-medium">—</div></div>
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200"><div class="text-xs text-slate-500 mb-1">SMB</div><div id="pvSmb" class="font-medium">—</div></div>
-              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200"><div class="text-xs text-slate-500 mb-1">Phones</div><div id="pvPhones" class="font-medium">—</div></div>
+      <!-- Preview & Actions -->
+      <aside class="space-y-6">
+        <!-- Live Preview -->
+        <section class="bg-white rounded-2xl border border-slate-100 shadow-soft p-5 h-full">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wide">
+                Live Preview
+              </h2>
+              <p class="text-xs text-slate-500">
+                Updates as you move through the steps.
+              </p>
             </div>
+          </div>
+
+          <div class="space-y-4 text-sm">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                  Provider
+                </div>
+                <div id="pvProvider" class="text-sm font-medium text-slate-800">—</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                  Lines
+                </div>
+                <div id="pvLines" class="text-sm font-medium text-slate-800">—</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                  SMB
+                </div>
+                <div id="pvSmb" class="text-sm font-medium text-slate-800">—</div>
+              </div>
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                  Phones
+                </div>
+                <div id="pvPhones" class="text-sm font-medium text-slate-800">—</div>
+              </div>
+            </div>
+
             <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="text-sm font-medium text-slate-800 mb-2">Plan Flags</div>
-              <ul id="pvPlanFlags" class="list-disc list-inside text-slate-600 text-sm space-y-1"></ul>
+              <div class="text-sm font-semibold text-slate-800 mb-2">Plan Flags</div>
+              <ul id="pvPlanFlags" class="list-disc list-inside text-slate-600 text-sm space-y-1">
+                <li class="text-slate-400">—</li>
+              </ul>
             </div>
+
             <div class="p-4 rounded-xl bg-slate-50 border border-slate-200">
-              <div class="text-sm font-medium text-slate-800 mb-2">Add-ons</div>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-slate-600">
+              <div class="text-sm font-semibold text-slate-800 mb-2">Add-Ons</div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-slate-600">
                 <div><span class="text-slate-500">SPC:</span> <span id="pvSpc">0</span></div>
                 <div><span class="text-slate-500">DF/Line:</span> <span id="pvDfPerLine">0</span></div>
                 <div><span class="text-slate-500">CC Waiver:</span> <span id="pvCcWaiver">0</span></div>
@@ -155,271 +190,1149 @@
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Actions Card -->
-        <div class="card p-6">
-          <div class="flex items-center justify-between mb-4">
-            <h2 class="section-title">Actions</h2>
-            <span class="pill">Next Steps</span>
+        <!-- Actions -->
+        <!-- <section class="bg-white rounded-2xl border border-slate-100 shadow-soft p-5">
+          <div class="flex items-center justify-between mb-3">
+            <div>
+              <h2 class="text-sm font-semibold text-slate-900 uppercase tracking-wide">
+                Actions
+              </h2>
+              <p class="text-xs text-slate-500">
+                Save this configuration or send it to the customer.
+              </p>
+            </div>
           </div>
-          <p class="text-sm text-slate-500 mb-4">Choose what to do with this configuration. These actions submit the same data shown above.</p>
-          <div class="flex flex-wrap gap-3">
-            <button id="btnSaveQuote" class="btn btn-primary">Save Quote</button>
-            <button id="btnSendQuote" class="btn btn-alt">Send Quote to Customer</button>
+
+          <div class="space-y-3">
+            <button
+              id="btnSaveQuote"
+              class="w-full px-4 py-2.5 rounded-xl bg-slate-900 text-white hover:bg-black text-sm font-medium shadow-soft">
+              Save Quote
+            </button>
+            <button
+              id="btnSendQuote"
+              class="w-full px-4 py-2.5 rounded-xl bg-emerald-600 text-white hover:bg-emerald-700 text-sm font-medium shadow-soft">
+              Send Quote to Customer
+            </button>
           </div>
-          <p class="text-xs text-slate-400 mt-3">Note: API endpoints and email sending are placeholders to be implemented on the backend.</p>
-        </div>
-      </div>
-    </div>
+
+          <p class="mt-3 text-[11px] text-slate-400">
+            Backend endpoints (<code>/api/new-user-form</code> and
+            <code>/api/quotes</code>) and email sending can be implemented
+            using this same payload.
+          </p>
+        </section> -->
+      </aside>
+    </main>
   </div>
 
   <!-- Email Modal -->
-    <div id="emailModal" class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 p-4">
+  <div
+    id="emailModal"
+    class="hidden fixed inset-0 z-50 items-center justify-center bg-black/40 p-4"
+  >
     <div class="bg-white w-full max-w-lg rounded-2xl shadow-soft p-6">
       <div class="flex items-start justify-between">
         <h3 class="text-lg font-semibold">Send Quote to Customer</h3>
-        <button class="p-2 -m-2 text-slate-500 hover:text-slate-700" onclick="toggleSend(false)" aria-label="Close">✕</button>
+        <button
+          id="emailClose"
+          class="p-2 -m-2 text-slate-500 hover:text-slate-700"
+          aria-label="Close"
+        >
+          ✕
+        </button>
       </div>
-      <p class="text-sm text-slate-600 mt-2">We will open your email client prefilled with the details below. Edit as needed before sending.</p>
-      <textarea id="sendBody" class="mt-4 w-full h-52 rounded-xl border border-slate-200 p-3 text-sm" spellcheck="false"></textarea>
+      <p class="text-sm text-slate-600 mt-2">
+        We’ll open your email client with this text. You can edit before sending.
+      </p>
+
+      <div class="mt-4 space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">
+            To (customer email)
+          </label>
+          <input
+            id="emailTo"
+            type="email"
+            class="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            placeholder="customer@example.com"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">
+            Subject
+          </label>
+          <input
+            id="emailSubject"
+            class="w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            value="Your Mobile Quote"
+          />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-600 mb-1">
+            Body
+          </label>
+          <textarea
+            id="emailBody"
+            class="mt-1 w-full h-48 rounded-xl border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            spellcheck="false"
+          ></textarea>
+        </div>
+      </div>
+
       <div class="mt-4 flex items-center justify-end gap-3">
-        <button id="emailClose"class="px-4 py-2 rounded-xl border border-slate-200" onclick="toggleSend(false)">Cancel</button>
-        <a id="mailtoLink" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white" href="#">Open Email</a>
+        <button
+          id="emailCancel"
+          class="px-4 py-2 rounded-xl border border-slate-200 text-sm hover:bg-slate-50"
+        >
+          Cancel
+        </button>
+        <a
+          id="mailtoLink"
+          class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium"
+          href="#"
+        >
+          Open Email
+        </a>
       </div>
     </div>
   </div>
 
-  <div id="toast" class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm shadow-lg">Saved</div>
+  <!-- Toast -->
+  <div
+    id="toast"
+    class="fixed bottom-4 left-1/2 -translate-x-1/2 hidden px-4 py-2 rounded-xl bg-indigo-600 text-white text-sm shadow-lg"
+  >
+    Saved
+  </div>
 
   <script>
-    // --- State ---
+    // ---------- STATE ----------
     const state = {
-      phoneSection: { currProvider: '', providerOther: '', numLines: null, smb: false, numPhones: null, phoneChoice: [] },
-      planSection: { fiveG: false, zeroOveruse: false, min1000: false, min200: false, usRoam: false, caUsCalling: false, usMxRoam: false },
-      addOnSection: { spc: 0, dfPerLine: 0, ccWaiver: 0, tradeIn: 0, upfrontPerLine: 0 },
-      phonesCatalog: []
+      step: 0,
+      steps: [
+        { id: "general",  title: "General Information",  subtitle: "Provider & lines" },
+        { id: "phone",  title: "Phone Section",  subtitle: "Phones" },
+        { id: "plan",   title: "Plan Section",   subtitle: "Plan flags" },
+        { id: "addons", title: "Add-On Section", subtitle: "Extras & credits" },
+        { id: "review", title: "Review",         subtitle: "Quick summary" },
+        { id: "quote", title: "Quote",         subtitle: "Final quote" },
+      ],
+      phone: {
+        currProvider: "",
+        providerOther: "",
+        numLines: "",
+        smb: false,
+        numPhones: "",
+        phoneChoice: [],
+      },
+      plan: {
+        fiveG: false,
+        zeroOveruse: false,
+        min1000: false,
+        min200: false,
+        usRoam: false,
+        caUsCalling: false,
+        usMxRoam: false,
+      },
+      addons: {
+        spc: 0,
+        dfPerLine: 0,
+        ccWaiver: 0,
+        tradeIn: 0,
+        upfrontPerLine: 0,
+      },
+      phonesCatalog: [],
     };
 
-    const el = id => document.getElementById(id);
+    // ---------- HELPERS ----------
+    const qs = (s, root = document) => root.querySelector(s);
+    const qsa = (s, root = document) => Array.from(root.querySelectorAll(s));
+    const el = (tag, cls, html) => {
+      const n = document.createElement(tag);
+      if (cls) n.className = cls;
+      if (html !== undefined) n.innerHTML = html;
+      return n;
+    };
+    const asInt = (v) => {
+      const n = parseInt(v, 10);
+      return Number.isFinite(n) ? n : 0;
+    };
 
-    // --- Fetch phones for selection ---
+    function showToast(msg = "Saved") {
+      const t = qs("#toast");
+      t.textContent = msg;
+      t.classList.remove("hidden");
+      clearTimeout(t._tid);
+      t._tid = setTimeout(() => t.classList.add("hidden"), 1600);
+    }
+
+    // ---------- PROGRESS ----------
+    function renderProgress() {
+      const ol = qs("#progress");
+      ol.innerHTML = "";
+      state.steps.forEach((s, i) => {
+        const active = i === state.step;
+        const done = i < state.step;
+        const li = el(
+          "li",
+          "flex items-center gap-3 p-3 rounded-xl border bg-white transition"
+        );
+        if (active) {
+          li.classList.add("border-indigo-200", "shadow-soft");
+        } else {
+          li.classList.add("border-slate-200", "shadow-sm");
+        }
+        li.innerHTML = `
+          <div class="flex items-center justify-center w-6 h-6 rounded-full text-[11px] font-semibold
+            ${
+              done
+                ? "bg-indigo-600 text-white"
+                : active
+                  ? "border-2 border-indigo-600 text-indigo-700"
+                  : "border border-slate-300 text-slate-500"
+            }">
+            ${i + 1}
+          </div>
+          <div class="truncate">
+            <div class="text-[11px] ${
+              active ? "text-indigo-700" : "text-slate-500"
+            }">${s.subtitle}</div>
+            <div class="text-xs font-medium text-slate-900 truncate">
+              ${s.title}
+            </div>
+          </div>
+        `;
+        ol.appendChild(li);
+      });
+    }
+
+    // ---------- SLIDE SHELL ----------
+    function slideShell(title, subtitle, innerHtml) {
+      const wrap = el("div", "slide space-y-4");
+      wrap.innerHTML = `
+        <div>
+          <h2 class="text-xl font-semibold text-slate-900">${title}</h2>
+          <p class="text-sm text-slate-500">${subtitle}</p>
+        </div>
+        <div class="mt-3">${innerHtml}</div>
+      `;
+      return wrap;
+    }
+
+    // ---------- SLIDES ----------
+    function renderFinalQuote() {
+  // --- helper for money formatting ---
+      const currency = (v) => {
+        const n = Number(v) || 0;
+        return "$" + n.toFixed(2);
+      };
+
+      // Try to read any pre-computed pricing if you add it later:
+      // state.finalQuote = { deviceTotal, planTotal, addonsTotal, subtotal, tax, total, taxRate }
+      const fq = state.finalQuote || {};
+
+      // --- PHONES / DEVICES ---
+      const phoneIds = state.phone.phoneChoice || [];
+      const phoneLabels = phoneIds
+        .map((id) =>
+          state.phonesCatalog.find((p) => (p._id || p.id || "") == id)
+        )
+        .filter(Boolean)
+        .map((p) => [p.manufacturer, p.model].filter(Boolean).join(" "))
+        .filter(Boolean);
+
+      const deviceTotal =
+        typeof fq.deviceTotal === "number" ? fq.deviceTotal : 0;
+
+      const devicesRow =
+        phoneLabels.length > 0
+          ? `
+            <tr>
+              <td class="py-2 align-top">
+                Devices
+                <div class="text-xs text-slate-500 mt-1">
+                  ${phoneLabels.join("<br>")}
+                </div>
+              </td>
+              <td class="py-2 text-right align-top">${currency(deviceTotal)}</td>
+            </tr>`
+          : `
+            <tr>
+              <td class="py-2 text-slate-500">Devices</td>
+              <td class="py-2 text-right text-slate-400">—</td>
+            </tr>`;
+
+      // --- PLAN ---
+      const flags = [];
+      if (state.plan.fiveG) flags.push("5G");
+      if (state.plan.zeroOveruse) flags.push("$0 Data Overuse");
+      if (state.plan.min1000) flags.push("1000 min");
+      if (state.plan.min200) flags.push("200 min");
+      if (state.plan.usRoam) flags.push("US Roam");
+      if (state.plan.caUsCalling) flags.push("CA/US Calling");
+      if (state.plan.usMxRoam) flags.push("US/MX Roam");
+
+      const planTotal =
+        typeof fq.planTotal === "number" ? fq.planTotal : 0;
+
+      const planRow =
+        flags.length > 0 || planTotal
+          ? `
+            <tr>
+              <td class="py-2 align-top">
+                Plan
+                ${
+                  flags.length
+                    ? `<div class="text-xs text-slate-500 mt-1">${flags.join(
+                        " • "
+                      )}</div>`
+                    : ""
+                }
+              </td>
+              <td class="py-2 text-right align-top">${currency(planTotal)}</td>
+            </tr>`
+          : `
+            <tr>
+              <td class="py-2 text-slate-500">Plan</td>
+              <td class="py-2 text-right text-slate-400">—</td>
+            </tr>`;
+
+      // --- ADD-ONS ---
+      const a = state.addons || {};
+      const addonItems = [
+        { key: "spc", label: "SPC" },
+        { key: "dfPerLine", label: "DF / Line" },
+        { key: "ccWaiver", label: "CC Waiver" },
+        { key: "tradeIn", label: "Trade-In (credit)" },
+        { key: "upfrontPerLine", label: "Upfront / Line" },
+      ];
+
+      const addonsRows = addonItems
+        .map(({ key, label }) => {
+          const raw = Number(a[key] || 0);
+          if (!raw) return "";
+          const isCredit = key === "tradeIn" && raw > 0;
+          const value = isCredit ? -raw : raw;
+          return `
+            <tr>
+              <td class="py-2">${label}</td>
+              <td class="py-2 text-right">
+                ${isCredit ? "-" : ""}${currency(Math.abs(value))}
+              </td>
+            </tr>`;
+        })
+        .join("");
+
+      const addonsTotal =
+        typeof fq.addonsTotal === "number"
+          ? fq.addonsTotal
+          : addonItems.reduce((sum, { key }) => sum + (Number(a[key]) || 0), 0);
+
+      // --- TOTALS ---
+      const subtotal =
+        typeof fq.subtotal === "number"
+          ? fq.subtotal
+          : deviceTotal + planTotal + addonsTotal;
+
+      const taxRate =
+        typeof fq.taxRate === "number" ? fq.taxRate : 0.05; // 5% placeholder
+
+      const tax =
+        typeof fq.tax === "number"
+          ? fq.tax
+          : +(subtotal * taxRate).toFixed(2);
+
+      const total =
+        typeof fq.total === "number"
+          ? fq.total
+          : +(subtotal + tax).toFixed(2);
+
+      const taxLabel = `Tax (est. ${(taxRate * 100)
+        .toFixed(1)
+        .replace(/\.0$/, "")}%)`;
+
+      // --- SLIDE UI ---
+      return slideShell(
+        "Final Quote",
+        "Full cost breakdown for this customer",
+        `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Cost Breakdown Table -->
+          <div>
+            <h3 class="my-5 font-semibold mb-2">Cost Breakdown</h3>
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
+              <table class="w-full text-sm">
+                <tbody>
+                  ${devicesRow}
+                  ${planRow}
+                  ${addonsRows}
+                  <tr><td class="py-2 font-medium">Subtotal</td><td class="py-2 text-right">${currency(subtotal)}</td></tr>
+                  <tr><td class="py-2">${taxLabel}</td><td class="py-2 text-right">${currency(tax)}</td></tr>
+                  <tr><td class="py-2 font-semibold">Total Due</td><td class="py-2 text-right font-semibold">${currency(total)}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Summary Panel -->
+          <div class="space-y-4">
+            <h3 class="my-5 font-semibold mb-2">Summary</h3>
+            <div class="rounded-2xl border border-slate-200 bg-white p-4 text-sm space-y-3">
+              <div>
+                <div class="text-xs uppercase text-slate-500 mb-1">Provider & Lines</div>
+                <div class="text-slate-800">
+                  ${(state.phone.currProvider || "—")}${
+                    state.phone.currProvider === "Others" && state.phone.providerOther
+                      ? " — " + state.phone.providerOther
+                      : ""
+                  } • ${state.phone.numLines || 0} line(s)
+                </div>
+              </div>
+
+              <div>
+                <div class="text-xs uppercase text-slate-500 mb-1">Phones</div>
+                <div class="text-slate-800">
+                  ${
+                    phoneLabels.length
+                      ? phoneLabels.join(", ")
+                      : "No phones selected"
+                  }
+                </div>
+              </div>
+
+              <div>
+                <div class="text-xs uppercase text-slate-500 mb-1">Plan Flags</div>
+                <div class="text-slate-800">
+                  ${flags.length ? flags.join(" • ") : "No specific flags selected"}
+                </div>
+              </div>
+
+              <div>
+                <div class="text-xs uppercase text-slate-500 mb-1">Add-Ons</div>
+                <ul class="list-disc list-inside text-slate-800 space-y-1">
+                  <li>SPC: ${a.spc || 0}</li>
+                  <li>DF / Line: ${a.dfPerLine || 0}</li>
+                  <li>CC Waiver: ${a.ccWaiver || 0}</li>
+                  <li>Trade-In: ${a.tradeIn || 0}</li>
+                  <li>Upfront / Line: ${a.upfrontPerLine || 0}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      `
+      );
+    }
+
+    function phoneCard(p){
+      const price = p.price?.deviceRetailPrice ?? 0;
+      const id = `ph_${p._id || (p.manufacturer+p.model).replace(/\W/g,'')}`;
+      return `
+        <label for="${id}" class="select-card block rounded-2xl border border-slate-200 p-4 hover:border-emerald-300 cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-emerald-500" role="radio" aria-checked="false">
+          <div class="flex items-center justify-between">
+            <div>
+              <div class="text-sm text-slate-500">${p.manufacturer}</div>
+              <div class="text-base font-semibold">${p.model}</div>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center gap-3">
+            <input id="${id}" data-id="${p._id || id}" data-manufacturer="${p.manufacturer}" data-model="${p.model}" data-price="${price}" type="checkbox" class="rounded border-slate-300" />
+            <div class="flex items-center gap-2">
+              <span class="text-sm text-slate-600">Qty</span>
+              <input type="number" min="1" value="1" class="w-16 rounded-lg border border-slate-200 p-2 qty-input" />
+            </div>
+          </div>
+        </label>`;
+    }
+
+    function renderGeneralInfoSlide() {
+      const cards = state.phonesCatalog.map(phoneCard).join('');
+      const content = `
+        <div class="space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-medium text-slate-700">Current Provider</label>
+              <select
+                id="currProvider"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select…</option>
+                <option value="Rogers">Rogers</option>
+                <option value="Fido">Fido</option>
+                <option value="Chatr">Chatr</option>
+                <option value="Telus">Telus</option>
+                <option value="Koodo">Koodo</option>
+                <option value="Public">Public</option>
+                <option value="Others">Others</option>
+              </select>
+              <p class="text-[11px] text-slate-500 mt-1">If "Others" is selected, specify below.</p>
+            </div>
+
+            <div id="providerOtherWrap" class="${
+              state.phone.currProvider === "Others" ? "" : "hidden"
+            }">
+              <label class="text-xs font-medium text-slate-700">Other Provider</label>
+              <input
+                id="providerOther"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Enter provider name"
+                value="${state.phone.providerOther || ""}"
+              />
+            </div>
+
+            <div>
+              <label class="text-xs font-medium text-slate-700">Number of Lines</label>
+              <input
+                id="numLines"
+                type="number"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="e.g., 3"
+                value="${state.phone.numLines || ""}"
+              />
+            </div>
+
+            <div class="flex items-center gap-3 mt-6">
+              <input
+                id="smb"
+                type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                ${state.phone.smb ? "checked" : ""}
+              />
+              <label for="smb" class="text-sm font-medium text-slate-700">SMB</label>
+            </div>
+
+            <div>
+              <label class="text-xs font-medium text-slate-700">Number of Phones</label>
+              <input
+                id="numPhones"
+                type="number"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="e.g., 2"
+                value="${state.phone.numPhones || ""}"
+              />
+            </div> 
+          </div>
+        </div>
+      `;
+      return slideShell("General Information", "Customer requirements", content);
+    }
+    function renderPhoneSlide() {
+      const cards = state.phonesCatalog.map(phoneCard).join('');
+      const content = `
+        <div class="space-y-5">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-medium text-slate-700">Current Provider</label>
+              <select
+                id="currProvider"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+                <option value="">Select…</option>
+                <option value="Rogers">Rogers</option>
+                <option value="Fido">Fido</option>
+                <option value="Chatr">Chatr</option>
+                <option value="Telus">Telus</option>
+                <option value="Koodo">Koodo</option>
+                <option value="Public">Public</option>
+                <option value="Others">Others</option>
+              </select>
+              <p class="text-[11px] text-slate-500 mt-1">If "Others" is selected, specify below.</p>
+            </div>
+
+            <div id="providerOtherWrap" class="${
+              state.phone.currProvider === "Others" ? "" : "hidden"
+            }">
+              <label class="text-xs font-medium text-slate-700">Other Provider</label>
+              <input
+                id="providerOther"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="Enter provider name"
+                value="${state.phone.providerOther || ""}"
+              />
+            </div>
+
+            <div>
+              <label class="text-xs font-medium text-slate-700">Number of Lines</label>
+              <input
+                id="numLines"
+                type="number"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="e.g., 3"
+                value="${state.phone.numLines || ""}"
+              />
+            </div>
+
+            <div class="flex items-center gap-3 mt-6">
+              <input
+                id="smb"
+                type="checkbox"
+                class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+                ${state.phone.smb ? "checked" : ""}
+              />
+              <label for="smb" class="text-sm font-medium text-slate-700">SMB</label>
+            </div>
+
+            <div>
+              <label class="text-xs font-medium text-slate-700">Number of Phones</label>
+              <input
+                id="numPhones"
+                type="number"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                placeholder="e.g., 2"
+                value="${state.phone.numPhones || ""}"
+              />
+            </div>
+            
+
+            
+          </div>
+        </div>
+      `;
+      return slideShell("Phone Section", "Capture current provider and device counts", content);
+    }
+
+    function renderPlanSlide() {
+      const p = state.plan;
+      const chk = (id, label, checked) => `
+        <label class="flex items-center gap-3 select-card rounded-2xl border border-slate-200 p-3 bg-slate-50/60 hover:border-indigo-300 cursor-pointer"
+               data-for="${id}" aria-checked="${checked ? "true" : "false"}">
+          <input
+            id="${id}"
+            type="checkbox"
+            class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
+            ${checked ? "checked" : ""}
+          />
+          <span class="text-sm font-medium text-slate-800">${label}</span>
+        </label>
+      `;
+      const content = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+          ${chk("plan5g", "5G", p.fiveG)}
+          ${chk("planZeroOveruse", "$0 Data Overuse", p.zeroOveruse)}
+          ${chk("planMin1000", "1000 min", p.min1000)}
+          ${chk("planMin200", "200 min", p.min200)}
+          ${chk("planUsRoam", "US Roam", p.usRoam)}
+          ${chk("planCaUsCalling", "CA/US Calling", p.caUsCalling)}
+          ${chk("planUsMxRoam", "US/MX Roam", p.usMxRoam)}
+        </div>
+      `;
+      return slideShell("Plan Section", "Mark key requirements for the plan", content);
+    }
+
+    function renderAddonSlide() {
+      const a = state.addons;
+      const block = (id, label, val) => `
+        <div>
+          <label class="text-xs font-medium text-slate-700">${label}</label>
+          <input
+            id="${id}"
+            type="number"
+            class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            value="${val || 0}"
+          />
+        </div>
+      `;
+      const content = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          ${block("addonSpc", "Num of SPC", a.spc)}
+          ${block("addonDfPerLine", "DF / Line", a.dfPerLine)}
+          ${block("addonCcWaiver", "# of CC Waiver", a.ccWaiver)}
+          ${block("addonTradeIn", "Trade-In", a.tradeIn)}
+          ${block("addonUpfrontPerLine", "Upfront / Line", a.upfrontPerLine)}
+        </div>
+      `;
+      return slideShell("Add-On Section", "Extras, waivers & credits", content);
+    }
+
+    function renderReviewSlide() {
+      const p = state.phone;
+      const flags = [];
+      if (state.plan.fiveG) flags.push("5G");
+      if (state.plan.zeroOveruse) flags.push("$0 Data Overuse");
+      if (state.plan.min1000) flags.push("1000 min");
+      if (state.plan.min200) flags.push("200 min");
+      if (state.plan.usRoam) flags.push("US Roam");
+      if (state.plan.caUsCalling) flags.push("CA/US Calling");
+      if (state.plan.usMxRoam) flags.push("US/MX Roam");
+
+      const content = `
+        <div class="space-y-4 text-sm text-slate-700">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-[11px] text-slate-500 mb-1 uppercase">Provider</div>
+              <div>${p.currProvider || "—"}${
+                p.currProvider === "Others" && p.providerOther
+                  ? " — " + p.providerOther
+                  : ""
+              }</div>
+            </div>
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+              <div class="text-[11px] text-slate-500 mb-1 uppercase">Lines & Phones</div>
+              <div>${p.numLines || 0} lines · ${p.numPhones || 0} phones</div>
+            </div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[11px] text-slate-500 mb-1 uppercase">Plan Flags</div>
+            <div>${flags.length ? flags.join(" • ") : "No flags selected"}</div>
+          </div>
+
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+            <div class="text-[11px] text-slate-500 mb-1 uppercase">Add-Ons Summary</div>
+            <ul class="list-disc list-inside space-y-1">
+              <li>SPC: ${state.addons.spc || 0}</li>
+              <li>DF / Line: ${state.addons.dfPerLine || 0}</li>
+              <li>CC Waiver: ${state.addons.ccWaiver || 0}</li>
+              <li>Trade-In: ${state.addons.tradeIn || 0}</li>
+              <li>Upfront / Line: ${state.addons.upfrontPerLine || 0}</li>
+            </ul>
+          </div>
+
+          <p class="text-[11px] text-slate-500">
+            Final pricing and credits will be calculated in your main quote builder.
+          </p>
+        </div>
+      `;
+      return slideShell("Review", "Quick check before saving or sending", content);
+    }
+
+    // ---------- RENDER SLIDES ----------
+    function renderSlides() {
+      const host = qs("#slides");
+      host.innerHTML = "";
+
+      let slide;
+      if (state.step === 0) slide = renderGeneralInfoSlide();
+      else if (state.step === 1) slide = renderPhoneSlide();
+      else if (state.step === 2) slide = renderPlanSlide();
+      else if (state.step === 3) slide = renderAddonSlide();
+      else if (state.step == 4) slide = renderReviewSlide();
+      else slide = renderFinalQuote();
+
+      slide.classList.add("slide-enter");
+      host.appendChild(slide);
+      requestAnimationFrame(() => {
+        slide.classList.add("slide-enter-active");
+        slide.classList.remove("slide-enter");
+      });
+
+      // bind per-slide events
+      if (state.step === 1) bindPhoneEvents();
+      if (state.step === 2) bindPlanEvents();
+      if (state.step === 3) bindAddonEvents();
+
+      if (state.step === 1) populatePhoneSelect();
+
+      renderProgress();
+      updateNavButtons();
+      updatePreview();
+    }
+
+    // ---------- BIND EVENTS ----------
+    function bindPhoneEvents() {
+      const p = state.phone;
+
+      const currProvider = qs("#currProvider");
+      const providerOtherWrap = qs("#providerOtherWrap");
+      const providerOther = qs("#providerOther");
+      const numLines = qs("#numLines");
+      const smb = qs("#smb");
+      const numPhones = qs("#numPhones");
+      const phoneChoice = qs("#phoneChoice");
+
+      if (p.currProvider) currProvider.value = p.currProvider;
+
+      currProvider.addEventListener("change", (e) => {
+        p.currProvider = e.target.value;
+        providerOtherWrap.classList.toggle("hidden", e.target.value !== "Others");
+        updatePreview();
+      });
+
+      providerOther.addEventListener("input", (e) => {
+        p.providerOther = e.target.value;
+        updatePreview();
+      });
+
+      numLines.addEventListener("input", (e) => {
+        p.numLines = asInt(e.target.value);
+        updatePreview();
+      });
+
+      smb.addEventListener("change", (e) => {
+        p.smb = !!e.target.checked;
+        updatePreview();
+      });
+
+      numPhones.addEventListener("input", (e) => {
+        p.numPhones = asInt(e.target.value);
+        updatePreview();
+      });
+
+      phoneChoice.addEventListener("change", (e) => {
+        p.phoneChoice = Array.from(e.target.selectedOptions).map((o) => o.value);
+        updatePreview();
+      });
+    }
+
+    function bindPlanEvents() {
+      const mapping = [
+        ["plan5g", "fiveG"],
+        ["planZeroOveruse", "zeroOveruse"],
+        ["planMin1000", "min1000"],
+        ["planMin200", "min200"],
+        ["planUsRoam", "usRoam"],
+        ["planCaUsCalling", "caUsCalling"],
+        ["planUsMxRoam", "usMxRoam"],
+      ];
+      mapping.forEach(([id, key]) => {
+        const input = qs("#" + id);
+        const card = input.closest(".select-card");
+        const updateAria = () =>
+          card.setAttribute("aria-checked", input.checked ? "true" : "false");
+
+        input.addEventListener("change", (e) => {
+          state.plan[key] = e.target.checked;
+          updateAria();
+          updatePreview();
+        });
+        updateAria();
+      });
+    }
+
+    function bindAddonEvents() {
+      const map = [
+        ["addonSpc", "spc"],
+        ["addonDfPerLine", "dfPerLine"],
+        ["addonCcWaiver", "ccWaiver"],
+        ["addonTradeIn", "tradeIn"],
+        ["addonUpfrontPerLine", "upfrontPerLine"],
+      ];
+      map.forEach(([id, key]) => {
+        const input = qs("#" + id);
+        input.addEventListener("input", (e) => {
+          state.addons[key] = asInt(e.target.value);
+          updatePreview();
+        });
+      });
+    }
+
+    // ---------- PHONE CATALOG ----------
     async function loadPhones() {
       try {
-        const res = await fetch('/api/phones');
+        const res = await fetch("/api/phones");
         const data = await res.json();
-        state.phonesCatalog = Array.isArray(data) ? data : (data?.phones || []);
-
-        const select = el('phoneChoice');
-        select.innerHTML = '';
-        state.phonesCatalog.forEach(p => {
-          const label = [p.manufacturer, p.model, p.storage?.[0] ? '(' + p.storage[0] + ')' : '']
-            .filter(Boolean).join(' ');
-          const opt = document.createElement('option');
-          opt.value = p._id || p.id || label;
-          opt.textContent = label;
-          select.appendChild(opt);
-        });
-      } catch (e) {
-        console.error('Failed to load phones', e);
+        state.phonesCatalog = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.phones)
+          ? data.phones
+          : [];
+      } catch (err) {
+        console.error("Failed to load phones", err);
+        state.phonesCatalog = [];
       }
     }
 
-    // --- Bind inputs to state ---
-    function bind() {
-      // Provider & details
-      el('currProvider').addEventListener('change', e => {
-        state.phoneSection.currProvider = e.target.value;
-        el('providerOtherWrap').classList.toggle('hidden', e.target.value !== 'Others');
-        update();
+    function populatePhoneSelect() {
+      const select = qs("#phoneChoice");
+      if (!select) return;
+
+      select.innerHTML = "";
+      if (!state.phonesCatalog.length) {
+        const opt = document.createElement("option");
+        opt.disabled = true;
+        opt.textContent = "No phones found";
+        select.appendChild(opt);
+        return;
+      }
+
+      state.phonesCatalog.forEach((p) => {
+        const label = [p.manufacturer, p.model]
+          .filter(Boolean)
+          .join(" ");
+        const opt = document.createElement("option");
+        const id = p._id || p.id || label;
+        opt.value = id;
+        opt.textContent = label;
+        if (state.phone.phoneChoice.includes(id)) {
+          opt.selected = true;
+        }
+        select.appendChild(opt);
       });
-      el('providerOther').addEventListener('input', e => { state.phoneSection.providerOther = e.target.value; update(); });
-
-      // Numbers & toggles
-      el('numLines').addEventListener('input', e => { state.phoneSection.numLines = asInt(e.target.value); update(); });
-      el('smb').addEventListener('change', e => { state.phoneSection.smb = !!e.target.checked; update(); });
-      el('numPhones').addEventListener('input', e => { state.phoneSection.numPhones = asInt(e.target.value); update(); });
-
-      // Phone multi-select
-      el('phoneChoice').addEventListener('change', e => {
-        const values = Array.from(e.target.selectedOptions).map(o => o.value);
-        state.phoneSection.phoneChoice = values;
-        update();
-      });
-
-      // Plan checkboxes
-      el('plan5g').addEventListener('change', e => { state.planSection.fiveG = e.target.checked; update(); });
-      el('planZeroOveruse').addEventListener('change', e => { state.planSection.zeroOveruse = e.target.checked; update(); });
-      el('planMin1000').addEventListener('change', e => { state.planSection.min1000 = e.target.checked; update(); });
-      el('planMin200').addEventListener('change', e => { state.planSection.min200 = e.target.checked; update(); });
-      el('planUsRoam').addEventListener('change', e => { state.planSection.usRoam = e.target.checked; update(); });
-      el('planCaUsCalling').addEventListener('change', e => { state.planSection.caUsCalling = e.target.checked; update(); });
-      el('planUsMxRoam').addEventListener('change', e => { state.planSection.usMxRoam = e.target.checked; update(); });
-
-      // Add-on numbers
-      el('addonSpc').addEventListener('input', e => { state.addOnSection.spc = asInt(e.target.value); update(); });
-      el('addonDfPerLine').addEventListener('input', e => { state.addOnSection.dfPerLine = asInt(e.target.value); update(); });
-      el('addonCcWaiver').addEventListener('input', e => { state.addOnSection.ccWaiver = asInt(e.target.value); update(); });
-      el('addonTradeIn').addEventListener('input', e => { state.addOnSection.tradeIn = asInt(e.target.value); update(); });
-      el('addonUpfrontPerLine').addEventListener('input', e => { state.addOnSection.upfrontPerLine = asInt(e.target.value); update(); });
-
-      // Global actions
-      el('btnSubmit').addEventListener('click', submitForm);
-      el('btnReset').addEventListener('click', () => { resetForm(); showToast('Reset'); });
-
-      // Actions card
-      el('btnSaveQuote').addEventListener('click', saveQuote);
-      el('btnSendQuote').addEventListener('click', openEmailModal);
-
-      // Modal actions
-      el('emailClose').addEventListener('click', closeEmailModal);
-      el('emailSend').addEventListener('click', sendQuoteEmail);
     }
 
-    function asInt(v) { const n = parseInt(v, 10); return Number.isFinite(n) ? n : 0; }
+    // ---------- SUMMARY / PREVIEW ----------
+    function updatePreview() {
+      const p = state.phone;
+      const provider =
+        p.currProvider === "Others" && p.providerOther
+          ? p.currProvider + " — " + p.providerOther
+          : p.currProvider || "—";
 
-    // --- Render preview ---
-    function update() {
-      const p = state.phoneSection;
-
-      const provider = p.currProvider === 'Others' && p.providerOther
-        ? `${p.currProvider} — ${p.providerOther}`
-        : (p.currProvider || '—');
-      el('pvProvider').textContent = provider;
-      el('pvLines').textContent = p.numLines || '—';
-      el('pvSmb').textContent = p.smb ? 'Yes' : 'No';
+      qs("#pvProvider").textContent = provider;
+      qs("#pvLines").textContent = p.numLines || "—";
+      qs("#pvSmb").textContent = p.smb ? "Yes" : "No";
 
       const phoneLabels = p.phoneChoice
-        .map(id => state.phonesCatalog.find(x => (x._id || x.id) == id))
+        .map((id) =>
+          state.phonesCatalog.find((x) => (x._id || x.id || "") == id)
+        )
         .filter(Boolean)
-        .map(x => [x.manufacturer, x.model, x.storage?.[0] ? '(' + x.storage[0] + ')' : '']
-          .filter(Boolean).join(' '));
-      el('pvPhones').textContent = phoneLabels.length ? `${phoneLabels.length} selected` : '—';
+        .map((x) => [x.manufacturer, x.model].filter(Boolean).join(" "));
+      qs("#pvPhones").textContent = phoneLabels.length
+        ? `${phoneLabels.length} selected`
+        : "—";
 
       const flags = [];
-      const pl = state.planSection;
-      if (pl.fiveG) flags.push('5G');
-      if (pl.zeroOveruse) flags.push('$0 Data Overuse');
-      if (pl.min1000) flags.push('1000 min');
-      if (pl.min200) flags.push('200 min');
-      if (pl.usRoam) flags.push('US Roam');
-      if (pl.caUsCalling) flags.push('CA/US Calling');
-      if (pl.usMxRoam) flags.push('US/MX Roam');
-      el('pvPlanFlags').innerHTML = flags.length ? flags.map(f => `<li>${f}</li>`).join('') : '<li>—</li>';
+      const pl = state.plan;
+      if (pl.fiveG) flags.push("5G");
+      if (pl.zeroOveruse) flags.push("$0 Data Overuse");
+      if (pl.min1000) flags.push("1000 min");
+      if (pl.min200) flags.push("200 min");
+      if (pl.usRoam) flags.push("US Roam");
+      if (pl.caUsCalling) flags.push("CA/US Calling");
+      if (pl.usMxRoam) flags.push("US/MX Roam");
 
-      // Pre-fill email modal fields with a simple summary
-      const email = buildEmailFromPayload();
-      el('emailSubject').value = email.subject;
-      el('emailBody').value = email.body;
+      const pvFlags = qs("#pvPlanFlags");
+      pvFlags.innerHTML = "";
+      if (!flags.length) {
+        pvFlags.innerHTML = '<li class="text-slate-400">—</li>';
+      } else {
+        flags.forEach((f) => {
+          pvFlags.appendChild(el("li", "", f));
+        });
+      }
+
+      qs("#pvSpc").textContent = state.addons.spc || 0;
+      qs("#pvDfPerLine").textContent = state.addons.dfPerLine || 0;
+      qs("#pvCcWaiver").textContent = state.addons.ccWaiver || 0;
+      qs("#pvTradeIn").textContent = state.addons.tradeIn || 0;
+      qs("#pvUpfrontPerLine").textContent = state.addons.upfrontPerLine || 0;
     }
 
+    // ---------- NAV ----------
+    function updateNavButtons() {
+      const prev = qs("#prevBtn");
+      const next = qs("#nextBtn");
+      prev.disabled = state.step === 0;
+      
+      if (state.step === state.steps.length - 2) {
+
+      }
+      else if (state.step === state.steps.length - 1) {
+         next.textContent = "Done"
+      }
+      else {
+        next.textContent = "Next ▶"
+      }
+    }
+
+    function go(dir) {
+      const next = state.step + dir;
+      if (next < 0 || next > state.steps.length - 1) return;
+      state.step = next;
+      renderSlides();
+    }
+
+    // ---------- PAYLOAD ----------
     function buildPayload() {
       return {
-        phoneSection: { ...state.phoneSection },
-        planSection: { ...state.planSection },
-        addOnSection: { ...state.addOnSection },
-        meta: { createdAt: new Date().toISOString() }
+        phoneSection: { ...state.phone },
+        planSection: { ...state.plan },
+        addOnSection: { ...state.addons },
+        meta: { createdAt: new Date().toISOString() },
       };
     }
 
-    // Submit button (generic demo endpoint)
+    // ---------- ACTIONS ----------
     async function submitForm() {
       const payload = buildPayload();
       try {
-        const res = await fetch('/api/new-user-form', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        const res = await fetch("/api/new-user-form", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error('Request failed');
-        showToast('Submitted');
-      } catch (e) { console.error(e); showToast('Submit failed'); }
+        if (!res.ok) throw new Error("Submit failed");
+        showToast("Intake submitted");
+      } catch (err) {
+        console.error(err);
+        showToast("Submit failed");
+      }
     }
 
-    // Save Quote (placeholder backend endpoint)
     async function saveQuote() {
       const payload = buildPayload();
       try {
-        const res = await fetch('/api/quotes', { // TODO: implement on backend with Save Quote schema
-          method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload)
+        const res = await fetch("/api/quotes", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         });
-        if (!res.ok) throw new Error('Save failed');
-        showToast('Quote saved');
-      } catch (e) { console.error(e); showToast('Save failed'); }
+        if (!res.ok) throw new Error("Save failed");
+        showToast("Quote saved");
+      } catch (err) {
+        console.error(err);
+        showToast("Save failed");
+      }
     }
 
-    // Email modal
-    function openEmailModal() { el('emailModal').classList.remove('hidden'); }
-    function closeEmailModal() { el('emailModal').classList.add('hidden'); }
+    // Draft to localStorage
+    function saveDraft() {
+      localStorage.setItem("wmq_new_user_draft", JSON.stringify(state));
+      showToast("Draft saved");
+    }
+    function loadDraft() {
+      const raw = localStorage.getItem("wmq_new_user_draft");
+      if (!raw) return false;
+      try {
+        const parsed = JSON.parse(raw);
+        Object.assign(state, parsed);
+        return true;
+      } catch {
+        return false;
+      }
+    }
 
+    function resetAll() {
+      localStorage.removeItem("wmq_new_user_draft");
+      state.step = 0;
+      state.phone = {
+        currProvider: "",
+        providerOther: "",
+        numLines: "",
+        smb: false,
+        numPhones: "",
+        phoneChoice: [],
+      };
+      state.plan = {
+        fiveG: false,
+        zeroOveruse: false,
+        min1000: false,
+        min200: false,
+        usRoam: false,
+        caUsCalling: false,
+        usMxRoam: false,
+      };
+      state.addons = {
+        spc: 0,
+        dfPerLine: 0,
+        ccWaiver: 0,
+        tradeIn: 0,
+        upfrontPerLine: 0,
+      };
+      renderSlides();
+      showToast("Reset");
+    }
+
+    // ---------- EMAIL ----------
     function buildEmailFromPayload() {
       const p = buildPayload();
-      const subject = 'Your Quote';
       const lines = [
-        'Hi,',
-        '',
-        'Please find your quote details below:',
-        '',
-        `Provider: ${p.phoneSection.currProvider}${p.phoneSection.providerOther ? ' ('+p.phoneSection.providerOther+')' : ''}`,
+        "Hi,",
+        "",
+        "Please find your quote details below:",
+        "",
+        `Provider: ${p.phoneSection.currProvider}${
+          p.phoneSection.providerOther
+            ? " (" + p.phoneSection.providerOther + ")"
+            : ""
+        }`,
         `Lines: ${p.phoneSection.numLines ?? 0}`,
-        `SMB: ${p.phoneSection.smb ? 'Yes' : 'No'}`,
+        `SMB: ${p.phoneSection.smb ? "Yes" : "No"}`,
         `Phones Selected: ${p.phoneSection.phoneChoice.length}`,
-        '',
-        'Plan Flags:',
-        `  5G: ${p.planSection.fiveG ? 'Yes' : 'No'}`,
-        `  $0 Data Overuse: ${p.planSection.zeroOveruse ? 'Yes' : 'No'}`,
-        `  1000 min: ${p.planSection.min1000 ? 'Yes' : 'No'}`,
-        `  200 min: ${p.planSection.min200 ? 'Yes' : 'No'}`,
-        `  US Roam: ${p.planSection.usRoam ? 'Yes' : 'No'}`,
-        `  CA/US Calling: ${p.planSection.caUsCalling ? 'Yes' : 'No'}`,
-        `  US/MX Roam: ${p.planSection.usMxRoam ? 'Yes' : 'No'}`,
-        '',
-        'Add-ons:',
+        "",
+        "Plan Flags:",
+        `  5G: ${p.planSection.fiveG ? "Yes" : "No"}`,
+        `  $0 Data Overuse: ${p.planSection.zeroOveruse ? "Yes" : "No"}`,
+        `  1000 min: ${p.planSection.min1000 ? "Yes" : "No"}`,
+        `  200 min: ${p.planSection.min200 ? "Yes" : "No"}`,
+        `  US Roam: ${p.planSection.usRoam ? "Yes" : "No"}`,
+        `  CA/US Calling: ${p.planSection.caUsCalling ? "Yes" : "No"}`,
+        `  US/MX Roam: ${p.planSection.usMxRoam ? "Yes" : "No"}`,
+        "",
+        "Add-ons:",
         `  SPC: ${p.addOnSection.spc}`,
         `  DF/Line: ${p.addOnSection.dfPerLine}`,
         `  CC Waiver: ${p.addOnSection.ccWaiver}`,
         `  Trade-In: ${p.addOnSection.tradeIn}`,
         `  Upfront/Line: ${p.addOnSection.upfrontPerLine}`,
-        '',
-        '—',
-        'Thank you!'
+        "",
+        "—",
+        "Thank you!",
       ];
-      return { subject, body: lines.join('') };
+      return {
+        subject: "Your Quote",
+        body: lines.join("\n"),
+      };
     }
 
-    function encodeMailto(obj) {
-      const params = new URLSearchParams({ subject: obj.subject, body: obj.body });
-      return `mailto:${encodeURIComponent(el('emailTo').value || '')}?${params.toString()}`;
+    function openEmailModal() {
+      const modal = qs("#emailModal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      const email = buildEmailFromPayload();
+      qs("#emailSubject").value = email.subject;
+      qs("#emailBody").value = email.body;
+
+      const to = state.phone.customerEmail || "";
+      qs("#emailTo").value = to || "";
+      updateMailtoLink();
     }
 
-    function sendQuoteEmail() {
-      const email = { subject: el('emailSubject').value, body: el('emailBody').value };
-      const url = encodeMailto(email);
-      window.location.href = url; // temporary implementation
-      closeEmailModal();
-      showToast('Opening email');
+    function closeEmailModal() {
+      const modal = qs("#emailModal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
     }
 
-    function resetForm() {
-      state.phoneSection = { currProvider: '', providerOther: '', numLines: null, smb: false, numPhones: null, phoneChoice: [] };
-      state.planSection  = { fiveG: false, zeroOveruse: false, min1000: false, min200: false, usRoam: false, caUsCalling: false, usMxRoam: false };
-      state.addOnSection = { spc: 0, dfPerLine: 0, ccWaiver: 0, tradeIn: 0, upfrontPerLine: 0 };
-
-      el('newUserForm').reset();
-      Array.from(el('phoneChoice').options).forEach(o => (o.selected = false));
-      el('providerOtherWrap').classList.add('hidden');
-
-      update();
+    function updateMailtoLink() {
+      const to = qs("#emailTo").value || "";
+      const subject = qs("#emailSubject").value || "Your Quote";
+      const body = qs("#emailBody").value || "";
+      const params = new URLSearchParams({
+        subject,
+        body,
+      }).toString();
+      const href = `mailto:${encodeURIComponent(to)}?${params}`;
+      qs("#mailtoLink").setAttribute("href", href);
     }
 
-    function showToast(msg = 'Saved') {
-      const t = el('toast');
-      t.textContent = msg;
-      t.classList.remove('hidden');
-      clearTimeout(t._tid);
-      t._tid = setTimeout(() => t.classList.add('hidden'), 1600);
+    // ---------- INIT ----------
+    async function init() {
+      // global buttons
+      qs("#prevBtn").addEventListener("click", () => go(-1));
+      qs("#nextBtn").addEventListener("click", () => {
+        if (state.step < state.steps.length - 1) go(1);
+        else showToast("Review complete");
+      });
+      qs("#saveDraft").addEventListener("click", saveDraft);
+      qs("#btnReset").addEventListener("click", resetAll);
+      qs("#btnSubmit").addEventListener("click", submitForm);
+      // qs("#btnSaveQuote").addEventListener("click", saveQuote);
+      // qs("#btnSendQuote").addEventListener("click", openEmailModal);
+
+      qs("#emailClose").addEventListener("click", closeEmailModal);
+      qs("#emailCancel").addEventListener("click", closeEmailModal);
+      qs("#emailTo").addEventListener("input", updateMailtoLink);
+      qs("#emailSubject").addEventListener("input", updateMailtoLink);
+      qs("#emailBody").addEventListener("input", updateMailtoLink);
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowRight") go(1);
+        if (e.key === "ArrowLeft") go(-1);
+        if (e.key === "Escape") closeEmailModal();
+      });
+
+      loadDraft(); // ignore if none
+
+      await loadPhones();
+      renderSlides();
     }
 
-    // Init
-    loadPhones().then(() => { bind(); update(); });
+    init();
   </script>
 </body>
 </html>

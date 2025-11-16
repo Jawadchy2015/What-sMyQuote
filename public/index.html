@@ -82,7 +82,7 @@
         </section>
 
         <!-- Right: Forms -->
-        <section class="relative p-8 md:p-10 overflow-hidden">
+        <section class="relative p-8 md:p-10 overflow-hidden mx-10 my-5">
           <!-- Alert -->
           <div id="alert" class="hidden mb-4 rounded-xl border border-red-200 bg-red-50 text-red-700 px-4 py-3 text-sm" role="alert"></div>
 
@@ -252,7 +252,9 @@
           const data = await res.json();
           if(!res.ok){ showAlert(data.message || 'Login failed.'); return; }
           localStorage.setItem('token', data.token);
-          toast('Welcome back!');
+          // toast('Welcome back!');
+          // Set a flag in sessionStorage right before you redirect
+          sessionStorage.setItem('showWelcomeMessage', 'true');
           window.location.href = '/dashboard';
         } catch(err){ console.error(err); showAlert('Server error during login.'); }
         finally { btn.disabled = false; spinner.classList.add('hidden'); }

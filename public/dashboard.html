@@ -30,50 +30,7 @@
         font-family: "Inter", sans-serif;
       }
 
-      /* Bootstrap Modal Tweaks for Dark Mode */
-      /* .modal-backdrop {
-        --bs-backdrop-zindex: 1050;
-      }
-      .modal {
-        --bs-modal-zindex: 1055;
-      }
-      .dark .modal-content {
-        background-color: #1f2937;
-        color: #f3f4f6;
-      }
-      .dark .modal-header,
-      .dark .modal-footer {
-        border-color: #374151;
-      }
-      .dark .modal-body,
-      .dark .form-label {
-        color: #d1d5db;
-      }
-      .dark .form-control[readonly] {
-        background-color: #374151;
-        color: #d1d5db;
-        border-color: #4b5563;
-      }
-      .dark .btn-close {
-        filter: invert(1) grayscale(100%) brightness(200%);
-      } */
-
-      /* Custom Modal Transitions */
-      .phone-modal-backdrop,
-      .plan-modal-backdrop {
-        transition: opacity 0.3s ease-in-out;
-      }
-      .phone-modal-content,
-      .plan-modal-content {
-        transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-      }
-      .no-scrollbar::-webkit-scrollbar {
-        display: none;
-      }
-      .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-      }
+     
     </style>
 
     <script>
@@ -189,20 +146,11 @@
         class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 font-[Inter]"
       >
         <div class="w-full mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex items-center h-16">
-            <!-- Push avatar all the way right -->
-            <div class="ml-auto">
-              <div
-                class="h-9 w-9 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-lg"
-              >
-                <i class="fas fa-user"></i>
-              </div>
-            </div>
-          </div>
+
         </div>
       </header>
 
-      <main class="w-full mx-auto py-8 px-4 sm:px-6 lg:px-8 flex flex-col">
+      <main class="w-full mx-auto py-4 px-4 sm:px-6 lg:px-8 flex flex-col">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div
             class="bg-blue-600 text-white p-6 rounded-xl shadow-lg flex items-center space-x-4 cursor-pointer hover:bg-blue-700 transition-colors"
@@ -323,7 +271,7 @@
 
         <div
           id="main-content-container"
-          class="mt-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6 min-h-[650px] flex-1 flex flex-col"
+          class="mt-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow p-6 min-h-[575px] flex-1 flex flex-col"
         >
           <div
             id="welcome-message"
@@ -331,7 +279,7 @@
           >
             <i class="fas fa-bell fa-3x text-blue-500 dark:text-blue-700"></i>
             <h2
-              class="mt-4 text-3xl font-semibold text-gray-800 dark:text-gray-20 flex-10"
+              class="mt-4 text-2xl font-semibold text-gray-800 dark:text-gray-20 flex-10"
             >
               Welcome to your Dashboard!
             </h2>
@@ -509,6 +457,40 @@
             </button>
           </div>
         </div>
+      </div>
+    </div>
+    <!-- Welcome modal -->
+    <div 
+      id="welcome-toast" 
+      class="
+        welcome-toast fixed inset-0 z-50 
+        flex items-center justify-center 
+        bg-black/60 
+        opacity-0 invisible 
+        transition-opacity duration-300 ease-in-out
+      "
+    >
+      <div 
+        class="
+          toast-content bg-white 
+          rounded-2xl 
+          shadow-2xl 
+          text-center 
+          w-11/12 max-w-lg 
+          py-12 px-16
+          scale-90 
+          transition-all duration-300 ease-[cubic-bezier(0.175,0.885,0.32,1.275)]
+        "
+      >
+        <span class="text-7xl block">👋</span>
+
+        <h2 class="text-4xl font-bold mt-4 mb-2 text-gray-900">
+          Welcome back!
+        </h2>
+
+        <p class="text-xl text-gray-600">
+          It's great to see you again.
+        </p>
       </div>
     </div>
 
@@ -753,6 +735,44 @@
             localStorage.setItem("theme", "light");
           }
         });
+
+        // Welcome message
+        // 1. Check if our flag exists
+        if (sessionStorage.getItem('showWelcomeMessage') === 'true') {
+          
+          const toast = document.getElementById('welcome-toast');
+          const toastContent = toast.querySelector('.toast-content'); 
+          
+          if (toast && toastContent) {
+            
+            // 2. SHOW THE TOAST:
+            // We add a small delay so the animation is visible on page load.
+            setTimeout(() => {
+              // Make the background overlay visible
+              toast.classList.remove('opacity-0', 'invisible');
+              toast.classList.add('opacity-100', 'visible');
+              
+              // "Pop" the content box to full size
+              toastContent.classList.remove('scale-90');
+              toastContent.classList.add('scale-100');
+            }, 200); // 300ms delay
+
+            // 3. HIDE THE TOAST:
+            // After 3 seconds, reverse the classes to hide it.
+            setTimeout(() => {
+              // Fade out the background overlay
+              toast.classList.remove('opacity-100', 'visible');
+              toast.classList.add('opacity-0', 'invisible');
+              
+              // "Shrink" the content box
+              toastContent.classList.remove('scale-100');
+              toastContent.classList.add('scale-90');
+            }, 3000); // 3-second duration
+          }
+                
+          // 4. CRITICAL: Remove the flag so it doesn't show again on refresh
+          sessionStorage.removeItem('showWelcomeMessage');
+        }
 
         // ---- Customer Follow-up (simple list) ----
         document
