@@ -80,6 +80,7 @@
           </a>
           <a
             href="#"
+            id="nav-saved-quotes"
             class="flex items-center px-3 py-2.5 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             <i class="fas fa-save w-6 text-center text-gray-400"></i>
@@ -494,6 +495,66 @@
       </div>
     </div>
 
+    <!-- Saved Quote Detail Modal -->
+    <div
+      id="saved-quote-modal"
+      class="fixed inset-0 z-50 hidden flex items-center justify-center p-4"
+      aria-modal="true"
+      role="dialog"
+    >
+      <!-- Backdrop -->
+      <div
+        id="saved-quote-backdrop"
+        class="fixed inset-0 bg-gray-500/60 dark:bg-gray-900/70 opacity-0 transition-opacity duration-200"
+      ></div>
+
+      <!-- Modal Content -->
+      <div
+        id="saved-quote-content"
+        class="relative bg-white dark:bg-gray-800 rounded-2xl shadow-2xl transform scale-95 opacity-0 transition-all duration-300 w-full max-w-2xl mx-auto overflow-hidden"
+      >
+        <!-- Header -->
+        <div class="px-6 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+              Saved Quote
+            </h3>
+            <p class="text-xs text-gray-500 dark:text-gray-400">
+              Full details in a quick summary format.
+            </p>
+          </div>
+          <button
+            id="saved-quote-close"
+            type="button"
+            class="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-300"
+          >
+            ✕
+          </button>
+          
+        </div>
+
+        <!-- Body -->
+        <div class="p-6 space-y-4 max-h-[70vh] overflow-y-auto" id="saved-quote-body">
+          <!-- Filled by JS -->
+        </div>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 flex justify-end">
+          <!-- <button
+            id="saved-quote-footer-close"
+            type="button"
+            class="inline-flex justify-center rounded-md border border-gray-300 dark:border-gray-600 shadow-sm px-5 py-2 bg-white dark:bg-gray-800 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition"
+          >
+            Close
+          </button> -->
+          <button id="generateQuote" type="button" class="text-white bg-primary box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:danger-subtle shadow-xs font-medium leading-5 rounded-md text-sm px-4 py-2.5 focus:outline-none">Generate Quote</button>
+          <button id="modal-delete-quote" type="button" class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:danger-subtle shadow-xs font-medium leading-5 rounded-md text-sm px-4 py-2.5 focus:outline-none">Delete</button>
+         
+        </div>
+      </div>
+    </div>
+
+
     <div
       id="price-modal"
       class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 overflow-y-auto"
@@ -718,6 +779,47 @@
         const toggleButton = document.getElementById("darkModeToggle");
         const toggleKnob = toggleButton.querySelector("span");
         const root = document.documentElement;
+        let savedQuotes = [];
+        let currentOpenQuoteId = null;
+
+        document.getElementById("modal-delete-quote").addEventListener("click", async () => {
+        if (!currentOpenQuoteId) {
+          alert("No quote selected.");
+          return;
+        }
+
+        const ok = confirm("Delete this quote? This action cannot be undone.");
+        if (!ok) return;
+
+        try {
+          const res = await fetch(`/api/quotes/${currentOpenQuoteId}`, {
+            method: "DELETE",
+          });
+
+          if (!res.ok) throw new Error("Failed to delete quote");
+
+          // Remove from in-memory list
+          savedQuotes = savedQuotes.filter(
+            (q) => (q._id || q.id) !== currentOpenQuoteId
+          );
+
+          // Re-render list
+          renderSavedQuotesGrid(savedQuotes);
+
+          // Close modal
+          closeSavedQuoteModal();
+
+          // Clear state
+          currentOpenQuoteId = null;
+
+        } catch (err) {
+          console.error(err);
+          alert("Could not delete quote. Please try again.");
+        }
+      });
+
+
+
 
         if (root.classList.contains("dark")) {
           toggleKnob.classList.remove("translate-x-1");
@@ -1116,6 +1218,145 @@
           };
         }
 
+        async function loadSavedQuotesUI() {
+          hideWelcomeMessage();
+
+          mainContentContainer.innerHTML = `
+            <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Saved Quotes</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Click a card to see the full quote details.
+              </p>
+            </div>
+
+            <div id="saved-quotes-loading" class="flex justify-center items-center h-48 mt-6">
+              <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 dark:border-blue-400"></div>
+            </div>
+            <div id="saved-quotes-error" class="hidden mt-6 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg">
+              Could not load saved quotes.
+            </div>
+            <div id="saved-quotes-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6"></div>
+          `;
+
+          try {
+            // adjust URL if your endpoint is different (e.g. /api/saved-quotes)
+            const res = await fetch("/api/quotes");
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            console.log("DATA:" + data)
+
+            savedQuotes = Array.isArray(data) ? data : (data.quotes || []);
+            // Newest first
+            savedQuotes.sort((a, b) => new Date(b.createdAt || b.meta?.createdAt || 0) - new Date(a.createdAt || a.meta?.createdAt || 0));
+
+            renderSavedQuotesGrid(savedQuotes);
+          } catch (err) {
+            console.error(err);
+            document.getElementById("saved-quotes-error").classList.remove("hidden");
+          } finally {
+            document.getElementById("saved-quotes-loading").classList.add("hidden");
+          }
+        }
+        function renderSavedQuotesGrid(items) {
+          console.log(items)
+          const cont = document.getElementById("saved-quotes-grid");
+          if (!cont) return;
+
+          if (!items || !items.length) {
+            cont.innerHTML = `
+              <p class="text-gray-500 dark:text-gray-400 col-span-full text-center py-10">
+                No saved quotes yet.
+              </p>
+            `;
+            return;
+          }
+
+          cont.innerHTML = items
+            .map((q, idx) => {
+              // Try to resolve customer information from different possible shapes
+              const customer =
+                q.customer ||
+                q.phoneSection?.selectedCustomer ||
+                q.meta?.customer ||
+                {};
+
+              const name =
+                customer.name ||
+                q.customerName ||
+                "Unknown Customer";
+
+              const phone =
+                customer.phone ||
+                q.customerPhone ||
+                "—";
+
+              const created =
+                q.createdAt ||
+                q.meta?.createdAt ||
+                q.created_at ||
+                null;
+
+              const createdLabel = created
+                ? new Date(created).toLocaleString()
+                : "Unknown date";
+
+              return `
+                <button
+                  class="group text-left bg-white dark:bg-gray-700 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-600
+                        hover:shadow-lg hover:-translate-y-0.5 transition-all p-5 w-full"
+                  data-quote-index="${idx}"
+                >
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                        ${name}
+                      </div>
+                      <div class="mt-1 text-sm text-gray-500 dark:text-gray-300">
+                        ${phone}
+                      </div>
+                    </div>
+                    <span class="inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-900/40
+                                text-blue-700 dark:text-blue-200 px-3 py-1 text-xs font-medium">
+                      Saved
+                    </span>
+                  </div>
+
+                  <div class="mt-4 flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                    <div class="flex items-center gap-1">
+                      <i class="far fa-calendar-alt"></i>
+                      <span>${createdLabel}</span>
+                    </div>
+                    <div class="flex items-center gap-1 text-blue-600 dark:text-blue-300">
+                      <span>View details</span>
+                      <i class="fas fa-chevron-right text-[10px]"></i>
+                    </div>
+                    
+                  </div>
+                </button>
+              `;
+            })
+            .join("");
+
+          // Attach click handlers to each card
+          cont.querySelectorAll("[data-quote-index]").forEach((btn) => {
+            btn.addEventListener("click", () => {
+              const idx = Number(btn.getAttribute("data-quote-index"));
+              const quote = savedQuotes[idx];
+              console.log("QUOTE: ",quote)
+              if (quote) openSavedQuoteModal(quote);
+            });
+          });
+        }
+
+
+
+        document
+          .getElementById("nav-saved-quotes")
+          .addEventListener("click", (e) => {
+            e.preventDefault();
+            loadSavedQuotesUI();
+          });
+
         document
           .getElementById("nav-phone-price")
           .addEventListener("click", (e) => {
@@ -1131,6 +1372,190 @@
         function hideWelcomeMessage() {
           if (welcomeMessage) welcomeMessage.classList.add("hidden");
         }
+
+        function openSavedQuoteModal(quote) {
+          currentOpenQuoteId = quote._id || quote.id;
+          const modal = document.getElementById("saved-quote-modal");
+          const backdrop = document.getElementById("saved-quote-backdrop");
+          const content = document.getElementById("saved-quote-content");
+          const body = document.getElementById("saved-quote-body");
+
+          if (!modal || !backdrop || !content || !body) return;
+
+          // Try to normalize data structure
+          const customer =
+            quote.selectedCustomer ||
+            quote.customer ||
+            quote.phoneSection?.selectedCustomer ||
+            quote.meta?.customer ||
+            {};
+
+          const phoneSection = quote.phoneSection || {};
+          const phoneChoice = quote.phoneSection.phoneChoice || {};
+          const planSection = quote.planSection || {};
+          const addOnSection = quote.addOnSection || {};
+         const devices =
+          (quote.selectedPhones && quote.selectedPhones.length
+            ? quote.selectedPhones
+            : quote.devices) || [];
+
+
+          const created =
+            quote.createdAt ||
+            quote.meta?.createdAt ||
+            quote.created_at ||
+            null;
+
+          const createdLabel = created
+            ? new Date(created).toLocaleString()
+            : "Unknown date";
+
+          // Helper to render Yes/No
+          const yn = (v) => (v ? "Yes" : "No");
+
+          body.innerHTML = `
+            <div class="space-y-6 text-sm text-gray-800 dark:text-gray-200">
+              <!-- Customer -->
+              <section class="space-y-2">
+                <h4 class="text-xs font-semibold tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                  Customer
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Name</div>
+                    <div class="font-medium">${customer.name || "—"}</div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Phone</div>
+                    <div class="font-medium">${customer.phone || "—"}</div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Email</div>
+                    <div class="font-medium break-all">${customer.email || "—"}</div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Created</div>
+                    <div class="font-medium">${createdLabel}</div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Phone Section -->
+              <section class="space-y-2">
+                <h4 class="text-xs font-semibold tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                  Phone Section
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Current Provider</div>
+                    <div class="font-medium">
+                      ${phoneSection.currProvider || "—"}
+                      ${
+                        phoneSection.currProvider === "Others" && phoneSection.providerOther
+                          ? ` — ${phoneSection.providerOther}`
+                          : ""
+                      }
+                    </div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Lines</div>
+                    <div class="font-medium">${phoneSection.numLines ?? "—"}</div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">Phones</div>
+                    <div class="font-medium">${phoneSection.numPhones ?? "—"}</div>
+                  </div>
+                  <div>
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400">SMB</div>
+                    <div class="font-medium">${yn(phoneSection.smb)}</div>
+                  </div>
+                  <div class="sm:col-span-2">
+                    <div class="text-[11px] text-gray-500 dark:text-gray-400 mb-1">Selected Phones</div>
+                    <div class="font-medium text-xs break-all">
+                      ${
+                        devices && devices.length
+                          ? devices
+                              .map((d) => {
+                                const label =
+                                  d.label ||
+                                  [d.manufacturer, d.model, d.features?.storage]
+                                    .filter(Boolean)
+                                    .join(" ");
+
+                                const qty = d.qty ?? 1;
+                                return `${label} × ${qty}`;
+                              })
+                              .join("<br>")
+                          : "—"
+                      }
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Plan Section -->
+              <section class="space-y-2">
+                <h4 class="text-xs font-semibold tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                  Plan Section
+                </h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">5G</div><div class="font-medium">${yn(planSection.fiveG)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">$0 Overuse</div><div class="font-medium">${yn(planSection.zeroOveruse)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">1000 min</div><div class="font-medium">${yn(planSection.min1000)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">200 min</div><div class="font-medium">${yn(planSection.min200)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">US Roam</div><div class="font-medium">${yn(planSection.usRoam)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">CA/US Calling</div><div class="font-medium">${yn(planSection.caUsCalling)}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">US/MX Roam</div><div class="font-medium">${yn(planSection.usMxRoam)}</div></div>
+                </div>
+              </section>
+
+              <!-- Add-On Section -->
+              <section class="space-y-2">
+                <h4 class="text-xs font-semibold tracking-wide text-gray-500 dark:text-gray-400 uppercase">
+                  Add-On Section
+                </h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 bg-gray-50 dark:bg-gray-900/40 rounded-xl p-3">
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">SPC</div><div class="font-medium">${addOnSection.spc ?? 0}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">DF / Line</div><div class="font-medium">${addOnSection.dfPerLine ?? 0}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">CC Waiver</div><div class="font-medium">${addOnSection.ccWaiver ?? 0}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">Trade-In</div><div class="font-medium">${addOnSection.tradeIn ?? 0}</div></div>
+                  <div><div class="text-[11px] text-gray-500 dark:text-gray-400">Upfront / Line</div><div class="font-medium">${addOnSection.upfrontPerLine ?? 0}</div></div>
+                </div>
+              </section>
+
+            </div>
+          `;
+
+          // Wire close handlers once (id-based)
+          document.getElementById("saved-quote-close")?.addEventListener("click", closeSavedQuoteModal);
+          document.getElementById("generateQuote")?.addEventListener("click", ()=>{
+            window.open("finalQuote.html", "_blank");
+          });
+          document.getElementById("saved-quote-footer-close")?.addEventListener("click", closeSavedQuoteModal);
+          backdrop.addEventListener("click", closeSavedQuoteModal);
+
+          // Show modal with animation
+          modal.classList.remove("hidden");
+          requestAnimationFrame(() => {
+            backdrop.classList.add("opacity-100");
+            content.classList.add("opacity-100", "scale-100");
+          });
+      }
+
+      function closeSavedQuoteModal() {
+        const modal = document.getElementById("saved-quote-modal");
+        const backdrop = document.getElementById("saved-quote-backdrop");
+        const content = document.getElementById("saved-quote-content");
+        if (!modal || !backdrop || !content) return;
+
+        backdrop.classList.remove("opacity-100");
+        content.classList.remove("opacity-100", "scale-100");
+
+        setTimeout(() => {
+          modal.classList.add("hidden");
+        }, 200);
+      }
+
 
         // --- Phone UI Logic ---
         const priceModal = document.getElementById("price-modal");

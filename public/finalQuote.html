@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Final Quote</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Tailwind CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Inter", "system-ui", "sans-serif"] },
+            boxShadow: {
+              card: "0 4px 20px rgba(0,0,0,0.08)",
+            },
+            colors: {
+              soft: {
+                bg: "#f7f9fc",
+                card: "#ffffff",
+                border: "#e4e7ec",
+                subtle: "#8a94a6",
+                accent: "#2563eb",
+              },
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body class="h-full bg-soft-bg text-gray-700">
+    <!-- HEADER -->
+    <header
+      class="sticky top-0 z-20 bg-white/80 backdrop-blur border-b border-soft-border"
+    >
+      <div
+        class=" mx-2 px-4 sm:px-6 py-4 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-3">
+         
+
+          <div>
+            <div class="text-xs font-medium text-gray-500 uppercase">
+              Final Quote
+            </div>
+            <div class="text-lg font-semibold text-gray-900">
+              Best Options for Customer
+            </div>
+          </div>
+        </div>
+
+
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class=" mx-2 px-4 sm:px-6 py-6">
+      <!-- SMALL SUMMARY BAR -->
+      <div class="grid sm:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
+          <div class="text-xs text-gray-500 uppercase mb-1">Customer</div>
+          <div
+            id="summaryCustomerName"
+            class="font-semibold text-gray-700"
+          ></div>
+          <div
+            id="summaryCustomerContact"
+            class="text-xs text-gray-500 mt-0.5"
+          ></div>
+        </div>
+
+        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
+          <div class="text-xs text-gray-500 uppercase mb-1">Lines & Provider</div>
+          <div id="summaryLines" class="font-semibold text-gray-700"></div>
+          <div
+            id="summaryProvider"
+            class="text-xs text-gray-500 mt-0.5"
+          ></div>
+        </div>
+
+        <div class="bg-white shadow-card border border-soft-border p-4 rounded-xl">
+          <div class="text-xs text-gray-500 uppercase mb-1">Scenarios</div>
+          <div id="summaryScenarioCount" class="font-semibold text-gray-700"></div>
+          <div
+            id="summaryScenarioCaption"
+            class="text-xs text-gray-500 mt-0.5"
+          >
+            Up to 3 recommended options
+          </div>
+        </div>
+      </div>
+
+      <!-- SCENARIO CAROUSEL -->
+      <section
+        class="bg-white shadow-card border border-soft-border rounded-3xl overflow-hidden"
+      >
+        <!-- TOP BAR -->
+        <div
+          class="px-6 py-4 flex items-center justify-between border-b border-soft-border bg-gray-50"
+        >
+          <div>
+            <div id="scenarioTitle" class="text-lg font-semibold"></div>
+            <div id="scenarioSubtitle" class="text-xs text-gray-500"></div>
+          </div>
+
+          <!-- DOTS + BUTTONS -->
+          <div class="flex items-center gap-3">
+            <div class="hidden sm:flex gap-2" id="scenarioDots"></div>
+
+            <button
+              id="btnPrev"
+              class="px-3 py-1.5 rounded-lg border border-soft-border bg-white hover:bg-gray-50 disabled:opacity-30"
+            >
+              ‹
+            </button>
+            <button
+              id="btnNext"
+              class="px-3 py-1.5 rounded-lg border border-soft-border bg-white hover:bg-gray-50 disabled:opacity-30"
+            >
+              ›
+            </button>
+          </div>
+        </div>
+
+        <!-- SLIDES -->
+        <div id="carouselTrack" class="overflow-hidden relative">
+          <div id="carouselInner" class="flex transition-transform duration-500">
+            <!-- slides added by JS -->
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div
+          class="px-6 py-4 flex flex-col sm:flex-row justify-between items-center border-t border-soft-border bg-gray-50 text-sm"
+        >
+          <div class="text-gray-500">
+            Taxes based on Alberta GST (5%) + $0.95/line 911 fee.
+          </div>
+
+          <div class="flex gap-2 mt-3 sm:mt-0">
+            <button
+              class="px-4 py-2 rounded-xl border border-soft-border bg-white hover:bg-gray-50"
+            >
+              Export PDF (Coming Soon)
+            </button>
+            <button
+              class="px-4 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-500 shadow"
+            >
+              Send to Customer (Coming Soon)
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- JS BELOW (same logic but updated small details) -->
+    <script>
+      // ------------------------------ SAMPLE DATA ------------------------------
+      let quoteData = {
+        customer: {
+          name: "Alice Smith",
+          phone: "403-555-0101",
+          email: "alice@example.com",
+        },
+        meta: { createdAt: new Date().toISOString(), quoteId: "QT-2025-01" },
+        phoneSection: { currProvider: "Koodo", numLines: 2 },
+
+        scenarios: [
+          {
+            title: "Best Overall Value",
+            tag: "Balanced choice: cost + data",
+            devices: [
+              { model: "iPhone 15 128GB", monthlyPrice: 45, qty: 1 },
+              { model: "Galaxy S24 256GB", monthlyPrice: 40, qty: 1 },
+            ],
+            plan: { label: "Premium 150GB 5G", data: "150GB", basePricePerLine: 70 },
+            addOns: [
+              { label: "US Roaming", price: 10, active: true },
+              { label: "1000 Intl Minutes", price: 5, active: true },
+            ],
+            credits: { dfCredit: 20, tradeIn: 10, upfront: 0, planDiscount: 15 },
+          },
+
+          {
+            title: "Lowest Monthly Price",
+            tag: "Minimize cost",
+            devices: [{ model: "Pixel 9", monthlyPrice: 30, qty: 2 }],
+            plan: { label: "Value 60GB", data: "60GB", basePricePerLine: 55 },
+            addOns: [{ label: "US Roaming", price: 10, active: false }],
+            credits: { dfCredit: 10, tradeIn: 0, upfront: 0, planDiscount: 20 },
+          },
+        ],
+      };
+
+      // ------------------------------ CONSTANTS ------------------------------
+      const TAX = 0.05;
+      const E911 = 0.95;
+
+      const $ = (id) => document.getElementById(id);
+
+      function money(v) {
+        return "$" + v.toFixed(2);
+      }
+
+      function computeTotals(s, lines) {
+        const devices = s.devices || [];
+        const addOns = s.addOns || [];
+        const c = s.credits || {};
+
+        const dTotal = devices.reduce((t, d) => t + d.monthlyPrice * d.qty, 0);
+        const pTotal = s.plan.basePricePerLine * lines;
+        const aTotal = addOns.filter((a) => a.active).reduce((t, a) => t + a.price, 0);
+        const credits =
+          (c.dfCredit || 0) +
+          (c.tradeIn || 0) +
+          (c.upfront || 0) +
+          (c.planDiscount || 0);
+
+        const subtotal = dTotal + pTotal + aTotal - credits;
+        const tax = subtotal * TAX;
+        const e911 = lines * E911;
+
+        return {
+          dTotal,
+          pTotal,
+          aTotal,
+          credits,
+          subtotal,
+          tax,
+          e911,
+          total: subtotal + tax + e911,
+        };
+      }
+
+      // ------------------------------ RENDERING ------------------------------
+      function renderHeader() {
+        const c = quoteData.customer || {};
+
+        // $("customerName").textContent = c.name;
+        // $("customerPhone").textContent = c.phone;
+        $("summaryCustomerName").textContent = c.name;
+        $("summaryCustomerContact").textContent =
+          c.phone + " • " + (c.email || "");
+
+        const p = quoteData.phoneSection;
+        $("summaryLines").textContent = p.numLines + " lines";
+        $("summaryProvider").textContent = "Provider: " + p.currProvider;
+
+        $("summaryScenarioCount").textContent =
+          quoteData.scenarios.length + " scenarios";
+
+        // $("quoteMeta").textContent =
+        //   new Date(quoteData.meta.createdAt).toLocaleString();
+      }
+
+      function renderDots() {
+        const dots = $("scenarioDots");
+        dots.innerHTML = "";
+        quoteData.scenarios.forEach((_, i) => {
+          const btn = document.createElement("button");
+          btn.className =
+            "px-3 py-1.5 rounded-lg border text-xs transition " +
+            (i === current ? "bg-blue-600 text-white" : "bg-white border-gray-300");
+          btn.textContent = "Option " + (i + 1);
+          btn.onclick = () => go(i);
+          dots.appendChild(btn);
+        });
+      }
+
+      function slideHTML(s, i) {
+        const p = quoteData.phoneSection;
+        const t = computeTotals(s, p.numLines);
+
+        return `
+          <div class="w-full p-6 flex-none">
+            <div class="grid lg:grid-cols-[1.6fr,1fr] gap-6">
+              <!-- LEFT -->
+              <div class="space-y-5">
+                <!-- DEVICES -->
+                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
+                  <div class="flex justify-between mb-3">
+                    <div>
+                      <div class="font-semibold">Devices</div>
+                      <div class="text-xs text-gray-500">Monthly device financing</div>
+                    </div>
+                    <div class="font-semibold">${money(t.dTotal)}/mo</div>
+                  </div>
+
+                  ${
+                    s.devices.length
+                      ? s.devices
+                          .map(
+                            (d) => `
+                    <div class="flex justify-between text-sm py-1">
+                      <div>${d.model} <span class="text-gray-500">x${d.qty}</span></div>
+                      <div>${money(d.monthlyPrice * d.qty)}/mo</div>
+                    </div>`
+                          )
+                          .join("")
+                      : `<div class="text-sm text-gray-500">No devices selected.</div>`
+                  }
+                </div>
+
+                <!-- PLAN -->
+                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
+                  <div class="flex justify-between mb-3">
+                    <div>
+                      <div class="font-semibold">Plan</div>
+                      <div class="text-xs text-gray-500">Base monthly cost</div>
+                    </div>
+                    <div class="font-semibold">${money(t.pTotal)}/mo</div>
+                  </div>
+
+                  <div class="grid grid-cols-2 text-sm gap-3">
+                    <div>
+                      <div class="text-gray-500 text-xs">Plan Name</div>
+                      <div>${s.plan.label}</div>
+                    </div>
+                    <div>
+                      <div class="text-gray-500 text-xs">Data</div>
+                      <div>${s.plan.data}</div>
+                    </div>
+                    <div>
+                      <div class="text-gray-500 text-xs">Price / line</div>
+                      <div>${money(s.plan.basePricePerLine)}</div>
+                    </div>
+                    <div>
+                      <div class="text-gray-500 text-xs"># Lines</div>
+                      <div>${p.numLines}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- ADD-ONS -->
+                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
+                  <div class="flex justify-between mb-3">
+                    <div>
+                      <div class="font-semibold">Add-ons</div>
+                    </div>
+                    <div class="font-semibold">${money(t.aTotal)}/mo</div>
+                  </div>
+
+                  ${
+                    s.addOns.filter((a) => a.active).length
+                      ? s.addOns
+                          .filter((a) => a.active)
+                          .map(
+                            (a) => `
+                    <div class="flex justify-between text-sm py-1">
+                      <div>${a.label}</div>
+                      <div>${money(a.price)}</div>
+                    </div>`
+                          )
+                          .join("")
+                      : `<div class="text-sm text-gray-500">No add-ons selected</div>`
+                  }
+                </div>
+
+                <!-- CREDITS -->
+                <div class="p-4 bg-white border border-soft-border rounded-xl shadow-card">
+                  <div class="flex justify-between mb-3">
+                    <div class="font-semibold">Credits</div>
+                    <div class="font-semibold text-green-600">-${money(t.credits)}/mo</div>
+                  </div>
+
+                  <div class="grid grid-cols-2 gap-3 text-sm">
+                    <div>DF Credit: <span class="font-semibold">-${money(s.credits.dfCredit || 0)}</span></div>
+                    <div>Trade-in: <span class="font-semibold">-${money(s.credits.tradeIn || 0)}</span></div>
+                    <div>Upfront: <span class="font-semibold">-${money(s.credits.upfront || 0)}</span></div>
+                    <div>Plan Discount: <span class="font-semibold">-${money(s.credits.planDiscount || 0)}</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- RIGHT SIDE CALC -->
+              <div class="p-5 bg-blue-50 border border-blue-100 rounded-2xl shadow-card flex flex-col justify-between">
+                <div>
+                  <div class="text-xs text-gray-500 mb-1">Scenario ${i + 1}</div>
+                  <div class="text-lg font-semibold mb-3">${s.title}</div>
+
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span>Devices</span>
+                      <span>${money(t.dTotal)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Plan</span>
+                      <span>${money(t.pTotal)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Add-ons</span>
+                      <span>${money(t.aTotal)}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Credits</span>
+                      <span class="text-green-600">-${money(t.credits)}</span>
+                    </div>
+
+                    <hr />
+
+                    <div class="flex justify-between font-semibold">
+                      <span>Subtotal</span>
+                      <span>${money(t.subtotal)}</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-600">
+                      <span>Tax (5%)</span>
+                      <span>${money(t.tax)}</span>
+                    </div>
+                    <div class="flex justify-between text-xs text-gray-600">
+                      <span>911 Fee</span>
+                      <span>${money(t.e911)}</span>
+                    </div>
+                  </div>
+
+                  <div class="mt-4 p-4 bg-white rounded-xl border border-soft-border shadow-inner">
+                    <div class="flex justify-between text-base font-bold text-blue-600">
+                      <span>Total Monthly</span>
+                      <span>${money(t.total)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <p class="text-xs text-gray-500 mt-3">
+                  Pricing estimates only; actual billing may vary.
+                </p>
+              </div>
+            </div>
+          </div>
+        `;
+      }
+
+      // ------------------------------ CAROUSEL ------------------------------
+      let current = 0;
+
+      function renderSlides() {
+        $("carouselInner").innerHTML = quoteData.scenarios
+          .map((s, i) => slideHTML(s, i))
+          .join("");
+
+        updateHeader();
+        updateTransform();
+        renderDots();
+      }
+
+      function updateHeader() {
+        $("scenarioTitle").textContent = `Scenario ${current + 1} of ${
+          quoteData.scenarios.length
+        }`;
+        $("scenarioSubtitle").textContent =
+          quoteData.scenarios[current].tag || "";
+      }
+
+      function updateTransform() {
+        $("carouselInner").style.transform = `translateX(-${current * 100}%)`;
+      }
+
+      function go(i) {
+        const max = quoteData.scenarios.length - 1;
+        current = Math.max(0, Math.min(i, max));
+        updateHeader();
+        updateTransform();
+        renderDots();
+        $("btnPrev").disabled = current === 0;
+        $("btnNext").disabled = current === max;
+      }
+
+      $("btnPrev").onclick = () => go(current - 1);
+      $("btnNext").onclick = () => go(current + 1);
+
+      // ------------------------------ INIT ------------------------------
+      (function init() {
+        renderHeader();
+        renderSlides();
+        go(0);
+      })();
+    </script>
+  </body>
+</html>

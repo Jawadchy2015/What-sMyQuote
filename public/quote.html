@@ -86,11 +86,7 @@
           class="px-3 py-2 text-sm rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
           Reset
         </button>
-        <button
-          id="btnSubmit"
-          class="px-3 py-2 text-sm rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-soft">
-          Submit Intake
-        </button>
+    
       </div>
     </header>
 
@@ -324,7 +320,7 @@
         { id: "plan",   title: "Plan Section",   subtitle: "Plan flags" },
         { id: "addons", title: "Add-On Section", subtitle: "Extras & credits" },
         { id: "review", title: "Review",         subtitle: "Quick summary" },
-        { id: "quote", title: "Quote",         subtitle: "Final quote" },
+        // { id: "quote", title: "Quote",         subtitle: "Final quote" },
       ],
       phone: {
         currProvider: "",
@@ -446,11 +442,6 @@
       // Try to read any pre-computed pricing if you add it later:
       // state.finalQuote = { deviceTotal, planTotal, addonsTotal, subtotal, tax, total, taxRate }
       const fq = state.finalQuote || {};
-      document.querySelector("#saveQuote").classList.remove("hidden")
-
-      const btnSaveQuote = document.querySelector("#saveQuote")
-
-      btnSaveQuote.onclick = () => saveQuote();
 
       
 
@@ -911,6 +902,13 @@
       if (state.plan.caUsCalling) flags.push("CA/US Calling");
       if (state.plan.usMxRoam) flags.push("US/MX Roam");
       if (state.phone.smb) flags.push("SMB");
+
+      document.querySelector("#saveQuote").classList.remove("hidden")
+
+      const btnSaveQuote = document.querySelector("#saveQuote")
+
+      btnSaveQuote.onclick = () => saveQuote();
+
 
       const content = `
         <div class="space-y-4 text-sm text-slate-700">
@@ -1422,7 +1420,7 @@
       prev.disabled = state.step === 0;
       
       if (state.step === state.steps.length - 1) {
-        next.textContent = "Done"
+        next.textContent = "Generate Quote"
       }
       else {
         next.textContent = "Next ▶"
@@ -1658,7 +1656,7 @@
       });
       // qs("#saveQuote").addEventListener("click", saveQuote);
       qs("#btnReset").addEventListener("click", resetAll);
-      qs("#btnSubmit").addEventListener("click", submitForm);
+      // qs("#btnSubmit").addEventListener("click", submitForm);
       // qs("#btnSaveQuote").addEventListener("click", saveQuote);
       // qs("#btnSendQuote").addEventListener("click", openEmailModal);
 

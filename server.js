@@ -64,7 +64,7 @@ app.get('/api/customers', async (_req, res) => {
   }
 });
 
-// Save "New Customer Quote" / intake flow
+// Save new customerQuote" / intake flow
 app.post('/api/new-cust', async (req, res) => {
   try {
     // req.body is what you send from the frontend (buildPayload())
@@ -88,6 +88,37 @@ app.post('/api/new-cust', async (req, res) => {
 });
 
 
+// get quotes
+app.get('/api/quotes', async (_req, res) => {
+  try {
+    // Find all saved quotes, newest first
+    const quotes = await NewCust.find({})
+      .sort({ 'meta.createdAt': -1, createdAt: -1 });
+
+    // Return as a plain array (what dashboard.js expects)
+    res.json(quotes);
+  } catch (err) {
+    console.error('Error fetching quotes:', err);
+    res.status(500).json({ message: 'Failed to fetch quotes' });
+  }
+});
+
+// Delete a quote by ID
+app.delete('/api/quotes/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deleted = await NewCust.findByIdAndDelete(id);
+
+    if (!deleted) {
+      return res.status(404).json({ message: 'Quote not found' });
+    }
+
+    res.json({ message: 'Quote deleted' });
+  } catch (err) {
+    console.error('Error deleting quote:', err);
+    res.status(500).json({ message: 'Failed to delete quote' });
+  }
+});
 
 // List P2P reminders (populated with customer info)
 app.get('/api/p2p-reminders', async (req, res) => {
