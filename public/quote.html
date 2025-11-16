@@ -115,11 +115,11 @@
             ◀ Back
           </button>
           <div class="flex items-center gap-3">
-            <button
+            <!-- <button
               id="saveDraft"
               class="px-4 py-2.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-100">
               Save Draft
-            </button>
+            </button> -->
             <button
               id="nextBtn"
               class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white shadow-soft">
@@ -146,6 +146,12 @@
 
           <div class="space-y-4 text-sm">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
+                  Customer
+                </div>
+                <div id="pvCustomer" class="text-xs font-small text-slate-800">—</div>
+              </div>
               <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
                 <div class="text-[11px] uppercase tracking-wide text-slate-500 mb-1">
                   Provider
@@ -345,9 +351,16 @@
         upfrontPerLine: 0,
       },
       phonesCatalog: [],
+      customersCatalog: [],
     };
 
     // ---------- HELPERS ----------
+    const currency = (v) =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: "CAD",
+      }).format(v ?? 0);
+
     const qs = (s, root = document) => root.querySelector(s);
     const qsa = (s, root = document) => Array.from(root.querySelectorAll(s));
     const el = (tag, cls, html) => {
@@ -474,6 +487,7 @@
       if (state.plan.usRoam) flags.push("US Roam");
       if (state.plan.caUsCalling) flags.push("CA/US Calling");
       if (state.plan.usMxRoam) flags.push("US/MX Roam");
+      // if (state.phone.smb) flags.push("SMB");
 
       const planTotal =
         typeof fq.planTotal === "number" ? fq.planTotal : 0;
@@ -486,10 +500,10 @@
                 Plan
                 ${
                   flags.length
-                    ? `<div class="text-xs text-slate-500 mt-1">${flags.join(
-                        " • "
-                      )}</div>`
-                    : ""
+                    ? `<ul class="list-disc list-inside space-y-1 text-slate-500 text-xs">
+                      ${flags.map(f => `<li>${f}</li>`).join("")}
+                    </ul>`
+                  : `<span class="text-slate-400">No flags selected</span>`
                 }
               </td>
               <td class="py-2 text-right align-top">${currency(planTotal)}</td>
@@ -559,11 +573,11 @@
         "Final Quote",
         "Full cost breakdown for this customer",
         `
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Cost Breakdown Table -->
-          <div>
+        <div class="w-full h-full">
+         <!-- Cost Breakdown Table -->
+          <div class="w-full">
             <h3 class="my-5 font-semibold mb-2">Cost Breakdown</h3>
-            <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
+            <div class="rounded-2xl border border-slate-200 bg-slate-50/60 p-6 w-full min-h-[50vh] flex flex-col justify-between">
               <table class="w-full text-sm">
                 <tbody>
                   ${devicesRow}
@@ -576,83 +590,192 @@
               </table>
             </div>
           </div>
-
-          <!-- Summary Panel -->
-          <div class="space-y-4">
-            <h3 class="my-5 font-semibold mb-2">Summary</h3>
-            <div class="rounded-2xl border border-slate-200 bg-white p-4 text-sm space-y-3">
-              <div>
-                <div class="text-xs uppercase text-slate-500 mb-1">Provider & Lines</div>
-                <div class="text-slate-800">
-                  ${(state.phone.currProvider || "—")}${
-                    state.phone.currProvider === "Others" && state.phone.providerOther
-                      ? " — " + state.phone.providerOther
-                      : ""
-                  } • ${state.phone.numLines || 0} line(s)
-                </div>
-              </div>
-
-              <div>
-                <div class="text-xs uppercase text-slate-500 mb-1">Phones</div>
-                <div class="text-slate-800">
-                  ${
-                    phoneLabels.length
-                      ? phoneLabels.join(", ")
-                      : "No phones selected"
-                  }
-                </div>
-              </div>
-
-              <div>
-                <div class="text-xs uppercase text-slate-500 mb-1">Plan Flags</div>
-                <div class="text-slate-800">
-                  ${flags.length ? flags.join(" • ") : "No specific flags selected"}
-                </div>
-              </div>
-
-              <div>
-                <div class="text-xs uppercase text-slate-500 mb-1">Add-Ons</div>
-                <ul class="list-disc list-inside text-slate-800 space-y-1">
-                  <li>SPC: ${a.spc || 0}</li>
-                  <li>DF / Line: ${a.dfPerLine || 0}</li>
-                  <li>CC Waiver: ${a.ccWaiver || 0}</li>
-                  <li>Trade-In: ${a.tradeIn || 0}</li>
-                  <li>Upfront / Line: ${a.upfrontPerLine || 0}</li>
-                </ul>
-              </div>
-            </div>
-          </div>
         </div>
       `
       );
     }
 
-    function phoneCard(p){
-      const price = p.price?.deviceRetailPrice ?? 0;
-      const id = `ph_${p._id || (p.manufacturer+p.model).replace(/\W/g,'')}`;
-      return `
-        <label for="${id}" class="select-card block rounded-2xl border border-slate-200 p-4 hover:border-emerald-300 cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-emerald-500" role="radio" aria-checked="false">
-          <div class="flex items-center justify-between">
-            <div>
-              <div class="text-sm text-slate-500">${p.manufacturer}</div>
-              <div class="text-base font-semibold">${p.model}</div>
+  function phoneCard(p) {
+    const label = [p.model, "-",p.features.storage,"gb"].filter(Boolean).join(" ");
+    const manufacturer = p.manufacturer
+    const rawId = p._id || p.id || label.replace(/\W/g, "");
+    const id = `ph_${rawId}`;
+
+    const price = p.price || {};
+    const bellC = price.bellConsumer || {};
+    const bellS = price.bellSMB || {};
+    const virgin = price.virgin || {};
+
+    const fmt = (v) => (v && v > 0 ? `${currency(v)}/mo` : "--");
+
+    return `
+      <label
+        for="${id}"
+        class="select-card block rounded-2xl border border-slate-200 bg-white p-4 cursor-pointer transition hover:border-indigo-400 hover:shadow-sm focus-within:ring-2 focus-within:ring-indigo-500"
+        role="group"
+        aria-checked="false"
+      >
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-semibold text-slate-500">${manufacturer}</div>
+          </div>
+        </div>
+        <div class="flex items-center justify-between gap-3">
+          <div>
+            <div class="text-sm font-bold text-slate-900">${label}</div>
+          </div>
+        </div>
+
+        <!-- Pricing grid -->
+        <div class="mt-3 grid grid-cols-1 gap-2 text-xs text-slate-700">
+          <!-- Bell Consumer -->
+          <div class="rounded-xl bg-slate-50 px-3 py-2 flex flex-wrap items-start gap-2 text-blue-800">
+
+            <!-- Title (left-aligned) -->
+            <div class="font-semibold text-[11px] uppercase tracking-wide  basis-full">
+              Bell Consumer
+            </div>
+
+            <!-- Rows -->
+            <div class="w-full space-y-0.5">
+
+              <div class="flex justify-between text-xs">
+                <span class="">Elite</span>
+                <span class="font-medium">${fmt(bellC.Elite)}</span>
+              </div>
+
+              <div class="flex justify-between text-xs">
+                <span class="">Ultimate</span>
+                <span class="font-medium">${fmt(bellC.Ultimate)}</span>
+              </div>
+
+              <div class="flex justify-between text-xs">
+                <span class="">DRO</span>
+                <span class="font-medium">${fmt(bellC.deviceReturnOption)}</span>
+              </div>
+
+            </div>
+
+          </div>
+          <hr>
+          
+          <!-- Bell SMB -->
+          <div class="rounded-xl bg-slate-50 px-3 py-2 flex flex-wrap items-start gap-2 text-blue-800">
+
+            <!-- Title (left-aligned) -->
+            <div class="font-semibold text-[11px] uppercase tracking-wide  basis-full">
+              Bell SMB
+            </div>
+
+            <!-- Rows -->
+            <div class="w-full space-y-0.5">
+
+              <div class="flex justify-between text-xs">
+                <span class="">Elite</span>
+                <span class="font-medium">${fmt(bellS.Elite)}</span>
+              </div>
+
+              <div class="flex justify-between text-xs">
+                <span class="">Ultimate</span>
+                <span class="font-medium">${fmt(bellS.Ultimate)}</span>
+              </div>
+
+              <div class="flex justify-between text-xs">
+                <span class="">DRO</span>
+                <span class="font-medium">${fmt(bellS.deviceReturnOption)}</span>
+              </div>
+
+            </div>
+
+          </div>
+
+          <hr>
+
+          <!-- Virgin -->
+          <div class="rounded-xl bg-slate-50 px-3 py-2 flex flex-wrap items-start justify-between gap-2 text-red-800">
+            <div class="font-semibold text-[11px] uppercase tracking-wide basis-full">
+              Virgin
+            </div>
+            <div class="w-full space-y-0.5">
+              <div class="flex justify-between text-xs">
+                <span class="text-[11px] mr-1">Sweetpay</span>
+                <span class="font-medium">${fmt(virgin.sweetpay)}</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-[11px]  mr-1">Sweetpay lite</span>
+                <span class="font-medium">${fmt(virgin.sweetpayLite)}</span>
+              </div>
             </div>
           </div>
-          <div class="mt-3 flex items-center gap-3">
-            <input id="${id}" data-id="${p._id || id}" data-manufacturer="${p.manufacturer}" data-model="${p.model}" data-price="${price}" type="checkbox" class="rounded border-slate-300" />
-            <div class="flex items-center gap-2">
-              <span class="text-sm text-slate-600">Qty</span>
-              <input type="number" min="1" value="1" class="w-16 rounded-lg border border-slate-200 p-2 qty-input" />
-            </div>
+        </div>
+
+        <!-- Selection + qty -->
+        <div class="mt-4 flex items-center justify-between gap-3">
+          <label class="inline-flex items-center gap-2 text-xs text-slate-600">
+            <input
+              id="${id}"
+              type="checkbox"
+              data-id="${rawId}"
+              class="device-check rounded border-slate-300"
+            />
+            <span>Select</span>
+          </label>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-slate-600">Qty</span>
+            <input
+              type="number"
+              min="1"
+              value="1"
+              class="qty-input w-16 rounded-lg border border-slate-200 p-1.5 text-sm"
+            />
           </div>
-        </label>`;
+        </div>
+      </label>
+    `;
+  }
+
+
+
+    function renderPhoneSlide() {
+      const cards = state.phonesCatalog.map(phoneCard).join("");
+      const max = state.phone.numPhones || 0;
+
+      const hint =
+        max > 0
+          ? `You can select up to <strong>${max}</strong> phone${max > 1 ? "s" : ""} in total.`
+          : `Enter the <strong>Number of Phones</strong> in General Information to apply a limit.`;
+
+      const content = `
+        <div class="space-y-4">
+          <p class="text-xs text-slate-600">${hint}</p>
+          <p id="phoneError" class="text-xs text-red-600 hidden"></p>
+          <div id="phoneGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            ${
+              cards ||
+              '<div class="text-sm text-slate-500">No phones found in the catalog.</div>'
+            }
+          </div>
+          
+        </div>
+      `;
+      return slideShell("Phone Section", "Choose devices", content);
     }
 
+
     function renderGeneralInfoSlide() {
-      const cards = state.phonesCatalog.map(phoneCard).join('');
       const content = `
         <div class="space-y-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-medium text-slate-700">Customer</label>
+              <select
+                id="populateCustomer"
+                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              >
+            
+              </select>
+
+            </div>
             <div>
               <label class="text-xs font-medium text-slate-700">Current Provider</label>
               <select
@@ -693,17 +816,6 @@
                 value="${state.phone.numLines || ""}"
               />
             </div>
-
-            <div class="flex items-center gap-3 mt-6">
-              <input
-                id="smb"
-                type="checkbox"
-                class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                ${state.phone.smb ? "checked" : ""}
-              />
-              <label for="smb" class="text-sm font-medium text-slate-700">SMB</label>
-            </div>
-
             <div>
               <label class="text-xs font-medium text-slate-700">Number of Phones</label>
               <input
@@ -713,89 +825,22 @@
                 placeholder="e.g., 2"
                 value="${state.phone.numPhones || ""}"
               />
-            </div> 
+            </div>
+
+
+
+            
           </div>
         </div>
+      
       `;
       return slideShell("General Information", "Customer requirements", content);
     }
-    function renderPhoneSlide() {
-      const cards = state.phonesCatalog.map(phoneCard).join('');
-      const content = `
-        <div class="space-y-5">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label class="text-xs font-medium text-slate-700">Current Provider</label>
-              <select
-                id="currProvider"
-                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              >
-                <option value="">Select…</option>
-                <option value="Rogers">Rogers</option>
-                <option value="Fido">Fido</option>
-                <option value="Chatr">Chatr</option>
-                <option value="Telus">Telus</option>
-                <option value="Koodo">Koodo</option>
-                <option value="Public">Public</option>
-                <option value="Others">Others</option>
-              </select>
-              <p class="text-[11px] text-slate-500 mt-1">If "Others" is selected, specify below.</p>
-            </div>
-
-            <div id="providerOtherWrap" class="${
-              state.phone.currProvider === "Others" ? "" : "hidden"
-            }">
-              <label class="text-xs font-medium text-slate-700">Other Provider</label>
-              <input
-                id="providerOther"
-                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="Enter provider name"
-                value="${state.phone.providerOther || ""}"
-              />
-            </div>
-
-            <div>
-              <label class="text-xs font-medium text-slate-700">Number of Lines</label>
-              <input
-                id="numLines"
-                type="number"
-                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g., 3"
-                value="${state.phone.numLines || ""}"
-              />
-            </div>
-
-            <div class="flex items-center gap-3 mt-6">
-              <input
-                id="smb"
-                type="checkbox"
-                class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500"
-                ${state.phone.smb ? "checked" : ""}
-              />
-              <label for="smb" class="text-sm font-medium text-slate-700">SMB</label>
-            </div>
-
-            <div>
-              <label class="text-xs font-medium text-slate-700">Number of Phones</label>
-              <input
-                id="numPhones"
-                type="number"
-                class="mt-1 w-full rounded-xl border border-slate-300 p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                placeholder="e.g., 2"
-                value="${state.phone.numPhones || ""}"
-              />
-            </div>
-            
-
-            
-          </div>
-        </div>
-      `;
-      return slideShell("Phone Section", "Capture current provider and device counts", content);
-    }
+    
 
     function renderPlanSlide() {
       const p = state.plan;
+      const phone = state.phone;
       const chk = (id, label, checked) => `
         <label class="flex items-center gap-3 select-card rounded-2xl border border-slate-200 p-3 bg-slate-50/60 hover:border-indigo-300 cursor-pointer"
                data-for="${id}" aria-checked="${checked ? "true" : "false"}">
@@ -817,6 +862,7 @@
           ${chk("planUsRoam", "US Roam", p.usRoam)}
           ${chk("planCaUsCalling", "CA/US Calling", p.caUsCalling)}
           ${chk("planUsMxRoam", "US/MX Roam", p.usMxRoam)}
+          ${chk("smb", "SMB", phone.smb)}
         </div>
       `;
       return slideShell("Plan Section", "Mark key requirements for the plan", content);
@@ -857,6 +903,7 @@
       if (state.plan.usRoam) flags.push("US Roam");
       if (state.plan.caUsCalling) flags.push("CA/US Calling");
       if (state.plan.usMxRoam) flags.push("US/MX Roam");
+      if (state.phone.smb) flags.push("SMB");
 
       const content = `
         <div class="space-y-4 text-sm text-slate-700">
@@ -877,8 +924,16 @@
 
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[11px] text-slate-500 mb-1 uppercase">Plan Flags</div>
-            <div>${flags.length ? flags.join(" • ") : "No flags selected"}</div>
-          </div>
+              <div>
+                ${
+                  flags.length
+                    ? `<ul class="list-disc list-inside space-y-1 text-slate-700">
+                        ${flags.map(f => `<li>${f}</li>`).join("")}
+                      </ul>`
+                    : `<span class="text-slate-400">No flags selected</span>`
+                }
+              </div>
+            </div>
 
           <div class="p-3 rounded-xl bg-slate-50 border border-slate-200">
             <div class="text-[11px] text-slate-500 mb-1 uppercase">Add-Ons Summary</div>
@@ -910,7 +965,7 @@
       else if (state.step === 2) slide = renderPlanSlide();
       else if (state.step === 3) slide = renderAddonSlide();
       else if (state.step == 4) slide = renderReviewSlide();
-      else slide = renderFinalQuote();
+      else if (state.step == 5) slide = renderFinalQuote();
 
       slide.classList.add("slide-enter");
       host.appendChild(slide);
@@ -920,11 +975,15 @@
       });
 
       // bind per-slide events
+      if (state.step === 0) {
+        populateCustomerSelect();
+        bindGeneralInfoEvents()
+      };
       if (state.step === 1) bindPhoneEvents();
       if (state.step === 2) bindPlanEvents();
       if (state.step === 3) bindAddonEvents();
 
-      if (state.step === 1) populatePhoneSelect();
+      // if (state.step === 1) populatePhoneSelect();
 
       renderProgress();
       updateNavButtons();
@@ -932,16 +991,18 @@
     }
 
     // ---------- BIND EVENTS ----------
-    function bindPhoneEvents() {
+    function bindGeneralInfoEvents() {
       const p = state.phone;
 
       const currProvider = qs("#currProvider");
       const providerOtherWrap = qs("#providerOtherWrap");
       const providerOther = qs("#providerOther");
       const numLines = qs("#numLines");
-      const smb = qs("#smb");
+      // const smb = qs("#smb");
       const numPhones = qs("#numPhones");
-      const phoneChoice = qs("#phoneChoice");
+      // const phoneChoice = qs("#phoneChoice");
+      const populateCust = qs("#populateCustomer");
+
 
       if (p.currProvider) currProvider.value = p.currProvider;
 
@@ -961,23 +1022,169 @@
         updatePreview();
       });
 
-      smb.addEventListener("change", (e) => {
-        p.smb = !!e.target.checked;
-        updatePreview();
+      populateCust.addEventListener("change", (e) => {
+          const selectedId = e.target.value;
+          const customer = state.customersCatalog.find(c =>
+            (c._id || c.id) == selectedId
+          );
+
+          // Save both ID & full object
+          state.phone.selectedCustomerId = selectedId;
+          state.phone.selectedCustomer = customer || null;
+
+          updatePreview();
       });
+
+      // smb.addEventListener("change", (e) => {
+      //   p.smb = !!e.target.checked;
+      //   updatePreview();
+      // });
 
       numPhones.addEventListener("input", (e) => {
         p.numPhones = asInt(e.target.value);
         updatePreview();
       });
 
-      phoneChoice.addEventListener("change", (e) => {
-        p.phoneChoice = Array.from(e.target.selectedOptions).map((o) => o.value);
-        updatePreview();
-      });
+      // phoneChoice.addEventListener("change", (e) => {
+      //   p.phoneChoice = Array.from(e.target.selectedOptions).map((o) => o.value);
+      //   updatePreview();
+      // });
     }
 
+    function bindPhoneEvents() {
+      const root = qs("#slides");
+      const maxPhones = asInt(state.phone.numPhones);
+      
+
+      const quantities = (state.phone.phoneQuantities = state.phone.phoneQuantities || {});
+
+      // ERROR TO FIX: When coming back to the slide, is the "hidden" property reassigned
+      const showError = (msg) => {
+        const errorEl = qs("#phoneError", root);
+        console.log(msg)
+        if (!errorEl) return;
+        if (msg) {
+          errorEl.textContent = msg;
+          errorEl.classList.remove("hidden");
+        } else {
+          errorEl.textContent = "";
+          errorEl.classList.add("hidden");
+        }
+      };
+
+      const syncState = () => {
+        const ids = Object.keys(quantities).filter((id) => quantities[id] > 0);
+        state.phone.phoneChoice = ids;
+        const total = ids.reduce((sum, id) => sum + (quantities[id] || 0), 0);
+        return total;
+      };
+
+      const enforceLimit = () => {
+        const total = syncState();
+
+        // ✅ If numPhones is 0 or not set, disallow *any* selection
+        if (maxPhones < 0) {
+          if (total > 0) {
+            showError(
+              "Please set 'Number of Phones' to a value greater than 0 in General Information before selecting devices."
+            )
+            ;
+          }
+          
+          return false;
+        }
+
+        if (total <= maxPhones) {
+          showError("");
+          return true;
+        }
+
+        showError(
+          `You selected ${total} phones in total, but the maximum allowed is ${maxPhones}.`
+        );
+        return false;
+      };
+
+      qsa(".select-card input.device-check", root).forEach((checkbox) => {
+        const card = checkbox.closest(".select-card");
+        const qtyInput = card.querySelector(".qty-input");
+        const id = checkbox.dataset.id;
+
+        const storedQty = quantities[id] || 0;
+        if (storedQty > 0) {
+          checkbox.checked = true;
+          if (qtyInput) qtyInput.value = storedQty;
+          card.setAttribute("aria-checked", "true");
+        } else {
+          checkbox.checked = false;
+          card.setAttribute("aria-checked", "false");
+        }
+
+        const update = () => {
+          // ⛔ Hard stop if numPhones is 0 / empty
+          if (maxPhones <= 0) {
+            showError(
+              "Please set 'Number of Phones' to a value greater than 0 in General Information before selecting devices."
+            );
+            checkbox.checked = false;
+            card.setAttribute("aria-checked", "false");
+            if (qtyInput) qtyInput.value = 1;
+            syncState();
+            return;
+          }
+
+          let qty = qtyInput ? asInt(qtyInput.value) : 0;
+
+          if (!checkbox.checked) qty = 0;
+
+          if (qty <= 0) {
+            delete quantities[id];
+            checkbox.checked = false;
+            card.setAttribute("aria-checked", "false");
+          } else {
+            quantities[id] = qty;
+            card.setAttribute("aria-checked", "true");
+          }
+
+          // existing max-phones enforcement
+          const ok = enforceLimit();
+          if (!ok) {
+            // roll back this item if over limit
+            const othersTotal = Object.entries(quantities)
+              .filter(([key]) => key !== id)
+              .reduce((sum, [, q]) => sum + q, 0);
+            const allowedForThis = Math.max(0, maxPhones - othersTotal);
+
+            if (allowedForThis <= 0) {
+              delete quantities[id];
+              checkbox.checked = false;
+              card.setAttribute("aria-checked", "false");
+              if (qtyInput) qtyInput.value = 1;
+            } else {
+              quantities[id] = allowedForThis;
+              if (qtyInput) qtyInput.value = allowedForThis;
+              card.setAttribute("aria-checked", "true");
+            }
+
+            enforceLimit();
+          }
+
+          syncState();
+          updatePreview();
+        };
+
+        checkbox.addEventListener("change", update);
+        if (qtyInput) qtyInput.addEventListener("input", update);
+      });
+
+      enforceLimit();
+      syncState();
+    }
+
+
+
     function bindPlanEvents() {
+      // Normal plan checkboxes -> state.plan
       const mapping = [
         ["plan5g", "fiveG"],
         ["planZeroOveruse", "zeroOveruse"],
@@ -987,8 +1194,11 @@
         ["planCaUsCalling", "caUsCalling"],
         ["planUsMxRoam", "usMxRoam"],
       ];
+
+      // Plan flags
       mapping.forEach(([id, key]) => {
         const input = qs("#" + id);
+        if (!input) return;
         const card = input.closest(".select-card");
         const updateAria = () =>
           card.setAttribute("aria-checked", input.checked ? "true" : "false");
@@ -1000,7 +1210,29 @@
         });
         updateAria();
       });
+
+      // SMB checkbox -> state.phone.smb
+      const smbInput = qs("#smb");
+      if (smbInput) {
+        const smbCard = smbInput.closest(".select-card");
+        const updateSmbAria = () =>
+          smbCard.setAttribute(
+            "aria-checked",
+            smbInput.checked ? "true" : "false"
+          );
+
+        smbInput.addEventListener("change", (e) => {
+          state.phone.smb = e.target.checked;   // ✅ correct place
+          updateSmbAria();
+          updatePreview();                      // ✅ updates Live Preview
+        });
+
+        // initial state reflecting existing state.phone.smb
+        smbInput.checked = !!state.phone.smb;
+        updateSmbAria();
+      }
     }
+
 
     function bindAddonEvents() {
       const map = [
@@ -1034,6 +1266,49 @@
         state.phonesCatalog = [];
       }
     }
+    // ---------- CUSTOMER CATALOG ----------
+    async function loadCustomers() {
+      try {
+        const res = await fetch("/api/customers");
+        const data = await res.json();
+
+
+        state.customersCatalog = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.customers)
+          ? data.customers
+          : [];
+      } catch (err) {
+        console.error("Failed to load customers", err);
+        state.customersCatalog = [];
+      }
+    }
+
+
+    function populateCustomerSelect() {
+      const select = qs("#populateCustomer");
+      if (!select) return;
+
+      select.innerHTML = "";
+      if (!state.customersCatalog.length) {
+        const opt = document.createElement("option");
+        opt.disabled = true;
+        opt.textContent = "No customers found";
+        select.appendChild(opt);
+        return;
+      }
+
+    state.customersCatalog.forEach((c) => {
+      const label = c.name || [c.firstName, c.lastName].filter(Boolean).join(" ");
+      const opt = document.createElement("option");
+      const id = c._id || c.id || c.email; // choose what you want to store
+
+      opt.value = id;
+      opt.textContent = label;
+      select.appendChild(opt);
+    });
+    }
+
 
     function populatePhoneSelect() {
       const select = qs("#phoneChoice");
@@ -1075,15 +1350,27 @@
       qs("#pvLines").textContent = p.numLines || "—";
       qs("#pvSmb").textContent = p.smb ? "Yes" : "No";
 
+      const cust = state.phone.selectedCustomer;
+
+      if (cust) {
+        qs("#pvCustomer").textContent =
+          `${cust.name} • ${cust.phone}`;
+      } else {
+        qs("#pvCustomer").textContent = "—";
+      }
+
+
       const phoneLabels = p.phoneChoice
         .map((id) =>
           state.phonesCatalog.find((x) => (x._id || x.id || "") == id)
         )
         .filter(Boolean)
         .map((x) => [x.manufacturer, x.model].filter(Boolean).join(" "));
-      qs("#pvPhones").textContent = phoneLabels.length
-        ? `${phoneLabels.length} selected`
-        : "—";
+        if (phoneLabels.length === 0) {
+          qs("#pvPhones").textContent = "—";
+        } else {
+          qs("#pvPhones").innerHTML = phoneLabels.join("<br>");
+        }
 
       const flags = [];
       const pl = state.plan;
@@ -1118,15 +1405,14 @@
       const next = qs("#nextBtn");
       prev.disabled = state.step === 0;
       
-      if (state.step === state.steps.length - 2) {
-
-      }
-      else if (state.step === state.steps.length - 1) {
-         next.textContent = "Done"
+      if (state.step === state.steps.length - 1) {
+        next.textContent = "Done"
       }
       else {
         next.textContent = "Next ▶"
       }
+
+      
     }
 
     function go(dir) {
@@ -1308,7 +1594,7 @@
         if (state.step < state.steps.length - 1) go(1);
         else showToast("Review complete");
       });
-      qs("#saveDraft").addEventListener("click", saveDraft);
+      // qs("#saveDraft").addEventListener("click", saveDraft);
       qs("#btnReset").addEventListener("click", resetAll);
       qs("#btnSubmit").addEventListener("click", submitForm);
       // qs("#btnSaveQuote").addEventListener("click", saveQuote);
@@ -1327,6 +1613,7 @@
       });
 
       loadDraft(); // ignore if none
+      await loadCustomers();
 
       await loadPhones();
       renderSlides();
